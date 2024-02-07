@@ -14,6 +14,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd);
 void SetPoint(void* buffer, int x, int y, RGBQUAD color = { 0,0,0,0 });
 void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
+void plotLineWithErr(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
+void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
+
+
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
@@ -61,9 +65,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	frameBuffer[10][200] = { 0, 255, 0, 0 };
 
-	SetLine(frameBuffer, 100, 100, 200, 200, { 255, 0, 0, 0 });
-	//SetPoint(frameBuffer, 200, 9, {0,0,255, 0});
-
+	//SetLine(frameBuffer, 100, 100, 200, 200, { 255, 0, 0, 0 });
+	plotLine(frameBuffer, 500, 100, 500, 300, { 255,0,0,0 });
+	plotLine(frameBuffer, 150, 150, 350, 350, { 0,255,0,0 });
+	plotLineWithErr(frameBuffer, 100, 200, 100, 400, { 0,255,0,0 });
 	// Run the message loop.
 
 	MSG msg = { };
@@ -149,33 +154,153 @@ void SetPoint(void* buffer, int x, int y, RGBQUAD color)
 
 void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 {
-	int deltaX = std::abs(x1 - x0);
-	int deltaY = std::abs(y1 - y0);
+	int deltaX = x1 - x0;
+	int deltaY = y1 - y0;
+	int absDeltaX = std::abs(deltaX);
+	int absDeltaY = std::abs(deltaY);
 
-	double error = 0;
-	double deltaerr = (deltaY + 1) / static_cast<double>(deltaX + 1);
+	int accretion = 0;
 
+	if (absDeltaX >= absDeltaY) // angle >45 ? 
+	{
+		int y = y0;
+		int direction = deltaY != 0 ? (deltaY > 0 ? 1 : -1) : 0; //up or down
+		for (int x = x0; deltaX > 0 ? x <= x1 : x >= x1; deltaX > 0 ? x++ : x--) //left or right
+		{
+			SetPoint(buffer, x, y, color);
+			
+			accretion += absDeltaY;
+
+			if (accretion >= absDeltaX)
+			{
+				accretion -= absDeltaX;
+				y += direction;
+			}
+		}
+	}
+	else
+	{
+		int x = x0;
+		int direction = deltaX != 0 ? (deltaX > 0 ? 1 : -1) : 0;
+		for (int y = y0; deltaY > 0 ? y <= y1: y>=y1; deltaY > 0 ? y++ : y--)
+		{
+			SetPoint(buffer, x, y, color);
+
+			accretion += absDeltaX;
+
+			if (accretion >= absDeltaY)
+			{
+				accretion -= absDeltaY;
+				x += direction;
+			}
+		}
+	}
+}
+
+void plotLineLow(void* buffer,int x0, int y0, int x1, int y1, RGBQUAD color)
+{
+	int dx = x1 - x0;
+	int dy = y1 - y0;
+	int yi = 1;
+
+	if (dy < 0) {
+		yi = -1;
+		dy = -dy;
+	}
+
+	int D = (2 * dy) - dx;
 	int y = y0;
 
-	int directionY = y1 - y0;
-	if (directionY > 0)
-	{
-		directionY = 1;
-	}
-	else if (directionY < 0)
-	{
-		directionY = -1;
-	}
-
-
-	for (int x = x0; x <= x1; x++)
-	{
+	for (int x = x0; x <= x1; x++) {
 		SetPoint(buffer, x, y, color);
-		error = error + deltaerr;
-		if (error >= (deltaX + 1))
-		{
-			y += directionY;
-			error -= (deltaX + 1);
+
+		if (D > 0) {
+			y += yi;
+			D += (2 * (dy - dx));
+		}
+		else {
+			D += (2 * dy);
+		}
+	}
+}
+
+void plotLineHigh(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
+{
+	int dx = x1 - x0;
+	int dy = y1 - y0;
+	int xi = 1;
+
+	if (dx < 0) {
+		xi = -1;
+		dx = -dx;
+	}
+
+	int D = (2 * dx) - dy;
+	int x = x0;
+
+	for (int y = y0; y <= y1; y++) {
+		SetPoint(buffer, x, y, color);
+
+		if (D > 0) {
+			x += xi;
+			D += (2 * (dx - dy));
+		}
+		else {
+			D += (2 * dx);
+		}
+	}
+}
+
+void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
+{
+	if (std::abs(y1 - y0) < std::abs(x1 - x0)) {
+		if (x0 > x1) {
+			plotLineLow(buffer, x1, y1, x0, y0, color);
+		}
+		else {
+			plotLineLow(buffer, x0, y0, x1, y1, color);
+		}
+	}
+	else {
+		if (y0 > y1) {
+			plotLineHigh(buffer, x1, y1, x0, y0, color);
+		}
+		else {
+			plotLineHigh(buffer, x0, y0, x1, y1, color);
+		}
+	}
+}
+
+void plotLineWithErr(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
+{
+	int dx = std::abs(x1 - x0);
+	int sx = x0 < x1 ? 1 : -1;
+	int dy = -std::abs(y1 - y0);
+	int sy = y0 < y1 ? 1 : -1;
+	int error = dx + dy;
+
+	while (true) {
+		SetPoint(buffer, x0, y0, color);
+
+		if (x0 == x1 && y0 == y1)
+			break;
+
+		int errorx2 = 2 * error;
+
+		if (errorx2 >= dy) {
+			if (x0 == x1)
+				break;
+
+			error += dy;
+			x0 += sx;
+		}
+
+		if (errorx2 <= dx) {
+			if (y0 == y1)
+				break;
+
+			error += dx;
+			y0 += sy;
 		}
 	}
 }
