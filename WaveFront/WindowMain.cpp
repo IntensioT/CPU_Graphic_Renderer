@@ -3,7 +3,7 @@
 #endif 
 
 #include <windows.h>
-#include "ObjLoader.h"
+#include "CoordSystem.h"
 
 #define FrameHeight 720
 #define FrameWidth 1425
@@ -22,11 +22,23 @@ void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	ObjLoader* loader = new ObjLoader();
+	CoordSystem* coord = new CoordSystem({ 10,20,20 });
 
 	//std::string res = loader->GetOutput();
 	std::vector<CoordinateStruct> vertexes = loader->GetVetrexVector();
 	std::vector<int> indexes = loader->GetIndexes();
 
+	_3DMATRIX mat =
+	{ 1,0,0,10,
+	 0,1,0,0,
+	 0,0,1,0,
+	 0,0,0,1 };
+
+	HomogeneousCoordinateStruct vect = { 10,10,10,1 };
+
+	HomogeneousCoordinateStruct res = coord->MultiplyMatByVector(mat, vect);
+	coord->SetScaleMatrix({ 2,2,2 });
+	res = coord->MultiplyMatByVector(coord->ScaleMatrix, vect);
 
 	// Register the window class.
 	const wchar_t CLASS_NAME[] = L"Sample Window Class";
@@ -168,7 +180,7 @@ void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 		for (int x = x0; deltaX > 0 ? x <= x1 : x >= x1; deltaX > 0 ? x++ : x--) //left or right
 		{
 			SetPoint(buffer, x, y, color);
-			
+
 			accretion += absDeltaY;
 
 			if (accretion >= absDeltaX)
@@ -182,7 +194,7 @@ void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 	{
 		int x = x0;
 		int direction = deltaX != 0 ? (deltaX > 0 ? 1 : -1) : 0;
-		for (int y = y0; deltaY > 0 ? y <= y1: y>=y1; deltaY > 0 ? y++ : y--)
+		for (int y = y0; deltaY > 0 ? y <= y1 : y >= y1; deltaY > 0 ? y++ : y--)
 		{
 			SetPoint(buffer, x, y, color);
 
@@ -197,7 +209,7 @@ void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 	}
 }
 
-void plotLineLow(void* buffer,int x0, int y0, int x1, int y1, RGBQUAD color)
+void plotLineLow(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 {
 	int dx = x1 - x0;
 	int dy = y1 - y0;
