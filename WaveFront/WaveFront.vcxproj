@@ -127,10 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CoordSystem.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="WindowMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CoordSystem.h" />
     <ClInclude Include="ObjLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
