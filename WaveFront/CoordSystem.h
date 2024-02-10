@@ -1,6 +1,8 @@
 #pragma once
 #include "ObjLoader.h"
 
+
+
 typedef struct _3DMATRIX {
     union {
         struct {
@@ -19,11 +21,6 @@ struct HomogeneousCoordinateStruct
     float x, y, z, w;
 };
 
-struct Axis {
-    CoordinateStruct XAxis;
-    CoordinateStruct YAxis;
-    CoordinateStruct ZAxis;
-};
 
 inline CoordinateStruct AddVectors(const CoordinateStruct& vector1, const CoordinateStruct& vector2) {
     CoordinateStruct result;
@@ -66,7 +63,7 @@ public:
     void SetRotateXMatrix(float angle);
     void SetRotateYMatrix(float angle);
     void SetRotateZMatrix(float angle);
-    void Rotate(float angle, Axis );
+    void SetRotateMatrix(float angle, CoordinateStruct Axis);
 
 
 private:
