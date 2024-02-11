@@ -1,6 +1,8 @@
 #pragma once
 #include "ObjLoader.h"
 
+#define M_PI       3.14159265358979323846   // pi
+
 
 
 typedef struct _3DMATRIX {
@@ -47,23 +49,54 @@ class CoordSystem
 
 public:
     _3DMATRIX GlobalTransformationMatrix;
+    _3DMATRIX CameraTransformationMatrix;
+    _3DMATRIX ProjectionTransformationMatrix;
+    _3DMATRIX ViewPortTransformationMatrix;
+
     _3DMATRIX MovementMatrix;
+
     _3DMATRIX ScaleMatrix;
+
     _3DMATRIX RotateXMatrix;
     _3DMATRIX RotateYMatrix;
     _3DMATRIX RotateZMatrix;
 
+    _3DMATRIX RotationMatrix;
+
+
     HomogeneousCoordinateStruct ToGlobalCoords(HomogeneousCoordinateStruct local);
     CoordinateStruct ToLocalCoords(CoordinateStruct global);
     CoordSystem(CoordinateStruct Translation);
+
+    CoordinateStruct SubstractVectors(CoordinateStruct& vector1, CoordinateStruct& vector2);
+    CoordinateStruct MultiplyVectors(CoordinateStruct& vector1, CoordinateStruct& vector2);
     HomogeneousCoordinateStruct MultiplyMatByVector(_3DMATRIX matrix, HomogeneousCoordinateStruct vector);
+    _3DMATRIX MultiplyMatrixByMatrix(const _3DMATRIX& mat1, const _3DMATRIX& mat2);
+    float DotProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2);
+    CoordinateStruct CrossProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2);
+
+
+
+    float VectorLength(const CoordinateStruct& vector);
+    CoordinateStruct NormalizeVector(const CoordinateStruct& vector);
+
+    HomogeneousCoordinateStruct TransformVector(HomogeneousCoordinateStruct& originalVector, CoordinateStruct& scale, float angle, CoordinateStruct& axis, CoordinateStruct& translation);
+
+
+    void SetCameraTransformationMatrix(CoordinateStruct& cameraGlobalCoord, CoordinateStruct& targetGlobalCoord, CoordinateStruct& cameraUpVect);
+    void SetProjectiosTransformationMatrix(float fov, float aspectRatio, float nearPlane, float farPlane);
+    void SetViewPortTransformationMatrix(float width, float height, float x, float y);
+
     void MoveSystem(CoordinateStruct vect);
+
     void SetMovementMatrix(CoordinateStruct Translation);
     void SetScaleMatrix(CoordinateStruct Scale);
     void SetRotateXMatrix(float angle);
     void SetRotateYMatrix(float angle);
     void SetRotateZMatrix(float angle);
     void SetRotateMatrix(float angle, CoordinateStruct Axis);
+    void SetRotationMatrixOptimized(float angle, const CoordinateStruct& axis);
+
 
 
 private:

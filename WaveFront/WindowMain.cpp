@@ -4,9 +4,10 @@
 
 #include <windows.h>
 #include "CoordSystem.h"
+#include "TestGLM.h"
 
 #define FrameHeight 720
-#define FrameWidth 1425
+#define FrameWidth 960
 
 RGBQUAD frameBuffer[FrameHeight][FrameWidth];
 
@@ -23,10 +24,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 {
 	ObjLoader* loader = new ObjLoader();
 	CoordSystem* coord = new CoordSystem({ 10,20,20 });
+	//CoordSystem* ViewCoord = new CoordSystem({ -3.0f,0.0f,0.0f });
+	CoordSystem* cube = new CoordSystem({ 0.0f,0.0f,0.0f });
 
 	//std::string res = loader->GetOutput();
 	std::vector<CoordinateStruct> vertexes = loader->GetVetrexVector();
 	std::vector<int> indexes = loader->GetIndexes();
+
+	glm::vec4 inp;
+	inp.x = vertexes[0].x;
+	inp.y = vertexes[0].y;
+	inp.z = vertexes[0].z;
+	inp.w = 1;
+	doMagic(inp);
 
 	_3DMATRIX mat =
 	{ 1,0,0,10,
@@ -39,6 +49,33 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	HomogeneousCoordinateStruct res = coord->MultiplyMatByVector(mat, vect);
 	coord->SetScaleMatrix({ 2,2,2 });
 	res = coord->MultiplyMatByVector(coord->ScaleMatrix, vect);
+
+
+	/////
+	cube->SetProjectiosTransformationMatrix(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	CoordinateStruct cameraGlobalCoord = {4,3,3};
+	CoordinateStruct targetGlobalCoord = {0,0,0};
+	CoordinateStruct cameraUpVect = {0,1,0};
+	
+	cube->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
+
+	cube->SetViewPortTransformationMatrix(FrameWidth, FrameHeight, 0, 0);
+
+	_3DMATRIX ModelViewProjectionMatrix =  cube->MultiplyMatrixByMatrix(cube->ProjectionTransformationMatrix, cube->MultiplyMatrixByMatrix(cube->CameraTransformationMatrix, cube->GlobalTransformationMatrix));
+	_3DMATRIX ViewPortRESULTMatrix = cube->MultiplyMatrixByMatrix(cube->ViewPortTransformationMatrix, ModelViewProjectionMatrix);
+	//ViewCoord->SetMovementMatrix({ -3.0f,0.0f,0.0f });
+	
+	for (int i = 0; i < vertexes.size(); i++)
+	{
+		HomogeneousCoordinateStruct point = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1.0f };
+		point = cube->MultiplyMatByVector(ViewPortRESULTMatrix, point);
+
+
+		vertexes[i].x = point.x;
+		vertexes[i].y = point.y;
+		vertexes[i].z = point.z;
+	}
+	/////
 
 	// Register the window class.
 	const wchar_t CLASS_NAME[] = L"Sample Window Class";
@@ -60,7 +97,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		WS_OVERLAPPEDWINDOW,            // Window style
 
 		// Size and position
-		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+		CW_USEDEFAULT, CW_USEDEFAULT, FrameWidth, FrameHeight,
 
 		NULL,       // Parent window    
 		NULL,       // Menu
@@ -78,9 +115,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	frameBuffer[10][200] = { 0, 255, 0, 0 };
 
 	//SetLine(frameBuffer, 100, 100, 200, 200, { 255, 0, 0, 0 });
-	plotLine(frameBuffer, 500, 100, 500, 300, { 255,0,0,0 });
+	/*plotLine(frameBuffer, 500, 100, 500, 300, { 255,0,0,0 });
 	plotLine(frameBuffer, 150, 150, 350, 350, { 0,255,0,0 });
-	plotLineWithErr(frameBuffer, 100, 200, 100, 400, { 0,255,0,0 });
+	plotLineWithErr(frameBuffer, 100, 200, 100, 400, { 0,255,0,0 });*/
+
+	for (int i = 0; i < vertexes.size(); i++)
+	{
+		SetPoint(frameBuffer, vertexes[i].x, vertexes[i].y, { 0,255,0,0 });
+	}
+
+	for (int i = 0; i < indexes.size() / 3; i++)
+	{
+
+	}
 	// Run the message loop.
 
 	MSG msg = { };
