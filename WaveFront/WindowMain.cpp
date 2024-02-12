@@ -6,8 +6,12 @@
 #include "CoordSystem.h"
 #include "TestGLM.h"
 
-#define FrameHeight 720
-#define FrameWidth 960
+
+
+//#define FrameHeight 720
+//#define FrameWidth 960
+#define FrameHeight 600
+#define FrameWidth 800
 
 RGBQUAD frameBuffer[FrameHeight][FrameWidth];
 
@@ -22,6 +26,60 @@ void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
+	std::vector<CoordinateStruct> v2;
+	v2.push_back({ -0.1f, -0.1f, -0.1f });
+	v2.push_back({ -0.1f, 0.1f, -0.1f });
+	v2.push_back({ 0.1f, 0.1f, -0.1f });
+	v2.push_back({ 0.1f, -0.1f, -0.1f });
+	v2.push_back({ -0.1f, -0.1f, 0.1f });
+	v2.push_back({ -0.1f, 0.1f, 0.1f });
+	v2.push_back({ 0.1f, 0.1f, 0.1f });
+	v2.push_back({ 0.1f, -0.1f, 0.1f });
+
+	std::vector<int> indices;
+
+	indices.push_back(0);
+	indices.push_back(1);
+	indices.push_back(2);
+	indices.push_back(0);
+	indices.push_back(2);
+	indices.push_back(3);
+
+	indices.push_back(5);
+	indices.push_back(7);
+	indices.push_back(4);
+	indices.push_back(5);
+	indices.push_back(6);
+	indices.push_back(7);
+
+	indices.push_back(4);
+	indices.push_back(5);
+	indices.push_back(1);
+	indices.push_back(4);
+	indices.push_back(1);
+	indices.push_back(0);
+
+	indices.push_back(3);
+	indices.push_back(2);
+	indices.push_back(6);
+	indices.push_back(3);
+	indices.push_back(6);
+	indices.push_back(7);
+
+	indices.push_back(1);
+	indices.push_back(5);
+	indices.push_back(6);
+	indices.push_back(1);
+	indices.push_back(6);
+	indices.push_back(2);
+
+	indices.push_back(4);
+	indices.push_back(0);
+	indices.push_back(3);
+	indices.push_back(4);
+	indices.push_back(3);
+	indices.push_back(7);
+
 	ObjLoader* loader = new ObjLoader();
 	CoordSystem* coord = new CoordSystem({ 10,20,20 });
 	//CoordSystem* ViewCoord = new CoordSystem({ -3.0f,0.0f,0.0f });
@@ -31,49 +89,110 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	std::vector<CoordinateStruct> vertexes = loader->GetVetrexVector();
 	std::vector<int> indexes = loader->GetIndexes();
 
-	glm::vec4 inp;
+	/*glm::vec4 inp;
 	inp.x = vertexes[0].x;
 	inp.y = vertexes[0].y;
 	inp.z = vertexes[0].z;
 	inp.w = 1;
-	doMagic(inp);
-
-	_3DMATRIX mat =
-	{ 1,0,0,10,
-	 0,1,0,0,
-	 0,0,1,0,
-	 0,0,0,1 };
-
-	HomogeneousCoordinateStruct vect = { 10,10,10,1 };
-
-	HomogeneousCoordinateStruct res = coord->MultiplyMatByVector(mat, vect);
-	coord->SetScaleMatrix({ 2,2,2 });
-	res = coord->MultiplyMatByVector(coord->ScaleMatrix, vect);
+	doMagic(inp);*/
 
 
 	/////
-	cube->SetProjectiosTransformationMatrix(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-	CoordinateStruct cameraGlobalCoord = {4,3,3};
+	//cube->SetProjectionTransformationMatrix(45.0f, ((float)FrameWidth / (float)FrameHeight), 0.1f, 100.0f);
+	cube->SetProjectionTransformationMatrix(3.14f / 2.0f, 800.0f / 600.0f, 10.0f, 100.0f);
+
+
+	/*CoordinateStruct cameraGlobalCoord = {4,3,3};
 	CoordinateStruct targetGlobalCoord = {0,0,0};
-	CoordinateStruct cameraUpVect = {0,1,0};
-	
+	CoordinateStruct cameraUpVect = {0,1,0};*/
+
+	CoordinateStruct cameraGlobalCoord = { 0.05f,-0.2f,-0.5f };
+	CoordinateStruct targetGlobalCoord = { 0,0,1 };
+	CoordinateStruct cameraUpVect = { 0,1,0 };
+
 	cube->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
 
-	cube->SetViewPortTransformationMatrix(FrameWidth, FrameHeight, 0, 0);
+	//cube->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0);
+	cube->SetViewPortTransformationMatrix(800.0f, 600.0f, 0, 0, 0.0f, 1.0f);
 
-	_3DMATRIX ModelViewProjectionMatrix =  cube->MultiplyMatrixByMatrix(cube->ProjectionTransformationMatrix, cube->MultiplyMatrixByMatrix(cube->CameraTransformationMatrix, cube->GlobalTransformationMatrix));
-	_3DMATRIX ViewPortRESULTMatrix = cube->MultiplyMatrixByMatrix(cube->ViewPortTransformationMatrix, ModelViewProjectionMatrix);
-	//ViewCoord->SetMovementMatrix({ -3.0f,0.0f,0.0f });
-	
-	for (int i = 0; i < vertexes.size(); i++)
+	//// Матрица проекции : 45° Угол обзора. 4:3 соотношение, дальность вида : 0.1 единиц <-> 100 единиц
+	//glm::mat4 Projection = glm::perspective(40.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	//// Матрица камеры
+	//glm::mat4 View = glm::lookAt(
+	//	glm::vec3(4, 10, 3), // Позиция в  (4,3,3)мировых координат
+	//	glm::vec3(0, 0, 0), // И смотрит в центр экрана
+	//	glm::vec3(0, 1, 0)  // Верх камеры смотрит вверх
+	//);
+	//// Матрица модели – единичная матрица. Модель находится в центре мировых координат
+	//glm::mat4 Model = glm::mat4(1.0f);  // Выставляем свое значение для каждой модели!
+	//// НАША МВП : Умножаем все наши три матрицы
+	//glm::mat4 MVP = Projection * View * Model;
+
+	//glm::mat4 ViewPort;
+	//ViewPort[0][0] = 480;
+	//ViewPort[0][1] = 0;
+	//ViewPort[0][2] = 0;
+	//ViewPort[0][3] = 480;
+
+	//ViewPort[1][0] = 0;
+	//ViewPort[1][1] = -360;
+	//ViewPort[1][2] = 360;
+	//ViewPort[1][3] = 0;
+
+	//ViewPort[2][0] = 0;
+	//ViewPort[2][1] = 0;
+	//ViewPort[2][2] = 1;
+	//ViewPort[2][3] = 0;
+
+	//ViewPort[3][0] = 0;
+	//ViewPort[3][1] = 0;
+	//ViewPort[3][2] = 0;
+	//ViewPort[3][3] = 1;
+
+	//glm::mat4 viewPortRESULT = ViewPort * MVP;
+
+
+	//_3DMATRIX sus = cube->CameraTransformationMatrix * cube->GlobalTransformationMatrix;
+	//_3DMATRIX sus2 = cube->ProjectionTransformationMatrix * sus;
+	//_3DMATRIX tmp = cube->MultiplyMatrixByMatrix(cube->CameraTransformationMatrix, cube->GlobalTransformationMatrix);
+	//_3DMATRIX tmp2 = cube->MultiplyMatrixByMatrix(cube->ProjectionTransformationMatrix, tmp);
+	//_3DMATRIX ModelViewProjectionMatrix = cube->MultiplyMatrixByMatrix(cube->ProjectionTransformationMatrix, cube->MultiplyMatrixByMatrix(cube->CameraTransformationMatrix, cube->GlobalTransformationMatrix));
+	//_3DMATRIX ViewPortRESULTMatrix = cube->MultiplyMatrixByMatrix(cube->ViewPortTransformationMatrix, ModelViewProjectionMatrix);
+
+	//for (int i = 0; i < vertexes.size(); i++)
+	for (int i = 0; i < v2.size(); i++)
 	{
+		HomogeneousCoordinateStruct pointHomogeneous;
+		/*pointHomogeneous.x = vertexes[i].x;
+		pointHomogeneous.y = vertexes[i].y;
+		pointHomogeneous.z = vertexes[i].z;*/
+
+		pointHomogeneous.x = v2[i].x;
+		pointHomogeneous.y = v2[i].y;
+		pointHomogeneous.z = v2[i].z;
+		pointHomogeneous.w = 1.0f;
+
 		HomogeneousCoordinateStruct point = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1.0f };
-		point = cube->MultiplyMatByVector(ViewPortRESULTMatrix, point);
+		//point = cube->MultiplyMatByVector(ViewPortRESULTMatrix, point);
+		//point = cube->MultiplyMatByVector(sus2, point);
 
+		pointHomogeneous *= cube->GlobalTransformationMatrix;
+		pointHomogeneous *= cube->CameraTransformationMatrix;
+		pointHomogeneous *= cube->ProjectionTransformationMatrix;
+		pointHomogeneous *= (1 / pointHomogeneous.w);
+		pointHomogeneous *= cube->ViewPortTransformationMatrix;
 
-		vertexes[i].x = point.x;
+		/*vertexes[i].x = point.x;
 		vertexes[i].y = point.y;
 		vertexes[i].z = point.z;
+		*/
+		v2[i].x = pointHomogeneous.x;
+		v2[i].y = pointHomogeneous.y;
+		v2[i].z = pointHomogeneous.z;
+
+		/*vertexes[i].x = pointGLM.x;
+		vertexes[i].y = pointGLM.y;
+		vertexes[i].z = pointGLM.z;*/
 	}
 	/////
 
@@ -119,15 +238,34 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	plotLine(frameBuffer, 150, 150, 350, 350, { 0,255,0,0 });
 	plotLineWithErr(frameBuffer, 100, 200, 100, 400, { 0,255,0,0 });*/
 
-	for (int i = 0; i < vertexes.size(); i++)
+
+	/*for (int i = 0; i < vertexes.size(); i++)
 	{
 		SetPoint(frameBuffer, vertexes[i].x, vertexes[i].y, { 0,255,0,0 });
-	}
+	}*/
 
-	for (int i = 0; i < indexes.size() / 3; i++)
+
+	/*for (int i = 0; i < indexes.size(); i += 3)
 	{
+		plotLine(frameBuffer, vertexes[indexes[i] - 1].x, vertexes[indexes[i] - 1].y, vertexes[indexes[i + 1] - 1].x, vertexes[indexes[i + 1] - 1].y, { 0,255,0,0 });
+		plotLine(frameBuffer, vertexes[indexes[i + 1] - 1].x, vertexes[indexes[i + 1] - 1].y, vertexes[indexes[i + 2] - 1].x, vertexes[indexes[i + 2] - 1].y, { 0,255,0,0 });
+		plotLine(frameBuffer, vertexes[indexes[i + 2] - 1].x, vertexes[indexes[i + 2] - 1].y, vertexes[indexes[i] - 1].x, vertexes[indexes[i] - 1].y, { 0,255,0,0 });
+	}*/
 
+	for (int i = 0; i < indices.size(); i += 3)
+	{
+		plotLine(frameBuffer, v2[indices[i]].x, v2[indices[i]].y, v2[indices[i + 1]].x, v2[indices[i + 1]].y, { 0,255,0,0 });
+		plotLine(frameBuffer, v2[indices[i + 1]].x, v2[indices[i + 1]].y, v2[indices[i + 2]].x, v2[indices[i + 2]].y, { 0,255,0,0 });
+		plotLine(frameBuffer, v2[indices[i + 2]].x, v2[indices[i + 2]].y, v2[indices[i]].x, v2[indices[i]].y, { 0,255,0,0 });
 	}
+
+	//std::vector<CoordinateStruct> vertexes1 = { {100,100,200},{100,200,200},{200,100,200}, {200,200,200},{200,110,200},{110,200,200} };
+	/*for (int i = 0; i < 6; i += 3)
+	{
+		plotLine(frameBuffer, vertexes1[i].x, vertexes1[i].y, vertexes1[i + 1].x, vertexes1[i + 1].y, { 0,255,0,0 });
+		plotLine(frameBuffer, vertexes1[i + 1].x, vertexes1[i + 1].y, vertexes1[i + 2].x, vertexes1[i + 2].y, { 0,255,0,0 });
+		plotLine(frameBuffer, vertexes1[i + 2].x, vertexes1[i + 2].y, vertexes1[i].x, vertexes1[i].y, { 0,255,0,0 });
+	}*/
 	// Run the message loop.
 
 	MSG msg = { };
