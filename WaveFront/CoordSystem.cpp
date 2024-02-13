@@ -59,10 +59,6 @@ _3DMATRIX CoordSystem::MultiplyMatrixByMatrix(const _3DMATRIX& m1, const _3DMATR
 	_3DMATRIX result;
 
 
-	//c11 = a11 · b11 + a12 · b21 + a13 · b31 + a14 · b41 
-	//1.344443 · 0.599999 + 0 · 0 + 0 · (-0.79999) + 0 · 0 = 0.806664455557 + 0 + 0 + 0 = 0.806664455557
-
-
 	for (int i = 0; i < 4; ++i)
 	{
 		for (int j = 0; j < 4; ++j)
@@ -127,7 +123,6 @@ void CoordSystem::SetCameraTransformationMatrix(CoordinateStruct& cameraGlobalCo
 
 	//ZAxis = NormalizeVector(SubstractVectors(cameraGlobalCoord, targetGlobalCoord));
 	//XAxis = NormalizeVector(CrossProduct(cameraUpVect, ZAxis));
-	////YAxis = cameraUpVect; // ????
 	//YAxis = CrossProduct(ZAxis, XAxis);
 
 	//CameraTransformationMatrix = { XAxis.x, XAxis.y, XAxis.z, -(DotProduct(XAxis,cameraGlobalCoord)),
@@ -174,18 +169,6 @@ void CoordSystem::SetCameraTransformationMatrix(CoordinateStruct& cameraGlobalCo
 
 _3DMATRIX CoordSystem::GetViewMatrix(CoordinateStruct& Pos, CoordinateStruct& Target, CoordinateStruct& UpVect)
 {
-	/*Position[0] = 0.05;
-	Position[1] = -0.2;
-	Position[2] = -0.5f;
-
-	Look[0] = 0;
-	Look[1] = 0;
-	Look[2] = 1;
-
-	Up[0] = 0;
-	Up[1] = 1;
-	Up[2] = 0;*/
-
 	Position = Pos;
 	Look = Target;
 	Up = UpVect;
@@ -254,16 +237,13 @@ void CoordSystem::SetProjectionTransformationMatrix(float fov, float aspectRatio
 {
 	_3DMATRIX result;
 
-	//float radianFov = (fov / 2.0f) * (M_PI / 180.0f);
+	float radianFov = (fov / 2.0f) * (M_PI / 180.0f);
 
-	//float tanHalfFov = std::tan(fov / 2.0f);
-	float tanHalfFov =  tanf(fov * 0.5f);
+	float tanHalfFov = std::tan(fov / 2.0f);
+	//float tanHalfFov =  tan(fov * 0.5f);
 	float rangeInv = 1.0f / (nearPlane - farPlane);
 
-	// in glm
-	/*Result[2][2] = -(zFar + zNear) / (zFar - zNear);
-	Result[2][3] = -static_cast<T>(1);
-	Result[3][2] = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);*/
+
 
 	/*result = { 1.0f / (aspectRatio * tanHalfFov),	0,					0,						0,
 				0,									1.0f / tanHalfFov,	0,						0,
@@ -338,10 +318,11 @@ void CoordSystem::SetRotateYMatrix(float angle)
 						0,				0,				0,			1 };
 }
 
-void CoordSystem::SetRotateZMatrix(float angle)
+void CoordSystem::SetRotateZMatrix(float radianAngle)
 {
-	RotateZMatrix = { cos(angle),		-sin(angle),0,0,
-						sin(angle),		 cos(angle),0,0,
+
+	RotateZMatrix = { cos(radianAngle),		-sin(radianAngle),0,0,
+						sin(radianAngle),		 cos(radianAngle),0,0,
 						0,					0,		1,0,
 						0,					0,		0,1 };
 }
@@ -362,8 +343,8 @@ void CoordSystem::SetRotateMatrix(float angle, CoordinateStruct axis)
 
 void CoordSystem::SetRotationMatrixOptimized(float angle, const CoordinateStruct& axis)
 {
-	float rcos = cos(angle);
-	float rsin = sin(angle);
+	float rcos = std::cos(angle);
+	float rsin = std::sin(angle);
 
 	float u = axis.x;
 	float v = axis.y;
