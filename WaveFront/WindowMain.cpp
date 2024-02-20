@@ -4,19 +4,25 @@
 
 #include <windows.h>
 #include "CoordSystem.h"
-#include "TestGLM.h"
+//#include "TestGLM.h"
 
 
 
 //#define FrameHeight 720
 //#define FrameWidth 960
-#define FrameHeight 600
-#define FrameWidth 800
+#define FrameHeight 720
+#define FrameWidth 1280
 
 RGBQUAD frameBuffer[FrameHeight][FrameWidth];
 
 std::vector<CoordinateStruct> vertexes;
+std::vector<HomogeneousCoordinateStruct> vertexesOutp;
 std::vector<int> indexes;
+HomogeneousCoordinateStruct pointHomogeneous;
+CoordSystem* modelCoordSystem;
+
+float angle = 0.0f;
+
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd);
@@ -25,122 +31,32 @@ void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void plotLineWithErr(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void Render();
+void UpdateVectors();
 
-
+RGBQUAD color = { 255, 255, 255, 0 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-	std::vector<CoordinateStruct> v2;
-	v2.push_back({ -0.1f, -0.1f, -0.1f });
-	v2.push_back({ -0.1f, 0.1f, -0.1f });
-	v2.push_back({ 0.1f, 0.1f, -0.1f });
-	v2.push_back({ 0.1f, -0.1f, -0.1f });
-	v2.push_back({ -0.1f, -0.1f, 0.1f });
-	v2.push_back({ -0.1f, 0.1f, 0.1f });
-	v2.push_back({ 0.1f, 0.1f, 0.1f });
-	v2.push_back({ 0.1f, -0.1f, 0.1f });
-
-	std::vector<int> indices;
-
-	indices.push_back(0);
-	indices.push_back(1);
-	indices.push_back(2);
-	indices.push_back(0);
-	indices.push_back(2);
-	indices.push_back(3);
-
-	indices.push_back(5);
-	indices.push_back(7);
-	indices.push_back(4);
-	indices.push_back(5);
-	indices.push_back(6);
-	indices.push_back(7);
-
-	indices.push_back(4);
-	indices.push_back(5);
-	indices.push_back(1);
-	indices.push_back(4);
-	indices.push_back(1);
-	indices.push_back(0);
-
-	indices.push_back(3);
-	indices.push_back(2);
-	indices.push_back(6);
-	indices.push_back(3);
-	indices.push_back(6);
-	indices.push_back(7);
-
-	indices.push_back(1);
-	indices.push_back(5);
-	indices.push_back(6);
-	indices.push_back(1);
-	indices.push_back(6);
-	indices.push_back(2);
-
-	indices.push_back(4);
-	indices.push_back(0);
-	indices.push_back(3);
-	indices.push_back(4);
-	indices.push_back(3);
-	indices.push_back(7);
-
 	ObjLoader* loader = new ObjLoader();
 	//CoordSystem* coord = new CoordSystem({ 10,20,20 });
 	//CoordSystem* ViewCoord = new CoordSystem({ -3.0f,0.0f,0.0f });
-	CoordSystem* modelCoordSystem = new CoordSystem({ 0.0f,0.0f,0.0f });
+	modelCoordSystem = new CoordSystem({ 0.0f,0.0f,0.0f });
 
 	//std::string res = loader->GetOutput();
 	vertexes = loader->GetVetrexVector();
 	indexes = loader->GetIndexes();
 
+	vertexesOutp.resize(vertexes.size());
+
 
 	/////
 	
-	//modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateZMatrix * modelCoordSystem->GlobalTransformationMatrix;
-	modelCoordSystem->SetRotateZMatrix(GetRadians(180.0f));
-	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->MultiplyMatrixByMatrix(modelCoordSystem->RotateZMatrix, modelCoordSystem->GlobalTransformationMatrix);
-	//modelCoordSystem->SetMovementMatrix({ 0,-0.2,0 });
-	//modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->MultiplyMatrixByMatrix(modelCoordSystem->MovementMatrix, modelCoordSystem->GlobalTransformationMatrix);
-	//cube->SetProjectionTransformationMatrix(45.0f, ((float)FrameWidth / (float)FrameHeight), 0.1f, 100.0f);
-	//cube->SetProjectionTransformationMatrix(3.14f / 2.0f, ((float)FrameWidth / (float)FrameHeight), 10.0f, 100.0f);
-	modelCoordSystem->SetProjectionTransformationMatrix(45.0f, ((float)FrameWidth / (float)FrameHeight), 10.0f, 100.0f);
+
+	//UpdateVectors();
+	Render();
 
 
-	/*CoordinateStruct cameraGlobalCoord = {4,3,3};
-	CoordinateStruct targetGlobalCoord = {0,0,0};
-	CoordinateStruct cameraUpVect = {0,1,0};*/
-
-	CoordinateStruct cameraGlobalCoord = { 0.05f,0.2f,-2.0f };
-	CoordinateStruct targetGlobalCoord = { 0,0.3f,1 };
-	CoordinateStruct cameraUpVect = { 0,1,0 };
-
-	modelCoordSystem->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
-
-	//cube->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0);
-	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
-
-	HomogeneousCoordinateStruct pointHomogeneous;
-	for (int i = 0; i < vertexes.size(); i++)
-	//for (int i = 0; i < v2.size(); i++)
-	{
-		//pointHomogeneous = { v2[i].x, v2[i].y, v2[i].z, 1.0f };
-		pointHomogeneous = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1.0f };
-
-		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
-		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
-		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
-		pointHomogeneous *= (1 / pointHomogeneous.w);
-		pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
-
-
-		vertexes[i].x = pointHomogeneous.x;
-		vertexes[i].y = pointHomogeneous.y;
-		vertexes[i].z = pointHomogeneous.z;
-
-		/*v2[i].x = pointHomogeneous.x;
-		v2[i].y = pointHomogeneous.y;
-		v2[i].z = pointHomogeneous.z;*/
-	}
+	
 	/////
 
 	// Register the window class.
@@ -178,21 +94,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	ShowWindow(hwnd, nCmdShow);
 
-	/*for (int i = 0; i < indexes.size(); i += 3)
-	{
-		plotLine(frameBuffer, vertexes[indexes[i] - 1].x, vertexes[indexes[i] - 1].y, vertexes[indexes[i + 1] - 1].x, vertexes[indexes[i + 1] - 1].y, { 255,255,255,0 });
-		plotLine(frameBuffer, vertexes[indexes[i + 1] - 1].x, vertexes[indexes[i + 1] - 1].y, vertexes[indexes[i + 2] - 1].x, vertexes[indexes[i + 2] - 1].y, { 255,255,255,0 });
-		plotLine(frameBuffer, vertexes[indexes[i + 2] - 1].x, vertexes[indexes[i + 2] - 1].y, vertexes[indexes[i] - 1].x, vertexes[indexes[i] - 1].y, { 255,255,255,0 });
-	}*/
-
-	/*for (int i = 0; i < indices.size(); i += 3)
-	{
-		plotLine(frameBuffer, v2[indices[i]].x, v2[indices[i]].y, v2[indices[i + 1]].x, v2[indices[i + 1]].y, { 255,255,255,0 });
-		plotLine(frameBuffer, v2[indices[i + 1]].x, v2[indices[i + 1]].y, v2[indices[i + 2]].x, v2[indices[i + 2]].y, { 255,255,255,0 });
-		plotLine(frameBuffer, v2[indices[i + 2]].x, v2[indices[i + 2]].y, v2[indices[i]].x, v2[indices[i]].y, { 255,255,255,0 });
-	}*/
-
-
 	// Run the message loop.
 
 	MSG msg = { };
@@ -201,7 +102,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
-		Render();
 	}
 
 	return 0;
@@ -220,6 +120,28 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
+	case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case VK_LEFT:
+			// Process the LEFT ARROW key. 
+			Render();
+			ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
+			return 0;
+
+		case VK_RIGHT:
+			// Process the RIGHT ARROW key. 
+			return 0;
+
+		case VK_UP:
+			// Process the UP ARROW key. 
+			return 0;
+
+		case VK_DOWN:
+			// Process the DOWN ARROW key. 
+			return 0;
+
+		}
 	default:
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
@@ -268,6 +190,7 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 	DeleteObject(hBitMap);
 	DeleteDC(srcHdc);
 	ReleaseDC(hWnd, hdc);
+
 }
 
 void SetPoint(void* buffer, int x, int y, RGBQUAD color)
@@ -280,12 +203,63 @@ void SetPoint(void* buffer, int x, int y, RGBQUAD color)
 
 void Render()
 {
+	std::memset(frameBuffer, 0, sizeof(frameBuffer));
+
+	UpdateVectors();
+
 	for (int i = 0; i < indexes.size(); i += 3)
 	{
-		plotLine(frameBuffer, vertexes[indexes[i] - 1].x, vertexes[indexes[i] - 1].y, vertexes[indexes[i + 1] - 1].x, vertexes[indexes[i + 1] - 1].y, { 255,255,255,0 });
+		/*plotLine(frameBuffer, vertexesOutp[indexes[i] - 1].x, vertexes[indexes[i] - 1].y, vertexes[indexes[i + 1] - 1].x, vertexes[indexes[i + 1] - 1].y, { 255,255,255,0 });
 		plotLine(frameBuffer, vertexes[indexes[i + 1] - 1].x, vertexes[indexes[i + 1] - 1].y, vertexes[indexes[i + 2] - 1].x, vertexes[indexes[i + 2] - 1].y, { 255,255,255,0 });
-		plotLine(frameBuffer, vertexes[indexes[i + 2] - 1].x, vertexes[indexes[i + 2] - 1].y, vertexes[indexes[i] - 1].x, vertexes[indexes[i] - 1].y, { 255,255,255,0 });
+		plotLine(frameBuffer, vertexes[indexes[i + 2] - 1].x, vertexes[indexes[i + 2] - 1].y, vertexes[indexes[i] - 1].x, vertexes[indexes[i] - 1].y, { 255,255,255,0 });*/
+
+		plotLine(frameBuffer, vertexesOutp[indexes[i] - 1].x, vertexesOutp[indexes[i] - 1].y,
+			vertexesOutp[indexes[i + 1] - 1].x, vertexesOutp[indexes[i + 1] - 1].y, color);
+
+		plotLine(frameBuffer, vertexesOutp[indexes[i + 1] - 1].x, vertexesOutp[indexes[i + 1] - 1].y,
+			vertexesOutp[indexes[i + 2] - 1].x, vertexesOutp[indexes[i + 2] - 1].y, color);
+
+		plotLine(frameBuffer, vertexesOutp[indexes[i + 2] - 1].x, vertexesOutp[indexes[i + 2] - 1].y,
+			vertexesOutp[indexes[i] - 1].x, vertexesOutp[indexes[i] - 1].y, color);
 	}
+}
+
+void UpdateVectors()
+{
+	modelCoordSystem->SetRotateYMatrix(GetRadians(angle));
+	//modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->MultiplyMatrixByMatrix(modelCoordSystem->RotateYMatrix, modelCoordSystem->GlobalTransformationMatrix);
+	//modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix * modelCoordSystem->GlobalTransformationMatrix;
+	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix ;
+
+	modelCoordSystem->SetProjectionTransformationMatrix(45.0f, ((float)FrameWidth / (float)FrameHeight), 10.0f, 100.0f);
+
+	CoordinateStruct cameraGlobalCoord = { 0.05f,0.2f,-1.5f };
+	//CoordinateStruct cameraGlobalCoord = { 0.0f,0.f,-5.0f };
+	CoordinateStruct targetGlobalCoord = { 0,0.3f,1 };
+	CoordinateStruct cameraUpVect = { 0,1,0 };
+	modelCoordSystem->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
+
+	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
+
+	for (int i = 0; i < vertexes.size(); i++)
+	{
+		pointHomogeneous = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1.0f };
+
+		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
+		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
+		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
+		pointHomogeneous *= (1 / pointHomogeneous.w);
+		pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
+
+
+		/*vertexes[i].x = pointHomogeneous.x;
+		vertexes[i].y = pointHomogeneous.y;
+		vertexes[i].z = pointHomogeneous.z;*/
+
+		vertexesOutp[i] = pointHomogeneous;
+	}
+
+	angle = angle + 5.0f;
 }
 
 void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)

@@ -1,12 +1,12 @@
 #include "CoordSystem.h"
 
 
-HomogeneousCoordinateStruct CoordSystem::ToGlobalCoords(HomogeneousCoordinateStruct local)
-{
-	//return AddVectors((this->MultiplyMatByVector(GlobalTransformationMatrix,local)), Center);
-	HomogeneousCoordinateStruct cent = { Center.x, Center.y, Center.z, 1.0f };
-	return AddHomogeneousVectors((this->MultiplyMatByVector(GlobalTransformationMatrix, local)), cent);
-}
+//HomogeneousCoordinateStruct CoordSystem::ToGlobalCoords(HomogeneousCoordinateStruct local)
+//{
+//	//return AddVectors((this->MultiplyMatByVector(GlobalTransformationMatrix,local)), Center);
+//	HomogeneousCoordinateStruct cent = { Center.x, Center.y, Center.z, 1.0f };
+//	return AddHomogeneousVectors((this->MultiplyMatByVector(GlobalTransformationMatrix, local)), cent);
+//}
 
 CoordSystem::CoordSystem(CoordinateStruct Translation)
 {
@@ -257,8 +257,8 @@ void CoordSystem::SetProjectionTransformationMatrix(float fov, float aspectRatio
 
 	result = { (1.0f / (aspectRatio * tanHalfFov)),	0,					0,													0,
 				0,									1.0f / tanHalfFov,	0,													0,
-				0,									0,					(farPlane) / (farPlane - nearPlane),				1,
-				0,									0,					-(farPlane * nearPlane) / (farPlane - nearPlane),	0 };
+				0,									0,					(farPlane) / (farPlane - nearPlane),				-1,
+				0,									0,					(farPlane * nearPlane) / (farPlane - nearPlane),	0 };
 
 	ProjectionTransformationMatrix = result;
 }
@@ -281,10 +281,10 @@ void CoordSystem::SetViewPortTransformationMatrix(float width, float height, flo
 
 
 
-void CoordSystem::MoveSystem(CoordinateStruct vect)
-{
-	Center = AddVectors(Center, vect);
-}
+//void CoordSystem::MoveSystem(CoordinateStruct vect)
+//{
+//	Center = AddVectors(Center, vect);
+//}
 
 void CoordSystem::SetMovementMatrix(CoordinateStruct Translation)
 {
@@ -368,3 +368,17 @@ void CoordSystem::SetRotationMatrixOptimized(float angle, const CoordinateStruct
 	matrix[2][2] = rcos + w * w * (1 - rcos);*/
 }
 
+_3DMATRIX _3DMATRIX::operator*(const _3DMATRIX& a)
+{
+	_3DMATRIX result;
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			result.m[i][j] = 0.f;
+			for (int k = 0; k < 4; k++) {
+				result.m[i][j] += m[i][k] * a.m[k][j]; // rows * col
+			}
+		}
+	}
+	return result;
+}

@@ -16,6 +16,8 @@ typedef struct _3DMATRIX {
         };
         float m[4][4];
     };
+
+    _3DMATRIX operator*(const _3DMATRIX& a);
 }; 
 
 struct HomogeneousCoordinateStruct
@@ -49,18 +51,18 @@ inline HomogeneousCoordinateStruct AddHomogeneousVectors(const HomogeneousCoordi
     return result;
 }
 
-inline _3DMATRIX operator*(_3DMATRIX const& m1, _3DMATRIX const& m2)
-{
-    _3DMATRIX result;
-
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            for (int k = 0; k < 4; k++)
-                result.m[i][j] += m1.m[i][k] * m2.m[k][j];
-        }
-    }
-    return result;
-}
+//inline _3DMATRIX operator*(_3DMATRIX const& m1, _3DMATRIX const& m2)
+//{
+//    _3DMATRIX result;
+//
+//    for (int i = 0; i < 4; i++) {
+//        for (int j = 0; j < 4; j++) {
+//            for (int k = 0; k < 4; k++)
+//                result.m[i][j] += m1.m[i][k] * m2.m[k][j];
+//        }
+//    }
+//    return result;
+//}
 
 inline HomogeneousCoordinateStruct operator* (HomogeneousCoordinateStruct& p, const _3DMATRIX& m) 
 {
@@ -89,7 +91,6 @@ inline float GetRadians(float angle)
 
 class CoordSystem
 {
-    CoordinateStruct Center;
     CoordinateStruct XAxis, YAxis, ZAxis;
 
 
