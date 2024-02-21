@@ -1,12 +1,6 @@
 #include "CoordSystem.h"
 
 
-//HomogeneousCoordinateStruct CoordSystem::ToGlobalCoords(HomogeneousCoordinateStruct local)
-//{
-//	//return AddVectors((this->MultiplyMatByVector(GlobalTransformationMatrix,local)), Center);
-//	HomogeneousCoordinateStruct cent = { Center.x, Center.y, Center.z, 1.0f };
-//	return AddHomogeneousVectors((this->MultiplyMatByVector(GlobalTransformationMatrix, local)), cent);
-//}
 
 CoordSystem::CoordSystem(CoordinateStruct Translation)
 {
@@ -118,52 +112,28 @@ HomogeneousCoordinateStruct CoordSystem::TransformVector(HomogeneousCoordinateSt
 
 void CoordSystem::SetCameraTransformationMatrix(CoordinateStruct& cameraGlobalCoord, CoordinateStruct& targetGlobalCoord, CoordinateStruct& cameraUpVect)
 {
-	CameraTransformationMatrix = GetViewMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
+	//CameraTransformationMatrix = GetViewMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
 
 
 	//ZAxis = NormalizeVector(SubstractVectors(cameraGlobalCoord, targetGlobalCoord));
-	//XAxis = NormalizeVector(CrossProduct(cameraUpVect, ZAxis));
-	//YAxis = CrossProduct(ZAxis, XAxis);
+	ZAxis = NormalizeVector(SubstractVectors(targetGlobalCoord, cameraGlobalCoord));
+	XAxis = NormalizeVector(CrossProduct(cameraUpVect, ZAxis));
+	YAxis = CrossProduct(ZAxis, XAxis);
 
-	//CameraTransformationMatrix = { XAxis.x, XAxis.y, XAxis.z, -(DotProduct(XAxis,cameraGlobalCoord)),
-	//								YAxis.x, YAxis.y, YAxis.z, -(DotProduct(YAxis,cameraGlobalCoord)),
-	//								ZAxis.x, ZAxis.y, ZAxis.z, -(DotProduct(ZAxis,cameraGlobalCoord)),
-	//									0,		0,		 0,		 1 };
+	float dot1 = -(DotProduct(XAxis, cameraGlobalCoord));
+	float dot2 = -(DotProduct(YAxis, cameraGlobalCoord));
+	float dot3 = -(DotProduct(ZAxis, cameraGlobalCoord));
 
-	/*ZAxis = (SubstractVectors(targetGlobalCoord, cameraGlobalCoord));
-	ZAxis = NormalizeVector(ZAxis);
-	XAxis = CrossProduct(ZAxis, cameraUpVect);
-	XAxis = NormalizeVector(XAxis);
-	YAxis = CrossProduct(XAxis, ZAxis);
-
-
-	float sus1 = -(DotProduct(XAxis, cameraGlobalCoord));
-	float sus2 = -(DotProduct(YAxis, cameraGlobalCoord));
-	float sus3 = (DotProduct(ZAxis, cameraGlobalCoord));
-
-	CameraTransformationMatrix = { XAxis.x, XAxis.y, XAxis.z, sus1,
-									YAxis.x, YAxis.y, YAxis.z, sus2,
-									-ZAxis.x, -ZAxis.y, -ZAxis.z, sus3,
+	/*CameraTransformationMatrix = { XAxis.x, XAxis.y, XAxis.z, -(DotProduct(XAxis,cameraGlobalCoord)),
+									YAxis.x, YAxis.y, YAxis.z, -(DotProduct(YAxis,cameraGlobalCoord)),
+									ZAxis.x, ZAxis.y, ZAxis.z, -(DotProduct(ZAxis,cameraGlobalCoord)),
 										0,		0,		 0,		 1 };*/
 
-	/*vec<3, T, Q> const f(normalize(center - eye));
-	vec<3, T, Q> const s(normalize(cross(f, up)));
-	vec<3, T, Q> const u(cross(s, f));
 
-	mat<4, 4, T, Q> Result(1);
-	Result[0][0] = s.x;
-	Result[1][0] = s.y;
-	Result[2][0] = s.z;
-	Result[0][1] = u.x;
-	Result[1][1] = u.y;
-	Result[2][1] = u.z;
-	Result[0][2] = -f.x;
-	Result[1][2] = -f.y;
-	Result[2][2] = -f.z;
-	Result[3][0] = -dot(s, eye);
-	Result[3][1] = -dot(u, eye);
-	Result[3][2] = dot(f, eye);
-	return Result;*/
+		CameraTransformationMatrix = { XAxis.x, YAxis.x, ZAxis.x, 0,
+										XAxis.y, YAxis.y, ZAxis.y, 0,
+										XAxis.z, YAxis.z, ZAxis.z, 0,
+										dot1,	 dot2,		dot3, 1 };
 
 }
 
@@ -199,28 +169,20 @@ _3DMATRIX CoordSystem::GetViewMatrix(CoordinateStruct& Pos, CoordinateStruct& Ta
 	CoordinateStruct U;
 	U.x = Up.x; U.y = Up.y; U.z = Up.z;
 	CoordinateStruct L;
-	L.x = Look.x; L.y = Look.y; L.z = Look.z;
+	L.x = Pos.x - Look.x; L.y = Pos.y - Look.y; L.z = Pos.z - Look.z;
 	CoordinateStruct P;
 	P.x = Position.x; P.y = Position.y; P.z = Position.z;
 
-	//L.Normalize();
 	L = NormalizeVector(L);
 
-	//U = L.Cross(R);
 	U = CrossProduct(L, R);
-	//U.Normalize();
 	U = NormalizeVector(U);
 
-	//R = U.Cross(L);
 	R = CrossProduct(U, L);
-	//R.Normalize();
 	R = NormalizeVector(R);
 
-	//float X = -R.Dot(P);
 	float X = -DotProduct(R, P);
-	//float Y = -U.Dot(P);
 	float Y = -DotProduct(U, P);
-	//float Z = -L.Dot(P);
 	float Z = -DotProduct(L, P);
 
 	_3DMATRIX T;
@@ -228,7 +190,7 @@ _3DMATRIX CoordSystem::GetViewMatrix(CoordinateStruct& Pos, CoordinateStruct& Ta
 	T.m[0][0] = R.x; T.m[0][1] = U.x; T.m[0][2] = L.x; T.m[0][3] = 0;
 	T.m[1][0] = R.y; T.m[1][1] = U.y; T.m[1][2] = L.y; T.m[1][3] = 0;
 	T.m[2][0] = R.z; T.m[2][1] = U.z; T.m[2][2] = L.z; T.m[2][3] = 0;
-	T.m[3][0] = X; T.m[3][1] = Y; T.m[3][2] = Z; T.m[3][3] = 1;
+	T.m[3][0] = X; T.m[3][1] = Y;	  T.m[3][2] = Z;	   T.m[3][3] = 1;
 
 	return T;
 }

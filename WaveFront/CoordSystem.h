@@ -51,26 +51,10 @@ inline HomogeneousCoordinateStruct AddHomogeneousVectors(const HomogeneousCoordi
     return result;
 }
 
-//inline _3DMATRIX operator*(_3DMATRIX const& m1, _3DMATRIX const& m2)
-//{
-//    _3DMATRIX result;
-//
-//    for (int i = 0; i < 4; i++) {
-//        for (int j = 0; j < 4; j++) {
-//            for (int k = 0; k < 4; k++)
-//                result.m[i][j] += m1.m[i][k] * m2.m[k][j];
-//        }
-//    }
-//    return result;
-//}
-
 inline HomogeneousCoordinateStruct operator* (HomogeneousCoordinateStruct& p, const _3DMATRIX& m) 
 {
     HomogeneousCoordinateStruct t;
-    /*for(int i=0;i<4;i++){
-        for(int j=0;j<4;j++)
-            t[i] += p[j] * m.mat[j][i];
-    }*/
+
     t.x = p.x * m.m[0][0] + p.y * m.m[1][0] + p.z * m.m[2][0] + p.w * m.m[3][0];
     t.y = p.x * m.m[0][1] + p.y * m.m[1][1] + p.z * m.m[2][1] + p.w * m.m[3][1];
     t.z = p.x * m.m[0][2] + p.y * m.m[1][2] + p.z * m.m[2][2] + p.w * m.m[3][2];
@@ -87,6 +71,19 @@ inline HomogeneousCoordinateStruct operator*=(HomogeneousCoordinateStruct& p, co
 inline float GetRadians(float angle)
 {
     return (angle) * (M_PI / 180.0f);
+}
+
+inline CoordinateStruct SphericalToCartesian(float radius, float phiAngle, float thetaAngle)
+{
+    CoordinateStruct res;
+
+    float theta = GetRadians(thetaAngle);
+    float phi = GetRadians(phiAngle);
+
+    res.x = radius * sin(theta) * cos(phi);
+    res.y = radius * sin(theta) * sin(phi);
+    res.z = radius * cos(theta);
+    return res;
 }
 
 class CoordSystem

@@ -7,13 +7,19 @@
 //#include "TestGLM.h"
 
 
-
-//#define FrameHeight 720
-//#define FrameWidth 960
 #define FrameHeight 720
 #define FrameWidth 1280
 
+
+
+//RECT clientRect;
+//LONG FrameHeight, FrameWidth;
+
 RGBQUAD frameBuffer[FrameHeight][FrameWidth];
+//RGBQUAD frameBuffer[720][1280];
+
+RGBQUAD color = { 255, 255, 255, 0 };
+
 
 std::vector<CoordinateStruct> vertexes;
 std::vector<HomogeneousCoordinateStruct> vertexesOutp;
@@ -21,7 +27,14 @@ std::vector<int> indexes;
 HomogeneousCoordinateStruct pointHomogeneous;
 CoordSystem* modelCoordSystem;
 
-float angle = 0.0f;
+float yAngleObject = 0.0f;
+float xAngleObject = 0.0f;
+float xCamera = 0.0f;
+float yCamera = 0.0f;
+float zCamera = 1.5f;
+float rSphere = zCamera;
+float phiAngleSphere = 0.0f;
+float thetaAngleSphere = 0.0f;
 
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -33,7 +46,6 @@ void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void Render();
 void UpdateVectors();
 
-RGBQUAD color = { 255, 255, 255, 0 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
@@ -51,12 +63,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	/////
 	
-
 	//UpdateVectors();
 	Render();
 
-
-	
 	/////
 
 	// Register the window class.
@@ -102,6 +111,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
+		Render();
+		ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
 	}
 
 	return 0;
@@ -117,6 +128,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_PAINT:
 	{
+		Render();
 		ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
@@ -125,23 +137,55 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 		case VK_LEFT:
 			// Process the LEFT ARROW key. 
-			Render();
-			ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
+			yAngleObject -= 5.0f;
+			/*Render();
+			ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);*/
 			return 0;
 
 		case VK_RIGHT:
 			// Process the RIGHT ARROW key. 
+			yAngleObject += 5.0f;
+			/*Render();
+			ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);*/
 			return 0;
 
 		case VK_UP:
 			// Process the UP ARROW key. 
+			xAngleObject += 5.0f;
+			/*Render();
+			ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);*/
 			return 0;
 
 		case VK_DOWN:
 			// Process the DOWN ARROW key. 
+			xAngleObject -= 5.0f;
 			return 0;
 
+		case 'W':
+			zCamera += 0.05f;
+			return 0;
+
+		case 'S':
+			zCamera -= 0.05f;
+			return 0;
+
+		case 'Z':
+			phiAngleSphere += 5.f;
+			return 0;
+
+		case 'X':
+			phiAngleSphere -= 5.f;
+			return 0;
+
+		case 'C':
+			thetaAngleSphere += 5.f;
+			return 0;
+
+		case 'V':
+			thetaAngleSphere -= 5.f;
+			return 0;
 		}
+		
 	default:
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
@@ -226,16 +270,16 @@ void Render()
 
 void UpdateVectors()
 {
-	modelCoordSystem->SetRotateYMatrix(GetRadians(angle));
-	//modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->MultiplyMatrixByMatrix(modelCoordSystem->RotateYMatrix, modelCoordSystem->GlobalTransformationMatrix);
-	//modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix * modelCoordSystem->GlobalTransformationMatrix;
-	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix ;
+	modelCoordSystem->SetRotateYMatrix(GetRadians(yAngleObject));
+	modelCoordSystem->SetRotateXMatrix(GetRadians(xAngleObject));
+	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix * modelCoordSystem->RotateXMatrix;
 
 	modelCoordSystem->SetProjectionTransformationMatrix(45.0f, ((float)FrameWidth / (float)FrameHeight), 10.0f, 100.0f);
 
-	CoordinateStruct cameraGlobalCoord = { 0.05f,0.2f,-1.5f };
+	CoordinateStruct cameraGlobalCoord = { SphericalToCartesian(rSphere, phiAngleSphere, thetaAngleSphere)};
+	//CoordinateStruct cameraGlobalCoord = { xCamera,yCamera,zCamera };
 	//CoordinateStruct cameraGlobalCoord = { 0.0f,0.f,-5.0f };
-	CoordinateStruct targetGlobalCoord = { 0,0.3f,1 };
+	CoordinateStruct targetGlobalCoord = { 0,0.3f,0.5f };
 	CoordinateStruct cameraUpVect = { 0,1,0 };
 	modelCoordSystem->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
 
@@ -252,14 +296,9 @@ void UpdateVectors()
 		pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
 
 
-		/*vertexes[i].x = pointHomogeneous.x;
-		vertexes[i].y = pointHomogeneous.y;
-		vertexes[i].z = pointHomogeneous.z;*/
-
 		vertexesOutp[i] = pointHomogeneous;
 	}
 
-	angle = angle + 5.0f;
 }
 
 void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
