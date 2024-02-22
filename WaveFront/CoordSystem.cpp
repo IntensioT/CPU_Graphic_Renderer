@@ -105,7 +105,6 @@ HomogeneousCoordinateStruct CoordSystem::TransformVector(HomogeneousCoordinateSt
 	SetRotationMatrixOptimized(angle, axis);
 	SetMovementMatrix(translation);
 	_3DMATRIX ModelMatrix = MultiplyMatrixByMatrix(MovementMatrix, MultiplyMatrixByMatrix(RotationMatrix, ScaleMatrix));
-	//HomogeneousCoordinateStruct res = MultiplyMatByVector(MovementMatrix , MultiplyMatByVector(RotationMatrix , MultiplyMatByVector(ScaleMatrix, originalVector)));
 	HomogeneousCoordinateStruct res = MultiplyMatByVector(ModelMatrix, originalVector);
 	return res;
 }

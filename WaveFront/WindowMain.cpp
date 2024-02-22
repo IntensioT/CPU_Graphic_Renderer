@@ -4,19 +4,14 @@
 
 #include <windows.h>
 #include "CoordSystem.h"
+#include "Triangle.h"
 //#include "TestGLM.h"
 
 
-#define FrameHeight 720
-#define FrameWidth 1280
 
+LONG FrameHeight = 720, FrameWidth = 1280;
 
-
-//RECT clientRect;
-//LONG FrameHeight, FrameWidth;
-
-RGBQUAD frameBuffer[FrameHeight][FrameWidth];
-//RGBQUAD frameBuffer[720][1280];
+RGBQUAD frameBuffer[720][1280];
 
 RGBQUAD color = { 255, 255, 255, 0 };
 
@@ -31,10 +26,13 @@ float yAngleObject = 0.0f;
 float xAngleObject = 0.0f;
 float xCamera = 0.0f;
 float yCamera = 0.0f;
-float zCamera = 1.5f;
+float zCamera = 5.5f;
 float rSphere = zCamera;
-float phiAngleSphere = 0.0f;
+float phiAngleSphere = 90.0f;
 float thetaAngleSphere = 0.0f;
+
+float zNear = 10.0f;
+float zFar = 100.0f;
 
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -45,13 +43,13 @@ void plotLineWithErr(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color
 void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void Render();
 void UpdateVectors();
+void UpdateWindowSize(HWND hWnd);
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	ObjLoader* loader = new ObjLoader();
-	//CoordSystem* coord = new CoordSystem({ 10,20,20 });
-	//CoordSystem* ViewCoord = new CoordSystem({ -3.0f,0.0f,0.0f });
+
 	modelCoordSystem = new CoordSystem({ 0.0f,0.0f,0.0f });
 
 	//std::string res = loader->GetOutput();
@@ -60,10 +58,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	vertexesOutp.resize(vertexes.size());
 
+	std::vector<Triangle> polygons;
+	polygons.resize(indexes.size() / 3);
+	polygons = GetAllPolygons(vertexes, indexes);
 
 	/////
-	
-	//UpdateVectors();
+
 	Render();
 
 	/////
@@ -103,8 +103,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	ShowWindow(hwnd, nCmdShow);
 
-	// Run the message loop.
-
 	MSG msg = { };
 	while (GetMessage(&msg, NULL, 0, 0) > 0)
 	{
@@ -126,6 +124,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		return 0;
 
+	case WM_SIZE:
+		UpdateWindowSize(hwnd);
+		InvalidateRect(hwnd, NULL, TRUE);
+		return 0;
+
 	case WM_PAINT:
 	{
 		Render();
@@ -138,22 +141,16 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case VK_LEFT:
 			// Process the LEFT ARROW key. 
 			yAngleObject -= 5.0f;
-			/*Render();
-			ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);*/
 			return 0;
 
 		case VK_RIGHT:
 			// Process the RIGHT ARROW key. 
 			yAngleObject += 5.0f;
-			/*Render();
-			ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);*/
 			return 0;
 
 		case VK_UP:
 			// Process the UP ARROW key. 
 			xAngleObject += 5.0f;
-			/*Render();
-			ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);*/
 			return 0;
 
 		case VK_DOWN:
@@ -185,7 +182,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			thetaAngleSphere -= 5.f;
 			return 0;
 		}
-		
+
 	default:
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
@@ -253,9 +250,6 @@ void Render()
 
 	for (int i = 0; i < indexes.size(); i += 3)
 	{
-		/*plotLine(frameBuffer, vertexesOutp[indexes[i] - 1].x, vertexes[indexes[i] - 1].y, vertexes[indexes[i + 1] - 1].x, vertexes[indexes[i + 1] - 1].y, { 255,255,255,0 });
-		plotLine(frameBuffer, vertexes[indexes[i + 1] - 1].x, vertexes[indexes[i + 1] - 1].y, vertexes[indexes[i + 2] - 1].x, vertexes[indexes[i + 2] - 1].y, { 255,255,255,0 });
-		plotLine(frameBuffer, vertexes[indexes[i + 2] - 1].x, vertexes[indexes[i + 2] - 1].y, vertexes[indexes[i] - 1].x, vertexes[indexes[i] - 1].y, { 255,255,255,0 });*/
 
 		plotLine(frameBuffer, vertexesOutp[indexes[i] - 1].x, vertexesOutp[indexes[i] - 1].y,
 			vertexesOutp[indexes[i + 1] - 1].x, vertexesOutp[indexes[i + 1] - 1].y, color);
@@ -274,11 +268,10 @@ void UpdateVectors()
 	modelCoordSystem->SetRotateXMatrix(GetRadians(xAngleObject));
 	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix * modelCoordSystem->RotateXMatrix;
 
-	modelCoordSystem->SetProjectionTransformationMatrix(45.0f, ((float)FrameWidth / (float)FrameHeight), 10.0f, 100.0f);
+	modelCoordSystem->SetProjectionTransformationMatrix(45.0f, ((float)FrameWidth / (float)FrameHeight), zNear, zFar);
 
-	CoordinateStruct cameraGlobalCoord = { SphericalToCartesian(rSphere, phiAngleSphere, thetaAngleSphere)};
-	//CoordinateStruct cameraGlobalCoord = { xCamera,yCamera,zCamera };
-	//CoordinateStruct cameraGlobalCoord = { 0.0f,0.f,-5.0f };
+	CoordinateStruct cameraGlobalCoord = { SphericalToCartesian(rSphere, phiAngleSphere, thetaAngleSphere) };
+
 	CoordinateStruct targetGlobalCoord = { 0,0.3f,0.5f };
 	CoordinateStruct cameraUpVect = { 0,1,0 };
 	modelCoordSystem->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
@@ -292,13 +285,31 @@ void UpdateVectors()
 		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
-		pointHomogeneous *= (1 / pointHomogeneous.w);
-		pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
+
+
+		if (pointHomogeneous.w < 0.1 && pointHomogeneous.w > -0.1)
+		{
+			pointHomogeneous = { 0,0,0,1 };
+		}
+		else
+		{
+			pointHomogeneous *= (1 / pointHomogeneous.w);
+			pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
+		}
 
 
 		vertexesOutp[i] = pointHomogeneous;
 	}
 
+}
+
+void UpdateWindowSize(HWND hWnd)
+{
+	RECT clientRect;
+	GetClientRect(hWnd, &clientRect);
+
+	FrameHeight = clientRect.bottom - clientRect.top;
+	FrameWidth = clientRect.right - clientRect.left;
 }
 
 void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
