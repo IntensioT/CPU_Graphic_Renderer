@@ -81,8 +81,8 @@ inline CoordinateStruct SphericalToCartesian(float radius, float phiAngle, float
     float phi = GetRadians(phiAngle);
 
     res.x = radius * sin(theta) * cos(phi);
-    res.y = radius * sin(theta) * sin(phi);
-    res.z = radius * cos(theta);
+    res.z = radius * sin(theta) * sin(phi);
+    res.y = radius * cos(theta);
     return res;
 }
 

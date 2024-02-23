@@ -1,6 +1,6 @@
 #include "Triangle.h"
 
-Triangle GetTriangle(std::vector<CoordinateStruct> vec, std::vector<int> indicies)
+Triangle GetTriangle(std::vector<HomogeneousCoordinateStruct> vec, std::vector<int> indicies)
 {
 	Triangle result;
 
@@ -12,7 +12,7 @@ Triangle GetTriangle(std::vector<CoordinateStruct> vec, std::vector<int> indicie
 	return result;
 }
 
-std::vector<Triangle> GetAllPolygons(std::vector<CoordinateStruct> vectors, std::vector<int> indicies)
+std::vector<Triangle> GetAllPolygons(std::vector<HomogeneousCoordinateStruct> vectors, std::vector<int> indicies)
 {
 	std::vector<Triangle> triangles;
 

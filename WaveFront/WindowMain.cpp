@@ -18,6 +18,8 @@ RGBQUAD color = { 255, 255, 255, 0 };
 
 std::vector<CoordinateStruct> vertexes;
 std::vector<HomogeneousCoordinateStruct> vertexesOutp;
+std::vector<Triangle> polygons;
+std::vector<Triangle> polygonsOutp;
 std::vector<int> indexes;
 HomogeneousCoordinateStruct pointHomogeneous;
 CoordSystem* modelCoordSystem;
@@ -44,6 +46,8 @@ void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void Render();
 void UpdateVectors();
 void UpdateWindowSize(HWND hWnd);
+void UpdatePolygons();
+
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
@@ -57,10 +61,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	indexes = loader->GetIndexes();
 
 	vertexesOutp.resize(vertexes.size());
+	std::vector<HomogeneousCoordinateStruct> vertexesHomo;
+	vertexesHomo.resize(vertexes.size());
 
-	std::vector<Triangle> polygons;
+	for (int i = 0; i < vertexes.size(); i++)
+	{
+		vertexesHomo[i] = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1 };
+	}
+
 	polygons.resize(indexes.size() / 3);
-	polygons = GetAllPolygons(vertexes, indexes);
+	polygons = GetAllPolygons(vertexesHomo, indexes);
 
 	/////
 
@@ -260,6 +270,15 @@ void Render()
 		plotLine(frameBuffer, vertexesOutp[indexes[i + 2] - 1].x, vertexesOutp[indexes[i + 2] - 1].y,
 			vertexesOutp[indexes[i] - 1].x, vertexesOutp[indexes[i] - 1].y, color);
 	}
+
+	for (int i = 0; i < polygonsOutp.size(); i++)
+	{
+		int j = 0;
+			plotLine(frameBuffer, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, polygonsOutp[i].vectors[j + 1].x, polygonsOutp[i].vectors[j + 1].y, color);
+			plotLine(frameBuffer, polygonsOutp[i].vectors[j+1].x, polygonsOutp[i].vectors[j+1].y, polygonsOutp[i].vectors[j + 2].x, polygonsOutp[i].vectors[j + 2].y, color);
+			plotLine(frameBuffer, polygonsOutp[i].vectors[j+2].x, polygonsOutp[i].vectors[j+2].y, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, color);
+
+	}
 }
 
 void UpdateVectors()
@@ -272,7 +291,7 @@ void UpdateVectors()
 
 	CoordinateStruct cameraGlobalCoord = { SphericalToCartesian(rSphere, phiAngleSphere, thetaAngleSphere) };
 
-	CoordinateStruct targetGlobalCoord = { 0,0.3f,0.5f };
+	CoordinateStruct targetGlobalCoord = { 0,0.f,0.f };
 	CoordinateStruct cameraUpVect = { 0,1,0 };
 	modelCoordSystem->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
 
@@ -301,6 +320,38 @@ void UpdateVectors()
 		vertexesOutp[i] = pointHomogeneous;
 	}
 
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		UpdatePolygons();
+	}
+
+}
+
+void UpdatePolygons()
+{
+	Triangle polygon;
+	for (int i = 0; i < 3; i++)
+	{
+		pointHomogeneous = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1.0f };
+
+		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
+		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
+		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
+
+
+		if (pointHomogeneous.w < 0.1 && pointHomogeneous.w > -0.1)
+		{
+			pointHomogeneous = { 0,0,0,1 };
+		}
+		else
+		{
+			pointHomogeneous *= (1 / pointHomogeneous.w);
+			pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
+		}
+
+		polygon.vectors[i] = pointHomogeneous;
+	}
+	polygonsOutp.push_back(polygon);
 }
 
 void UpdateWindowSize(HWND hWnd)
