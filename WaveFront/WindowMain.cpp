@@ -28,7 +28,7 @@ float yAngleObject = 0.0f;
 float xAngleObject = 0.0f;
 float xCamera = 0.0f;
 float yCamera = 0.0f;
-float zCamera = 5.5f;
+float zCamera = 1.5f;
 float rSphere = zCamera;
 float phiAngleSphere = 90.0f;
 float thetaAngleSphere = 0.0f;
@@ -46,7 +46,7 @@ void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void Render();
 void UpdateVectors();
 void UpdateWindowSize(HWND hWnd);
-void UpdatePolygons();
+void UpdatePolygons(int polygonIterator);
 
 
 
@@ -71,6 +71,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	polygons.resize(indexes.size() / 3);
 	polygons = GetAllPolygons(vertexesHomo, indexes);
+	polygonsOutp.resize(polygons.size());
 
 	/////
 
@@ -170,10 +171,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		case 'W':
 			zCamera += 0.05f;
+			 rSphere += 0.05f;
 			return 0;
 
 		case 'S':
 			zCamera -= 0.05f;
+			rSphere -= 0.05f;
 			return 0;
 
 		case 'Z':
@@ -258,7 +261,7 @@ void Render()
 
 	UpdateVectors();
 
-	for (int i = 0; i < indexes.size(); i += 3)
+	/*for (int i = 0; i < indexes.size(); i += 3)
 	{
 
 		plotLine(frameBuffer, vertexesOutp[indexes[i] - 1].x, vertexesOutp[indexes[i] - 1].y,
@@ -269,14 +272,29 @@ void Render()
 
 		plotLine(frameBuffer, vertexesOutp[indexes[i + 2] - 1].x, vertexesOutp[indexes[i + 2] - 1].y,
 			vertexesOutp[indexes[i] - 1].x, vertexesOutp[indexes[i] - 1].y, color);
-	}
+	}*/
 
+	bool isInvisible = false;
 	for (int i = 0; i < polygonsOutp.size(); i++)
 	{
+		for (int j = 0; j < 3; j++)
+		{
+			if (polygonsOutp[i].vectors[j].x == 0 && polygonsOutp[i].vectors[j].y == 0 && polygonsOutp[i].vectors[j].z == 0 && polygonsOutp[i].vectors[j].w == 1)
+			{
+				isInvisible = true;
+				break;
+			}
+		}
+		if (isInvisible)
+		{
+			isInvisible = false;
+			continue;
+		}
+
 		int j = 0;
-			plotLine(frameBuffer, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, polygonsOutp[i].vectors[j + 1].x, polygonsOutp[i].vectors[j + 1].y, color);
-			plotLine(frameBuffer, polygonsOutp[i].vectors[j+1].x, polygonsOutp[i].vectors[j+1].y, polygonsOutp[i].vectors[j + 2].x, polygonsOutp[i].vectors[j + 2].y, color);
-			plotLine(frameBuffer, polygonsOutp[i].vectors[j+2].x, polygonsOutp[i].vectors[j+2].y, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, color);
+		plotLine(frameBuffer, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, polygonsOutp[i].vectors[j + 1].x, polygonsOutp[i].vectors[j + 1].y, color);
+		plotLine(frameBuffer, polygonsOutp[i].vectors[j + 1].x, polygonsOutp[i].vectors[j + 1].y, polygonsOutp[i].vectors[j + 2].x, polygonsOutp[i].vectors[j + 2].y, color);
+		plotLine(frameBuffer, polygonsOutp[i].vectors[j + 2].x, polygonsOutp[i].vectors[j + 2].y, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, color);
 
 	}
 }
@@ -291,13 +309,14 @@ void UpdateVectors()
 
 	CoordinateStruct cameraGlobalCoord = { SphericalToCartesian(rSphere, phiAngleSphere, thetaAngleSphere) };
 
-	CoordinateStruct targetGlobalCoord = { 0,0.f,0.f };
+	//CoordinateStruct targetGlobalCoord = { 0,0.f,0.f };
+	CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
 	CoordinateStruct cameraUpVect = { 0,1,0 };
 	modelCoordSystem->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
 
 	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
 
-	for (int i = 0; i < vertexes.size(); i++)
+	/*for (int i = 0; i < vertexes.size(); i++)
 	{
 		pointHomogeneous = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1.0f };
 
@@ -318,28 +337,29 @@ void UpdateVectors()
 
 
 		vertexesOutp[i] = pointHomogeneous;
-	}
+	}*/
 
 	for (int i = 0; i < polygons.size(); i++)
 	{
-		UpdatePolygons();
+		UpdatePolygons(i);
 	}
 
 }
 
-void UpdatePolygons()
+void UpdatePolygons(int polygonIterator)
 {
 	Triangle polygon;
 	for (int i = 0; i < 3; i++)
 	{
-		pointHomogeneous = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1.0f };
+		pointHomogeneous = polygons[polygonIterator].vectors[i];
+		//pointHomogeneous = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1.0f };
 
 		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 
 
-		if (pointHomogeneous.w < 0.1 && pointHomogeneous.w > -0.1)
+		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
 		{
 			pointHomogeneous = { 0,0,0,1 };
 		}
@@ -351,7 +371,7 @@ void UpdatePolygons()
 
 		polygon.vectors[i] = pointHomogeneous;
 	}
-	polygonsOutp.push_back(polygon);
+	polygonsOutp[polygonIterator] = polygon;
 }
 
 void UpdateWindowSize(HWND hWnd)
