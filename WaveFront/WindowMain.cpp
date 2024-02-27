@@ -30,8 +30,8 @@ float xCamera = 0.0f;
 float yCamera = 0.0f;
 float zCamera = 1.5f;
 float rSphere = zCamera;
-float phiAngleSphere = 90.0f;
-float thetaAngleSphere = 0.0f;
+float phiAngleSphere = 0.0f;
+float thetaAngleSphere = 90.0f;
 
 float zNear = 10.0f;
 float zFar = 100.0f;
@@ -120,8 +120,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
-		Render();
-		ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
+		//Render();
+		//ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
 	}
 
 	return 0;
@@ -152,47 +152,58 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case VK_LEFT:
 			// Process the LEFT ARROW key. 
 			yAngleObject -= 5.0f;
+			InvalidateRect(hwnd, NULL, TRUE);;
 			return 0;
 
 		case VK_RIGHT:
 			// Process the RIGHT ARROW key. 
 			yAngleObject += 5.0f;
+			InvalidateRect(hwnd, NULL, TRUE);;
 			return 0;
 
 		case VK_UP:
 			// Process the UP ARROW key. 
 			xAngleObject += 5.0f;
+			InvalidateRect(hwnd, NULL, TRUE);;
+
 			return 0;
 
 		case VK_DOWN:
 			// Process the DOWN ARROW key. 
 			xAngleObject -= 5.0f;
+			InvalidateRect(hwnd, NULL, TRUE);;
 			return 0;
 
 		case 'W':
 			zCamera += 0.05f;
 			 rSphere += 0.05f;
-			return 0;
+			 InvalidateRect(hwnd, NULL, TRUE);;
+			 return 0;
 
 		case 'S':
 			zCamera -= 0.05f;
 			rSphere -= 0.05f;
+			InvalidateRect(hwnd, NULL, TRUE);;
 			return 0;
 
 		case 'Z':
 			phiAngleSphere += 5.f;
+			InvalidateRect(hwnd, NULL, TRUE);;
 			return 0;
 
 		case 'X':
 			phiAngleSphere -= 5.f;
+			InvalidateRect(hwnd, NULL, TRUE);;
 			return 0;
 
 		case 'C':
 			thetaAngleSphere += 5.f;
+			InvalidateRect(hwnd, NULL, TRUE);;
 			return 0;
 
 		case 'V':
 			thetaAngleSphere -= 5.f;
+			InvalidateRect(hwnd, NULL, TRUE);;
 			return 0;
 		}
 
@@ -261,18 +272,6 @@ void Render()
 
 	UpdateVectors();
 
-	/*for (int i = 0; i < indexes.size(); i += 3)
-	{
-
-		plotLine(frameBuffer, vertexesOutp[indexes[i] - 1].x, vertexesOutp[indexes[i] - 1].y,
-			vertexesOutp[indexes[i + 1] - 1].x, vertexesOutp[indexes[i + 1] - 1].y, color);
-
-		plotLine(frameBuffer, vertexesOutp[indexes[i + 1] - 1].x, vertexesOutp[indexes[i + 1] - 1].y,
-			vertexesOutp[indexes[i + 2] - 1].x, vertexesOutp[indexes[i + 2] - 1].y, color);
-
-		plotLine(frameBuffer, vertexesOutp[indexes[i + 2] - 1].x, vertexesOutp[indexes[i + 2] - 1].y,
-			vertexesOutp[indexes[i] - 1].x, vertexesOutp[indexes[i] - 1].y, color);
-	}*/
 
 	bool isInvisible = false;
 	for (int i = 0; i < polygonsOutp.size(); i++)
@@ -316,28 +315,6 @@ void UpdateVectors()
 
 	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
 
-	/*for (int i = 0; i < vertexes.size(); i++)
-	{
-		pointHomogeneous = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1.0f };
-
-		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
-		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
-		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
-
-
-		if (pointHomogeneous.w < 0.1 && pointHomogeneous.w > -0.1)
-		{
-			pointHomogeneous = { 0,0,0,1 };
-		}
-		else
-		{
-			pointHomogeneous *= (1 / pointHomogeneous.w);
-			pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
-		}
-
-
-		vertexesOutp[i] = pointHomogeneous;
-	}*/
 
 	for (int i = 0; i < polygons.size(); i++)
 	{
