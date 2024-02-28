@@ -47,6 +47,7 @@ void Render();
 void UpdateVectors();
 void UpdateWindowSize(HWND hWnd);
 void UpdatePolygons(int polygonIterator);
+void BresenhamLineOptimised(void* buffer, HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color);
 
 
 
@@ -260,7 +261,7 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 
 void SetPoint(void* buffer, int x, int y, RGBQUAD color)
 {
-	if (x >= 0 && x <= static_cast<int>(FrameWidth - 1) && y >= 0 && y <= static_cast<int>(FrameHeight - 1))
+	if (x >= 0 && x <= (FrameWidth - 1) && y >= 0 && y <= (FrameHeight - 1))
 	{
 		reinterpret_cast<RGBQUAD*>(buffer)[y * FrameWidth + x] = color;
 	}
@@ -291,9 +292,13 @@ void Render()
 		}
 
 		int j = 0;
-		plotLine(frameBuffer, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, polygonsOutp[i].vectors[j + 1].x, polygonsOutp[i].vectors[j + 1].y, color);
+		/*plotLine(frameBuffer, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, polygonsOutp[i].vectors[j + 1].x, polygonsOutp[i].vectors[j + 1].y, color);
 		plotLine(frameBuffer, polygonsOutp[i].vectors[j + 1].x, polygonsOutp[i].vectors[j + 1].y, polygonsOutp[i].vectors[j + 2].x, polygonsOutp[i].vectors[j + 2].y, color);
-		plotLine(frameBuffer, polygonsOutp[i].vectors[j + 2].x, polygonsOutp[i].vectors[j + 2].y, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, color);
+		plotLine(frameBuffer, polygonsOutp[i].vectors[j + 2].x, polygonsOutp[i].vectors[j + 2].y, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, color);*/
+
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j], polygonsOutp[i].vectors[j + 1], color);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 1], polygonsOutp[i].vectors[j + 2], color);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 2], polygonsOutp[i].vectors[j], color);
 
 	}
 }
@@ -358,6 +363,51 @@ void UpdateWindowSize(HWND hWnd)
 
 	FrameHeight = clientRect.bottom - clientRect.top;
 	FrameWidth = clientRect.right - clientRect.left;
+}
+
+//void BresenhamLineOptimised(void * buffer , CoordinateStruct vectorA, CoordinateStruct vectorB, RGBQUAD color)
+void BresenhamLineOptimised(void * buffer , HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color)
+{
+	int x1 = (int)(vectorA.x);
+	int y1 = (int)(vectorA.y);
+	int x2 = (int)(vectorB.x);
+	int y2 = (int)(vectorB.y);
+
+	int dx = x2 - x1;
+	int dy = y2 - y1;
+	int w = std::abs(dx);
+	int h = std::abs(dy);
+	int l = max(w, h);
+
+	int sign = (dx >= 0) ? 1 : -1;
+	int mat11 = sign;
+	int mat12 = 0;
+	int mat21 = 0;
+	sign = (dy >= 0) ? 1 : -1;
+	int mat22 = 0;
+
+	if (w < h)
+	{
+		(mat11, mat12) = (mat12, mat11);
+		(mat21, mat22) = (mat22, mat21);
+	}
+	int y = 0;
+	int error = 0;
+	int errorDec = 2 * l;
+	int errorInc = 2 * min(w, h);
+
+	for (int x = 0; x <= l; x++)
+	{
+		int xt = x1 + mat11 * x + mat12 * y;
+		int yt = y1 + mat21 * x + mat22 * y;
+		SetPoint(buffer, xt, yt, color);
+
+		if ((error += errorInc) > l)
+		{
+			error -= errorDec;
+			y++;
+		}
+	}
 }
 
 void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
