@@ -5,13 +5,12 @@
 #include <windows.h>
 #include "CoordSystem.h"
 #include "Triangle.h"
-//#include "TestGLM.h"
 
 
 
 LONG FrameHeight = 720, FrameWidth = 1280;
 
-RGBQUAD frameBuffer[720][1280];
+RGBQUAD frameBuffer[1080][1920];
 
 RGBQUAD color = { 255, 255, 255, 0 };
 
@@ -40,13 +39,14 @@ float zFar = 100.0f;
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd);
 void SetPoint(void* buffer, int x, int y, RGBQUAD color = { 0,0,0,0 });
-void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void plotLineWithErr(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void Render();
 void UpdateVectors();
 void UpdateWindowSize(HWND hWnd);
 void UpdatePolygons(int polygonIterator);
+void BresenhamLineOptimised(void* buffer, HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color);
+
 
 
 
@@ -120,8 +120,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
-		//Render();
-		//ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
 	}
 
 	return 0;
@@ -152,58 +150,67 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case VK_LEFT:
 			// Process the LEFT ARROW key. 
 			yAngleObject -= 5.0f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case VK_RIGHT:
 			// Process the RIGHT ARROW key. 
 			yAngleObject += 5.0f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case VK_UP:
 			// Process the UP ARROW key. 
 			xAngleObject += 5.0f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
 
 			return 0;
 
 		case VK_DOWN:
 			// Process the DOWN ARROW key. 
 			xAngleObject -= 5.0f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case 'W':
 			zCamera += 0.05f;
-			 rSphere += 0.05f;
-			 InvalidateRect(hwnd, NULL, TRUE);;
-			 return 0;
+			rSphere += 0.05f;
+			InvalidateRect(hwnd, NULL, TRUE);
+			return 0;
 
 		case 'S':
 			zCamera -= 0.05f;
 			rSphere -= 0.05f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case 'Z':
+
 			phiAngleSphere += 5.f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case 'X':
+
 			phiAngleSphere -= 5.f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
+
 			return 0;
 
 		case 'C':
-			thetaAngleSphere += 5.f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			if (thetaAngleSphere < 175.f)
+			{
+				thetaAngleSphere += 5.f;
+				InvalidateRect(hwnd, NULL, TRUE);
+			}
 			return 0;
 
 		case 'V':
-			thetaAngleSphere -= 5.f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			if (thetaAngleSphere > 5.f)
+			{
+				thetaAngleSphere -= 5.f;
+				InvalidateRect(hwnd, NULL, TRUE);
+			}
 			return 0;
 		}
 
@@ -291,9 +298,11 @@ void Render()
 		}
 
 		int j = 0;
-		plotLine(frameBuffer, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, polygonsOutp[i].vectors[j + 1].x, polygonsOutp[i].vectors[j + 1].y, color);
-		plotLine(frameBuffer, polygonsOutp[i].vectors[j + 1].x, polygonsOutp[i].vectors[j + 1].y, polygonsOutp[i].vectors[j + 2].x, polygonsOutp[i].vectors[j + 2].y, color);
-		plotLine(frameBuffer, polygonsOutp[i].vectors[j + 2].x, polygonsOutp[i].vectors[j + 2].y, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, color);
+
+
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j], polygonsOutp[i].vectors[j + 1], color);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 1], polygonsOutp[i].vectors[j + 2], color);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 2], polygonsOutp[i].vectors[j], color);
 
 	}
 }
@@ -356,54 +365,59 @@ void UpdateWindowSize(HWND hWnd)
 	RECT clientRect;
 	GetClientRect(hWnd, &clientRect);
 
-	FrameHeight = clientRect.bottom - clientRect.top;
-	FrameWidth = clientRect.right - clientRect.left;
+	FrameHeight = clientRect.bottom;
+	FrameWidth = clientRect.right;
 }
 
-void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
+void BresenhamLineOptimised(void* buffer, HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color)
 {
-	int deltaX = x1 - x0;
-	int deltaY = y1 - y0;
-	int absDeltaX = std::abs(deltaX);
-	int absDeltaY = std::abs(deltaY);
+	int x1 = (int)(vectorA.x);
+	int y1 = (int)(vectorA.y);
+	int x2 = (int)(vectorB.x);
+	int y2 = (int)(vectorB.y);
 
-	int accretion = 0;
+	int dx = x2 - x1;
+	int dy = y2 - y1;
+	int w = std::abs(dx);
+	int h = std::abs(dy);
+	int l = max(w, h);
 
-	if (absDeltaX >= absDeltaY) // angle >45 ? 
+	int sign = (dx >= 0) ? 1 : -1;
+	int mat11 = sign;
+	int mat12 = 0;
+	int mat21 = 0;
+	sign = (dy >= 0) ? 1 : -1;
+	int mat22 = sign;
+
+	if (w < h)
 	{
-		int y = y0;
-		int direction = deltaY != 0 ? (deltaY > 0 ? 1 : -1) : 0; //up or down
-		for (int x = x0; deltaX > 0 ? x <= x1 : x >= x1; deltaX > 0 ? x++ : x--) //left or right
-		{
-			SetPoint(buffer, x, y, color);
+		int temp = mat11;
+		mat11 = mat12;
+		mat12 = temp;
 
-			accretion += absDeltaY;
-
-			if (accretion >= absDeltaX)
-			{
-				accretion -= absDeltaX;
-				y += direction;
-			}
-		}
+		temp = mat21;
+		mat21 = mat22;
+		mat22 = temp;
 	}
-	else
+	int y = 0;
+	int error = 0;
+	int errorDec = 2 * l;
+	int errorInc = 2 * min(w, h);
+
+	for (int x = 0; x <= l; x++)
 	{
-		int x = x0;
-		int direction = deltaX != 0 ? (deltaX > 0 ? 1 : -1) : 0;
-		for (int y = y0; deltaY > 0 ? y <= y1 : y >= y1; deltaY > 0 ? y++ : y--)
+		int xt = x1 + (mat11 * x) + (mat12 * y);
+		int yt = y1 + (mat21 * x) + (mat22 * y);
+		SetPoint(buffer, xt, yt, color);
+
+		if ((error += errorInc) > l)
 		{
-			SetPoint(buffer, x, y, color);
-
-			accretion += absDeltaX;
-
-			if (accretion >= absDeltaY)
-			{
-				accretion -= absDeltaY;
-				x += direction;
-			}
+			error -= errorDec;
+			y++;
 		}
 	}
 }
+
 
 void plotLineLow(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 {
@@ -475,40 +489,6 @@ void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 		}
 		else {
 			plotLineHigh(buffer, x0, y0, x1, y1, color);
-		}
-	}
-}
-
-void plotLineWithErr(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
-{
-	int dx = std::abs(x1 - x0);
-	int sx = x0 < x1 ? 1 : -1;
-	int dy = -std::abs(y1 - y0);
-	int sy = y0 < y1 ? 1 : -1;
-	int error = dx + dy;
-
-	while (true) {
-		SetPoint(buffer, x0, y0, color);
-
-		if (x0 == x1 && y0 == y1)
-			break;
-
-		int errorx2 = 2 * error;
-
-		if (errorx2 >= dy) {
-			if (x0 == x1)
-				break;
-
-			error += dy;
-			x0 += sx;
-		}
-
-		if (errorx2 <= dx) {
-			if (y0 == y1)
-				break;
-
-			error += dx;
-			y0 += sy;
 		}
 	}
 }
