@@ -11,8 +11,9 @@
 
 LONG FrameHeight = 720, FrameWidth = 1280;
 
-//RGBQUAD frameBuffer[720][1280];
-RGBQUAD** frameBuffer;
+RGBQUAD frameBuffer[1080][1920];
+//RGBQUAD** frameBuffer;
+//std::vector<std::vector<RGBQUAD>> frameBuffer;
 
 
 RGBQUAD color = { 255, 255, 255, 0 };
@@ -50,15 +51,14 @@ void UpdateVectors();
 void UpdateWindowSize(HWND hWnd);
 void UpdatePolygons(int polygonIterator);
 void BresenhamLineOptimised(void* buffer, HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color);
-void SetMemoryForFrameBuffer();
-void DeleteFrameBuffer();
+//void SetMemoryForFrameBuffer();
+//void DeleteFrameBuffer();
 
 
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-	SetMemoryForFrameBuffer();
 
 	ObjLoader* loader = new ObjLoader();
 
@@ -83,9 +83,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	/////
 
-	//Render();
+	SetPoint(frameBuffer, 100, 100, color);
+	//Render(	);
 	//plotLine(frameBuffer, 200, 200, 500, 210, color);
-	plotLine(frameBuffer, 200, 200, 500, 100, color);
+	//plotLine(frameBuffer, 200, 200, 500, 100, color);
 	//BresenhamLineOptimised(frameBuffer, { 200,100,0,1 }, {500, 200, 0, 1}, color);
 
 	/////
@@ -227,7 +228,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 {
-	HBITMAP hBitMap = CreateBitmap(width, height, 1, 8 * 4, pixels);  //CreateCompatibleBitmap  с цветным будет быстрее 
+	HDC hdc = GetDC(hWnd);
+
+
+	HBITMAP hBitMap = CreateBitmap(width, height, 1, 8 * 4, pixels); 
+	//HBITMAP hBitMap = CreateCompatibleBitmap(hdc, width, height);
 	/*
 	  [in] nPlanes
 	  Количество цветовых плоскостей, используемых устройством.
@@ -235,7 +240,6 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 	  Количество битов, необходимых для идентификации цвета одного пикселя.
 	 */
 
-	HDC hdc = GetDC(hWnd);
 
 	// Временный DC для переноса bit-map'а
 	HDC srcHdc = CreateCompatibleDC(hdc);
@@ -270,10 +274,12 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 }
 
 void SetPoint(void* buffer, int x, int y, RGBQUAD color)
+//void SetPoint(const std::vector<std::vector<RGBQUAD>>& frameBuffer, int x, int y, RGBQUAD color)
 {
 	if (x >= 0 && x <= (FrameWidth - 1) && y >= 0 && y <= (FrameHeight - 1))
 	{
 		reinterpret_cast<RGBQUAD*>(buffer)[y * FrameWidth + x] = color;
+		//frameBuffer[y][x] = color;
 	}
 }
 
@@ -368,7 +374,6 @@ void UpdatePolygons(int polygonIterator)
 
 void UpdateWindowSize(HWND hWnd)
 {
-	DeleteFrameBuffer();
 
 	RECT clientRect;
 	GetClientRect(hWnd, &clientRect);
@@ -376,28 +381,41 @@ void UpdateWindowSize(HWND hWnd)
 	FrameHeight = clientRect.bottom;
 	FrameWidth = clientRect.right;
 
-	SetMemoryForFrameBuffer();
 }
 
-void SetMemoryForFrameBuffer()
-{
-	frameBuffer = new RGBQUAD * [FrameHeight] {} ;
-
-	for (unsigned i{}; i < FrameHeight; i++)
-	{
-		frameBuffer[i] = new RGBQUAD[FrameWidth]{};
-	}
-}
-
-void DeleteFrameBuffer()
-{
-	// удаление массивов    
-	for (unsigned i{}; i < FrameHeight; i++)
-	{
-		delete[] frameBuffer[i];
-	}
-	delete[] frameBuffer;
-}
+//void SetMemoryForFrameBuffer()
+//{
+//	frameBuffer = new RGBQUAD * [FrameHeight] {} ;
+//
+//	for (unsigned i{}; i < FrameHeight; i++)
+//	{
+//		frameBuffer[i] = new RGBQUAD[FrameWidth]{};
+//	}
+//
+//	for (int y = 0; y < FrameHeight; y++)
+//	{
+//		for (int x = 0; x < FrameWidth; x++)
+//		{
+//			frameBuffer[y][x] = { 0, 0, 0, 0 }; // Установка каждого элемента в ноль
+//		}
+//	}
+//
+//	//// Вычисляем размер блока памяти в байтах
+//	//size_t bufferSize = FrameWidth * FrameHeight * sizeof(RGBQUAD);
+//
+//	//// Заполняем блок памяти нулями
+//	//std::memset(frameBuffer[0], 0, bufferSize);
+//}
+//
+//void DeleteFrameBuffer()
+//{
+//	// удаление массивов    
+//	for (unsigned i{}; i < FrameHeight; i++)
+//	{
+//		delete[] frameBuffer[i];
+//	}
+//	delete[] frameBuffer;
+//}
 
 //void BresenhamLineOptimised(void * buffer , CoordinateStruct vectorA, CoordinateStruct vectorB, RGBQUAD color)
 void BresenhamLineOptimised(void * buffer , HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color)
