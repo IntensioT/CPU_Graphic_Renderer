@@ -1,18 +1,8 @@
 ﻿  WindowMain.cpp
 D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(21,2): warning C4091: 'typedef ': ignored on left of '_3DMATRIX' when no variable is declared
 D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(73,20): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(294,149): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(294,115): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(294,81): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(294,51): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(295,157): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(295,123): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(295,89): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(295,55): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(296,149): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(296,119): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(296,89): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(296,55): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(386,23): warning C4018: '<': signed/unsigned mismatch
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(395,23): warning C4018: '<': signed/unsigned mismatch
   WaveFront.vcxproj -> D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\x64\Debug\WaveFront.exe
   "pwsh.exe" не является внутренней или внешней
   командой, исполняемой программой или пакетным файлом.

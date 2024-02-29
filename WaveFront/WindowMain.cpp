@@ -11,7 +11,9 @@
 
 LONG FrameHeight = 720, FrameWidth = 1280;
 
-RGBQUAD frameBuffer[720][1280];
+//RGBQUAD frameBuffer[720][1280];
+RGBQUAD** frameBuffer;
+
 
 RGBQUAD color = { 255, 255, 255, 0 };
 
@@ -48,11 +50,16 @@ void UpdateVectors();
 void UpdateWindowSize(HWND hWnd);
 void UpdatePolygons(int polygonIterator);
 void BresenhamLineOptimised(void* buffer, HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color);
+void SetMemoryForFrameBuffer();
+void DeleteFrameBuffer();
+
 
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
+	SetMemoryForFrameBuffer();
+
 	ObjLoader* loader = new ObjLoader();
 
 	modelCoordSystem = new CoordSystem({ 0.0f,0.0f,0.0f });
@@ -76,7 +83,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	/////
 
-	Render();
+	//Render();
+	//plotLine(frameBuffer, 200, 200, 500, 210, color);
+	plotLine(frameBuffer, 200, 200, 500, 100, color);
+	//BresenhamLineOptimised(frameBuffer, { 200,100,0,1 }, {500, 200, 0, 1}, color);
 
 	/////
 
@@ -143,7 +153,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_PAINT:
 	{
-		Render();
+		//Render();
 		ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
@@ -358,11 +368,35 @@ void UpdatePolygons(int polygonIterator)
 
 void UpdateWindowSize(HWND hWnd)
 {
+	DeleteFrameBuffer();
+
 	RECT clientRect;
 	GetClientRect(hWnd, &clientRect);
 
-	FrameHeight = clientRect.bottom - clientRect.top;
-	FrameWidth = clientRect.right - clientRect.left;
+	FrameHeight = clientRect.bottom;
+	FrameWidth = clientRect.right;
+
+	SetMemoryForFrameBuffer();
+}
+
+void SetMemoryForFrameBuffer()
+{
+	frameBuffer = new RGBQUAD * [FrameHeight] {} ;
+
+	for (unsigned i{}; i < FrameHeight; i++)
+	{
+		frameBuffer[i] = new RGBQUAD[FrameWidth]{};
+	}
+}
+
+void DeleteFrameBuffer()
+{
+	// удаление массивов    
+	for (unsigned i{}; i < FrameHeight; i++)
+	{
+		delete[] frameBuffer[i];
+	}
+	delete[] frameBuffer;
 }
 
 //void BresenhamLineOptimised(void * buffer , CoordinateStruct vectorA, CoordinateStruct vectorB, RGBQUAD color)
@@ -384,12 +418,17 @@ void BresenhamLineOptimised(void * buffer , HomogeneousCoordinateStruct vectorA,
 	int mat12 = 0;
 	int mat21 = 0;
 	sign = (dy >= 0) ? 1 : -1;
-	int mat22 = 0;
+	int mat22 = sign;
 
 	if (w < h)
 	{
-		(mat11, mat12) = (mat12, mat11);
-		(mat21, mat22) = (mat22, mat21);
+		int temp = mat11;
+		mat11 = mat12;
+		mat12 = temp;
+
+		temp = mat21;
+		mat21 = mat22;
+		mat22 = temp;
 	}
 	int y = 0;
 	int error = 0;
@@ -398,8 +437,8 @@ void BresenhamLineOptimised(void * buffer , HomogeneousCoordinateStruct vectorA,
 
 	for (int x = 0; x <= l; x++)
 	{
-		int xt = x1 + mat11 * x + mat12 * y;
-		int yt = y1 + mat21 * x + mat22 * y;
+		int xt = x1 + (mat11 * x) + (mat12 * y);
+		int yt = y1 + (mat21 * x) + (mat22 * y);
 		SetPoint(buffer, xt, yt, color);
 
 		if ((error += errorInc) > l)
