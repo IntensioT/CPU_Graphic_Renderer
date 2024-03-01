@@ -35,10 +35,10 @@
     <ClInclude Include="CoordSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TestGLM.h">
+    <ClInclude Include="Triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Triangle.h">
+    <ClInclude Include="ThreadPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

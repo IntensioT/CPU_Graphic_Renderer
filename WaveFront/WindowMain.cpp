@@ -5,6 +5,7 @@
 #include <windows.h>
 #include "CoordSystem.h"
 #include "Triangle.h"
+#include "ThreadPool.h"
 
 
 
@@ -46,6 +47,7 @@ void UpdateVectors();
 void UpdateWindowSize(HWND hWnd);
 void UpdatePolygons(int polygonIterator);
 void BresenhamLineOptimised(void* buffer, HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color);
+void UpdatePolygonsAsync();
 
 
 
@@ -296,14 +298,11 @@ void Render()
 			isInvisible = false;
 			continue;
 		}
-
 		int j = 0;
-
 
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j], polygonsOutp[i].vectors[j + 1], color);
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 1], polygonsOutp[i].vectors[j + 2], color);
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 2], polygonsOutp[i].vectors[j], color);
-
 	}
 }
 
@@ -325,12 +324,49 @@ void UpdateVectors()
 	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
 
 
-	for (int i = 0; i < polygons.size(); i++)
+	/*for (int i = 0; i < polygons.size(); i++)
 	{
 		UpdatePolygons(i);
-	}
+	}*/
 
+	UpdatePolygonsAsync();
 }
+
+
+
+//void ProcessPolygonsAsync(std::vector<int>& polygonIterators)
+//{
+//	std::vector<std::future<void>> futures;
+//
+//	// Создание пула потоков
+//	const int numThreads = 10;
+//	std::vector<std::thread> threads(numThreads);
+//
+//	for (int i = 0; i < numThreads; ++i)
+//	{
+//		threads[i] = std::thread([&polygonIterators] {
+//			while (true)
+//			{
+//				int polygonIterator;
+//
+//				// Получение следующего итератора полигона с использованием мьютекса или другой синхронизации
+//				// ...
+//
+//				if (polygonIterator == -1)
+//					break;
+//
+//				// Выполнение обновления полигона
+//				UpdatePolygons(polygonIterator);
+//			}
+//			});
+//	}
+//
+//	// Дождитесь завершения всех потоков
+//	for (auto& thread : threads)
+//	{
+//		thread.join();
+//	}
+//}
 
 void UpdatePolygons(int polygonIterator)
 {
@@ -338,7 +374,6 @@ void UpdatePolygons(int polygonIterator)
 	for (int i = 0; i < 3; i++)
 	{
 		pointHomogeneous = polygons[polygonIterator].vectors[i];
-		//pointHomogeneous = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1.0f };
 
 		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
@@ -490,5 +525,51 @@ void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 		else {
 			plotLineHigh(buffer, x0, y0, x1, y1, color);
 		}
+	}
+}
+
+
+void UpdatePolygonsAsync()
+{
+	ThreadPool pool(8);
+	std::vector<std::future<void>> futures;
+
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		CoordSystem* currentModelCoordSystem = modelCoordSystem; // Сохраняем указатель в локальную переменную
+		Triangle currentPolygon = polygons[i]; // Копируем текущий полигон
+		Triangle currentPolygonOutp; // Создаем пустой полигон для записи результата
+
+		futures.push_back(pool.enqueue([i, currentPolygon, &currentPolygonOutp, currentModelCoordSystem]() {
+			Triangle polygon = currentPolygon;
+			for (int j = 0; j < 3; j++)
+			{
+				pointHomogeneous = polygon.vectors[j];
+
+				pointHomogeneous *= currentModelCoordSystem->GlobalTransformationMatrix;
+				pointHomogeneous *= currentModelCoordSystem->CameraTransformationMatrix;
+				pointHomogeneous *= currentModelCoordSystem->ProjectionTransformationMatrix;
+
+				if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
+				{
+					pointHomogeneous = { 0, 0, 0, 1 };
+				}
+				else
+				{
+					pointHomogeneous *= (1 / pointHomogeneous.w);
+					pointHomogeneous *= currentModelCoordSystem->ViewPortTransformationMatrix;
+				}
+
+				polygon.vectors[j] = pointHomogeneous;
+			}
+			currentPolygonOutp = polygon;
+			}));
+		polygonsOutp[i] = currentPolygonOutp; // Сохраняем пустой полигон в исходный вектор
+	}
+
+	// Дожидаемся завершения всех задач
+	for (auto& future : futures)
+	{
+		future.get();
 	}
 }
