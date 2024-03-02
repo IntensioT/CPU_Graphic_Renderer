@@ -21,14 +21,14 @@ std::vector<HomogeneousCoordinateStruct> vertexesOutp;
 std::vector<Triangle> polygons;
 std::vector<Triangle> polygonsOutp;
 std::vector<int> indexes;
-HomogeneousCoordinateStruct pointHomogeneous;
+//HomogeneousCoordinateStruct pointHomogeneous;
 CoordSystem* modelCoordSystem;
 
 float yAngleObject = 0.0f;
 float xAngleObject = 0.0f;
 float xCamera = 0.0f;
 float yCamera = 0.0f;
-float zCamera = 1.5f;
+float zCamera = 300.5f;
 float rSphere = zCamera;
 float phiAngleSphere = 0.0f;
 float thetaAngleSphere = 90.0f;
@@ -371,6 +371,7 @@ void UpdateVectors()
 void UpdatePolygons(int polygonIterator)
 {
 	Triangle polygon;
+	HomogeneousCoordinateStruct pointHomogeneous;
 	for (int i = 0; i < 3; i++)
 	{
 		pointHomogeneous = polygons[polygonIterator].vectors[i];
@@ -393,6 +394,34 @@ void UpdatePolygons(int polygonIterator)
 		polygon.vectors[i] = pointHomogeneous;
 	}
 	polygonsOutp[polygonIterator] = polygon;
+}
+
+Triangle UpdatePolygonsTriangle(int polygonIterator)
+{
+	Triangle polygon;
+	HomogeneousCoordinateStruct pointHomogeneous;
+	for (int i = 0; i < 3; i++)
+	{
+		pointHomogeneous = polygons[polygonIterator].vectors[i];
+
+		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
+		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
+		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
+
+
+		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
+		{
+			pointHomogeneous = { 0,0,0,1 };
+		}
+		else
+		{
+			pointHomogeneous *= (1 / pointHomogeneous.w);
+			pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
+		}
+
+		polygon.vectors[i] = pointHomogeneous;
+	}
+	return polygon;
 }
 
 void UpdateWindowSize(HWND hWnd)
@@ -532,44 +561,15 @@ void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 void UpdatePolygonsAsync()
 {
 	ThreadPool pool(8);
-	std::vector<std::future<void>> futures;
+	std::vector<std::future<Triangle>> futures;
 
 	for (int i = 0; i < polygons.size(); i++)
 	{
-		CoordSystem* currentModelCoordSystem = modelCoordSystem; // Сохраняем указатель в локальную переменную
-		Triangle currentPolygon = polygons[i]; // Копируем текущий полигон
-		Triangle currentPolygonOutp; // Создаем пустой полигон для записи результата
-
-		futures.push_back(pool.enqueue([i, currentPolygon, &currentPolygonOutp, currentModelCoordSystem]() {
-			Triangle polygon = currentPolygon;
-			for (int j = 0; j < 3; j++)
-			{
-				pointHomogeneous = polygon.vectors[j];
-
-				pointHomogeneous *= currentModelCoordSystem->GlobalTransformationMatrix;
-				pointHomogeneous *= currentModelCoordSystem->CameraTransformationMatrix;
-				pointHomogeneous *= currentModelCoordSystem->ProjectionTransformationMatrix;
-
-				if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
-				{
-					pointHomogeneous = { 0, 0, 0, 1 };
-				}
-				else
-				{
-					pointHomogeneous *= (1 / pointHomogeneous.w);
-					pointHomogeneous *= currentModelCoordSystem->ViewPortTransformationMatrix;
-				}
-
-				polygon.vectors[j] = pointHomogeneous;
-			}
-			currentPolygonOutp = polygon;
-			}));
-		polygonsOutp[i] = currentPolygonOutp; // Сохраняем пустой полигон в исходный вектор
+		futures.emplace_back(pool.enqueue([i] { return UpdatePolygonsTriangle(i); }));
 	}
 
-	// Дожидаемся завершения всех задач
-	for (auto& future : futures)
+	for (int i = 0; i < polygons.size(); i++)
 	{
-		future.get();
+		polygonsOutp[i] = futures[i].get();
 	}
 }
