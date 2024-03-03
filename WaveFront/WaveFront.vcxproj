@@ -160,6 +160,7 @@
   <ItemGroup>
     <ClInclude Include="CoordSystem.h" />
     <ClInclude Include="ObjLoader.h" />
+    <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

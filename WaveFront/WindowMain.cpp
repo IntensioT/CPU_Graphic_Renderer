@@ -5,16 +5,13 @@
 #include <windows.h>
 #include "CoordSystem.h"
 #include "Triangle.h"
-//#include "TestGLM.h"
+#include "ThreadPool.h"
 
 
 
 LONG FrameHeight = 720, FrameWidth = 1280;
 
 RGBQUAD frameBuffer[1080][1920];
-//RGBQUAD** frameBuffer;
-//std::vector<std::vector<RGBQUAD>> frameBuffer;
-
 
 RGBQUAD color = { 255, 255, 255, 0 };
 
@@ -24,7 +21,7 @@ std::vector<HomogeneousCoordinateStruct> vertexesOutp;
 std::vector<Triangle> polygons;
 std::vector<Triangle> polygonsOutp;
 std::vector<int> indexes;
-HomogeneousCoordinateStruct pointHomogeneous;
+//HomogeneousCoordinateStruct pointHomogeneous;
 CoordSystem* modelCoordSystem;
 
 float yAngleObject = 0.0f;
@@ -43,7 +40,6 @@ float zFar = 100.0f;
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd);
 void SetPoint(void* buffer, int x, int y, RGBQUAD color = { 0,0,0,0 });
-void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void plotLineWithErr(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void Render();
@@ -51,8 +47,7 @@ void UpdateVectors();
 void UpdateWindowSize(HWND hWnd);
 void UpdatePolygons(int polygonIterator);
 void BresenhamLineOptimised(void* buffer, HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color);
-//void SetMemoryForFrameBuffer();
-//void DeleteFrameBuffer();
+void UpdatePolygonsAsync();
 
 
 
@@ -132,8 +127,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
-		//Render();
-		//ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
 	}
 
 	return 0;
@@ -164,58 +157,67 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case VK_LEFT:
 			// Process the LEFT ARROW key. 
 			yAngleObject -= 5.0f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case VK_RIGHT:
 			// Process the RIGHT ARROW key. 
 			yAngleObject += 5.0f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case VK_UP:
 			// Process the UP ARROW key. 
 			xAngleObject += 5.0f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
 
 			return 0;
 
 		case VK_DOWN:
 			// Process the DOWN ARROW key. 
 			xAngleObject -= 5.0f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case 'W':
 			zCamera += 0.05f;
-			 rSphere += 0.05f;
-			 InvalidateRect(hwnd, NULL, TRUE);;
-			 return 0;
+			rSphere += 0.05f;
+			InvalidateRect(hwnd, NULL, TRUE);
+			return 0;
 
 		case 'S':
 			zCamera -= 0.05f;
 			rSphere -= 0.05f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case 'Z':
+
 			phiAngleSphere += 5.f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case 'X':
+
 			phiAngleSphere -= 5.f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			InvalidateRect(hwnd, NULL, TRUE);
+
 			return 0;
 
 		case 'C':
-			thetaAngleSphere += 5.f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			if (thetaAngleSphere < 175.f)
+			{
+				thetaAngleSphere += 5.f;
+				InvalidateRect(hwnd, NULL, TRUE);
+			}
 			return 0;
 
 		case 'V':
-			thetaAngleSphere -= 5.f;
-			InvalidateRect(hwnd, NULL, TRUE);;
+			if (thetaAngleSphere > 5.f)
+			{
+				thetaAngleSphere -= 5.f;
+				InvalidateRect(hwnd, NULL, TRUE);
+			}
 			return 0;
 		}
 
@@ -235,36 +237,36 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 	//HBITMAP hBitMap = CreateCompatibleBitmap(hdc, width, height);
 	/*
 	  [in] nPlanes
-	  Количество цветовых плоскостей, используемых устройством.
-	  [in] nBitCount (4 байта)
-	  Количество битов, необходимых для идентификации цвета одного пикселя.
+	  пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+	  [in] nBitCount (4 пїЅпїЅпїЅпїЅпїЅ)
+	  пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 	 */
 
 
-	// Временный DC для переноса bit-map'а
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ DC пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ bit-map'пїЅ
 	HDC srcHdc = CreateCompatibleDC(hdc);
 
 	SelectObject(srcHdc, hBitMap);
 
 	BitBlt(hdc, 0, 0, static_cast<int>(width), static_cast<int>(height), srcHdc, 0, 0, SRCCOPY);
 	/*[in] hdc
-		Дескриптор контекста целевого устройства.
+		пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 		[in] x
-		Координата X в логических единицах верхнего левого угла прямоугольника назначения.
+		пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ X пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 		[in] y
-		Координата Y в логических единицах верхнего левого угла прямоугольника назначения.
+		пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Y пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 		[in] cx
-		Ширина(в логических единицах) исходного и целевого прямоугольников.
+		пїЅпїЅпїЅпїЅпїЅпїЅ(пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 		[in] cy
-		Высота(в логических единицах) исходного и целевого прямоугольников.
+		пїЅпїЅпїЅпїЅпїЅпїЅ(пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 		[in] hdcSrc
-		Дескриптор контекста исходного устройства.
+		пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 		[in] x1
-		Координата X в логических единицах верхнего левого угла исходного прямоугольника.
+		пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ X пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 		[in] y1
-		Координата Y в логических единицах верхнего левого угла исходного прямоугольника.
+		пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Y пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 		[in] rop
-		Код растровой операции.Эти коды определяют, как данные цвета исходного прямоугольника должны сочетаться с данными цвета для прямоугольника назначения для достижения окончательного цвета.*/
+		пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.*/
 
 
 	DeleteObject(hBitMap);
@@ -306,16 +308,11 @@ void Render()
 			isInvisible = false;
 			continue;
 		}
-
 		int j = 0;
-		/*plotLine(frameBuffer, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, polygonsOutp[i].vectors[j + 1].x, polygonsOutp[i].vectors[j + 1].y, color);
-		plotLine(frameBuffer, polygonsOutp[i].vectors[j + 1].x, polygonsOutp[i].vectors[j + 1].y, polygonsOutp[i].vectors[j + 2].x, polygonsOutp[i].vectors[j + 2].y, color);
-		plotLine(frameBuffer, polygonsOutp[i].vectors[j + 2].x, polygonsOutp[i].vectors[j + 2].y, polygonsOutp[i].vectors[j].x, polygonsOutp[i].vectors[j].y, color);*/
 
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j], polygonsOutp[i].vectors[j + 1], color);
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 1], polygonsOutp[i].vectors[j + 2], color);
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 2], polygonsOutp[i].vectors[j], color);
-
 	}
 }
 
@@ -337,20 +334,57 @@ void UpdateVectors()
 	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
 
 
-	for (int i = 0; i < polygons.size(); i++)
+	/*for (int i = 0; i < polygons.size(); i++)
 	{
 		UpdatePolygons(i);
-	}
+	}*/
 
+	UpdatePolygonsAsync();
 }
+
+
+
+//void ProcessPolygonsAsync(std::vector<int>& polygonIterators)
+//{
+//	std::vector<std::future<void>> futures;
+//
+//	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+//	const int numThreads = 10;
+//	std::vector<std::thread> threads(numThreads);
+//
+//	for (int i = 0; i < numThreads; ++i)
+//	{
+//		threads[i] = std::thread([&polygonIterators] {
+//			while (true)
+//			{
+//				int polygonIterator;
+//
+//				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+//				// ...
+//
+//				if (polygonIterator == -1)
+//					break;
+//
+//				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+//				UpdatePolygons(polygonIterator);
+//			}
+//			});
+//	}
+//
+//	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+//	for (auto& thread : threads)
+//	{
+//		thread.join();
+//	}
+//}
 
 void UpdatePolygons(int polygonIterator)
 {
 	Triangle polygon;
+	HomogeneousCoordinateStruct pointHomogeneous;
 	for (int i = 0; i < 3; i++)
 	{
 		pointHomogeneous = polygons[polygonIterator].vectors[i];
-		//pointHomogeneous = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1.0f };
 
 		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
@@ -372,6 +406,34 @@ void UpdatePolygons(int polygonIterator)
 	polygonsOutp[polygonIterator] = polygon;
 }
 
+Triangle UpdatePolygonsTriangle(int polygonIterator)
+{
+	Triangle polygon;
+	HomogeneousCoordinateStruct pointHomogeneous;
+	for (int i = 0; i < 3; i++)
+	{
+		pointHomogeneous = polygons[polygonIterator].vectors[i];
+
+		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
+		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
+		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
+
+
+		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
+		{
+			pointHomogeneous = { 0,0,0,1 };
+		}
+		else
+		{
+			pointHomogeneous *= (1 / pointHomogeneous.w);
+			pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
+		}
+
+		polygon.vectors[i] = pointHomogeneous;
+	}
+	return polygon;
+}
+
 void UpdateWindowSize(HWND hWnd)
 {
 
@@ -380,45 +442,9 @@ void UpdateWindowSize(HWND hWnd)
 
 	FrameHeight = clientRect.bottom;
 	FrameWidth = clientRect.right;
-
 }
 
-//void SetMemoryForFrameBuffer()
-//{
-//	frameBuffer = new RGBQUAD * [FrameHeight] {} ;
-//
-//	for (unsigned i{}; i < FrameHeight; i++)
-//	{
-//		frameBuffer[i] = new RGBQUAD[FrameWidth]{};
-//	}
-//
-//	for (int y = 0; y < FrameHeight; y++)
-//	{
-//		for (int x = 0; x < FrameWidth; x++)
-//		{
-//			frameBuffer[y][x] = { 0, 0, 0, 0 }; // Установка каждого элемента в ноль
-//		}
-//	}
-//
-//	//// Вычисляем размер блока памяти в байтах
-//	//size_t bufferSize = FrameWidth * FrameHeight * sizeof(RGBQUAD);
-//
-//	//// Заполняем блок памяти нулями
-//	//std::memset(frameBuffer[0], 0, bufferSize);
-//}
-//
-//void DeleteFrameBuffer()
-//{
-//	// удаление массивов    
-//	for (unsigned i{}; i < FrameHeight; i++)
-//	{
-//		delete[] frameBuffer[i];
-//	}
-//	delete[] frameBuffer;
-//}
-
-//void BresenhamLineOptimised(void * buffer , CoordinateStruct vectorA, CoordinateStruct vectorB, RGBQUAD color)
-void BresenhamLineOptimised(void * buffer , HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color)
+void BresenhamLineOptimised(void* buffer, HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color)
 {
 	int x1 = (int)(vectorA.x);
 	int y1 = (int)(vectorA.y);
@@ -467,50 +493,6 @@ void BresenhamLineOptimised(void * buffer , HomogeneousCoordinateStruct vectorA,
 	}
 }
 
-void SetLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
-{
-	int deltaX = x1 - x0;
-	int deltaY = y1 - y0;
-	int absDeltaX = std::abs(deltaX);
-	int absDeltaY = std::abs(deltaY);
-
-	int accretion = 0;
-
-	if (absDeltaX >= absDeltaY) // angle >45 ? 
-	{
-		int y = y0;
-		int direction = deltaY != 0 ? (deltaY > 0 ? 1 : -1) : 0; //up or down
-		for (int x = x0; deltaX > 0 ? x <= x1 : x >= x1; deltaX > 0 ? x++ : x--) //left or right
-		{
-			SetPoint(buffer, x, y, color);
-
-			accretion += absDeltaY;
-
-			if (accretion >= absDeltaX)
-			{
-				accretion -= absDeltaX;
-				y += direction;
-			}
-		}
-	}
-	else
-	{
-		int x = x0;
-		int direction = deltaX != 0 ? (deltaX > 0 ? 1 : -1) : 0;
-		for (int y = y0; deltaY > 0 ? y <= y1 : y >= y1; deltaY > 0 ? y++ : y--)
-		{
-			SetPoint(buffer, x, y, color);
-
-			accretion += absDeltaX;
-
-			if (accretion >= absDeltaY)
-			{
-				accretion -= absDeltaY;
-				x += direction;
-			}
-		}
-	}
-}
 
 void plotLineLow(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 {
@@ -586,36 +568,19 @@ void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 	}
 }
 
-void plotLineWithErr(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
+
+void UpdatePolygonsAsync()
 {
-	int dx = std::abs(x1 - x0);
-	int sx = x0 < x1 ? 1 : -1;
-	int dy = -std::abs(y1 - y0);
-	int sy = y0 < y1 ? 1 : -1;
-	int error = dx + dy;
+	ThreadPool pool(8);
+	std::vector<std::future<Triangle>> futures;
 
-	while (true) {
-		SetPoint(buffer, x0, y0, color);
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		futures.emplace_back(pool.enqueue([i] { return UpdatePolygonsTriangle(i); }));
+	}
 
-		if (x0 == x1 && y0 == y1)
-			break;
-
-		int errorx2 = 2 * error;
-
-		if (errorx2 >= dy) {
-			if (x0 == x1)
-				break;
-
-			error += dy;
-			x0 += sx;
-		}
-
-		if (errorx2 <= dx) {
-			if (y0 == y1)
-				break;
-
-			error += dx;
-			y0 += sy;
-		}
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		polygonsOutp[i] = futures[i].get();
 	}
 }
