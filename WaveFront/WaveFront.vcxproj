@@ -154,14 +154,17 @@
   <ItemGroup>
     <ClCompile Include="CoordSystem.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
+    <ClCompile Include="Rasterizator.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="WindowMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CoordSystem.h" />
     <ClInclude Include="ObjLoader.h" />
+    <ClInclude Include="Rasterizator.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="Triangle.h" />
+    <ClInclude Include="WindowMain.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

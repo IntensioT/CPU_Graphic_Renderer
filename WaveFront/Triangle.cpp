@@ -23,3 +23,10 @@ std::vector<Triangle> GetAllPolygons(std::vector<HomogeneousCoordinateStruct> ve
 
 	return triangles;
 }
+
+void SwapVectorsInPolygon(Triangle polygon, int indVec1, int indVec2)
+{
+	HomogeneousCoordinateStruct tmpVector = polygon.vectors[indVec1];
+	polygon.vectors[indVec1] = polygon.vectors[indVec2];
+	polygon.vectors[indVec2] = tmpVector;
+}

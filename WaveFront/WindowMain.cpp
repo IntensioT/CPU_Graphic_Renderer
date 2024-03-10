@@ -2,64 +2,16 @@
 #define UNICODE
 #endif 
 
-#include <windows.h>
-#include "CoordSystem.h"
-#include "Triangle.h"
-#include "ThreadPool.h"
 
-
-
-LONG FrameHeight = 720, FrameWidth = 1280;
-
-RGBQUAD frameBuffer[1080][1920];
-
-RGBQUAD color = { 255, 255, 255, 0 };
-
-
-std::vector<CoordinateStruct> vertexes;
-std::vector<HomogeneousCoordinateStruct> vertexesOutp;
-std::vector<Triangle> polygons;
-std::vector<Triangle> polygonsOutp;
-std::vector<int> indexes;
-//HomogeneousCoordinateStruct pointHomogeneous;
-CoordSystem* modelCoordSystem;
-
-float yAngleObject = 0.0f;
-float xAngleObject = 0.0f;
-float xCamera = 0.0f;
-float yCamera = 0.0f;
-float zCamera = 1.5f;
-float rSphere = zCamera;
-float phiAngleSphere = 0.0f;
-float thetaAngleSphere = 90.0f;
-
-float zNear = 10.0f;
-float zFar = 100.0f;
-
-
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd);
-void SetPoint(void* buffer, int x, int y, RGBQUAD color = { 0,0,0,0 });
-void plotLineWithErr(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
-void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
-void Render();
-void UpdateVectors();
-void UpdateWindowSize(HWND hWnd);
-void UpdatePolygons(int polygonIterator);
-void BresenhamLineOptimised(void* buffer, HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color);
-void UpdatePolygonsAsync();
-
-
+#include "WindowMain.h"
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-
 	ObjLoader* loader = new ObjLoader();
 
 	modelCoordSystem = new CoordSystem({ 0.0f,0.0f,0.0f });
 
-	//std::string res = loader->GetOutput();
 	vertexes = loader->GetVetrexVector();
 	indexes = loader->GetIndexes();
 
@@ -77,12 +29,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	polygonsOutp.resize(polygons.size());
 
 	/////
+	
+	rasterizator = new Rasterizator();
 
-	SetPoint(frameBuffer, 100, 100, color);
-	//Render(	);
-	//plotLine(frameBuffer, 200, 200, 500, 210, color);
-	//plotLine(frameBuffer, 200, 200, 500, 100, color);
-	//BresenhamLineOptimised(frameBuffer, { 200,100,0,1 }, {500, 200, 0, 1}, color);
+	
 
 	/////
 
@@ -147,7 +97,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_PAINT:
 	{
-		//Render();
+		Render();
 		ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
@@ -292,28 +242,68 @@ void Render()
 	UpdateVectors();
 
 
-	bool isInvisible = false;
-	for (int i = 0; i < polygonsOutp.size(); i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			if (polygonsOutp[i].vectors[j].x == 0 && polygonsOutp[i].vectors[j].y == 0 && polygonsOutp[i].vectors[j].z == 0 && polygonsOutp[i].vectors[j].w == 1)
-			{
-				isInvisible = true;
-				break;
-			}
-		}
-		if (isInvisible)
-		{
-			isInvisible = false;
-			continue;
-		}
-		int j = 0;
+	//bool isInvisible = false;
+	//for (int i = 0; i < polygonsOutp.size(); i++)
+	//{
+	//	for (int j = 0; j < 3; j++)
+	//	{
+	//		if (polygonsOutp[i].vectors[j].x == 0 && polygonsOutp[i].vectors[j].y == 0 && polygonsOutp[i].vectors[j].z == 0 && polygonsOutp[i].vectors[j].w == 1)
+	//		{
+	//			isInvisible = true;
+	//			break;
+	//		}
+	//	}
+	//	if (isInvisible)
+	//	{
+	//		isInvisible = false;
+	//		continue;
+	//	}
+	//	int j = 0;
 
-		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j], polygonsOutp[i].vectors[j + 1], color);
-		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 1], polygonsOutp[i].vectors[j + 2], color);
-		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 2], polygonsOutp[i].vectors[j], color);
+	//	/*BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j], polygonsOutp[i].vectors[j + 1], color);
+	//	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 1], polygonsOutp[i].vectors[j + 2], color);
+	//	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 2], polygonsOutp[i].vectors[j], color);*/
+
+	//	
+	//	rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
+	//	// Отрисовка горизонтальных отрезков
+	//	for (float y = polygonsOutp[i].vectors[0].y; y < polygonsOutp[i].vectors[2].y; y++)
+	//	{
+	//		for (float x = rasterizator->xLeft[y - polygonsOutp[i].vectors[0].y]; x < rasterizator->xRight[y - polygonsOutp[i].vectors[0].y]; x++)
+	//		{
+	//			SetPoint(frameBuffer, x, y, color);
+	//		}
+	//	}
+	//}
+
+	Triangle test1;
+	test1.vectors[0] = { 100,100,0,0 };
+	test1.vectors[1] = { 100,300,0,0 };
+	test1.vectors[2] = { 300,100,0,0 };
+
+	rasterizator->UpdateXleftAndXRight(test1);
+	// Отрисовка горизонтальных отрезков
+	for (float y = test1.vectors[0].y; y < test1.vectors[2].y; y++)
+	{
+		for (float x = rasterizator->xLeft[y - test1.vectors[0].y]; x < rasterizator->xRight[y - test1.vectors[0].y]; x++)
+		{
+			SetPoint(frameBuffer, x, y, color);
+		}
 	}
+	//Triangle test2;
+	//test2.vectors[0] = { 300,100,0,0 };
+	//test2.vectors[1] = { 300,300,0,0 };
+	//test2.vectors[2] = { 100,100,0,0 };
+
+	//rasterizator->UpdateXleftAndXRight(test2);
+	//// Отрисовка горизонтальных отрезков
+	//for (float y = test2.vectors[0].y; y < test2.vectors[2].y; y++)
+	//{
+	//	for (float x = rasterizator->xLeft[y - test2.vectors[0].y]; x < rasterizator->xRight[y - test2.vectors[0].y]; x++)
+	//	{
+	//		SetPoint(frameBuffer, x, y, color);
+	//	}
+	//}
 }
 
 void UpdateVectors()
@@ -342,41 +332,6 @@ void UpdateVectors()
 	UpdatePolygonsAsync();
 }
 
-
-
-//void ProcessPolygonsAsync(std::vector<int>& polygonIterators)
-//{
-//	std::vector<std::future<void>> futures;
-//
-//	// �������� ���� �������
-//	const int numThreads = 10;
-//	std::vector<std::thread> threads(numThreads);
-//
-//	for (int i = 0; i < numThreads; ++i)
-//	{
-//		threads[i] = std::thread([&polygonIterators] {
-//			while (true)
-//			{
-//				int polygonIterator;
-//
-//				// ��������� ���������� ��������� �������� � �������������� �������� ��� ������ �������������
-//				// ...
-//
-//				if (polygonIterator == -1)
-//					break;
-//
-//				// ���������� ���������� ��������
-//				UpdatePolygons(polygonIterator);
-//			}
-//			});
-//	}
-//
-//	// ��������� ���������� ���� �������
-//	for (auto& thread : threads)
-//	{
-//		thread.join();
-//	}
-//}
 
 void UpdatePolygons(int polygonIterator)
 {
