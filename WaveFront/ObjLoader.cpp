@@ -58,6 +58,43 @@ void ObjLoader::_parseLine(std::string line)
 
 		_vertexVector.push_back(coordStr);
 	}
+
+	if (line[0] == 'v' && line[1] == ' ')
+	{
+		int i = 2;
+		int j = 0;
+		_clearArray(coordinates);
+
+		//X parsing
+		while (line[i] != ' ' && j < CoordMaxLength)
+		{
+			coordinates[j++] = line[i++];
+		}
+		coordStr.x = _convertCharArrayToFloat(coordinates);
+		_clearArray(coordinates);
+
+		//Y parsing
+		i++;
+		j = 0;
+		while (line[i] != ' ' && j < CoordMaxLength)
+		{
+			coordinates[j++] = line[i++];
+		}
+		coordStr.y = _convertCharArrayToFloat(coordinates);
+		_clearArray(coordinates);
+
+		//Z parsing
+		i++;
+		j = 0;
+		while (line[i] != ' ' && line[i] != '\n' && j < CoordMaxLength)
+		{
+			coordinates[j++] = line[i++];
+		}
+		coordStr.z = _convertCharArrayToFloat(coordinates);
+
+		_vertexVector.push_back(coordStr);
+	}
+
 	if (line[0] == 'f' && line[1] == ' ')
 	{
 		int i = 2;
@@ -81,6 +118,32 @@ void ObjLoader::_parseLine(std::string line)
 		_indexes.push_back( _convertCharArrayToFloat(coordinates));
 		_clearArray(coordinates);
 
+		////First coord parsing
+		//while (line[i] != '/' && j < CoordMaxLength)
+		//{
+		//	coordinates[j++] = line[i];
+		//	i++;
+		//}
+		//_indexes.push_back(_convertCharArrayToFloat(coordinates));
+		//_clearArray(coordinates);
+
+		//i++;
+		//j = 0;
+
+		//while (line[i] != '/')
+		//{
+		//	i++;
+		//}
+		//i++;
+		//while (line[i] != ' ')
+		//{
+		//	coordinates[j++] = line[i];
+		//	i++;
+		//}
+		//_normalIndexes.push_back(_convertCharArrayToFloat(coordinates));
+		//_clearArray(coordinates);
+
+
 		//Second coord parsing
 		isIndex = 1;
 		i++;
@@ -100,6 +163,34 @@ void ObjLoader::_parseLine(std::string line)
 		_indexes.push_back(_convertCharArrayToFloat(coordinates));
 		_clearArray(coordinates);
 
+		////Second coord parsing
+		//isIndex = 1;
+		//i++;
+		//j = 0;
+		//while (line[i] != '/' && j < CoordMaxLength)
+		//{
+		//	coordinates[j++] = line[i];
+		//	i++;
+		//}
+		//_indexes.push_back(_convertCharArrayToFloat(coordinates));
+		//_clearArray(coordinates);
+
+		//i++;
+		//j = 0;
+
+		//while (line[i] != '/')
+		//{
+		//	i++;
+		//}
+		//i++;
+		//while (line[i] != ' ')
+		//{
+		//	coordinates[j++] = line[i];
+		//	i++;
+		//}
+		//_normalIndexes.push_back(_convertCharArrayToFloat(coordinates));
+		//_clearArray(coordinates);
+
 		//Third coord parsing
 		isIndex = 1;
 		i++;
@@ -117,6 +208,33 @@ void ObjLoader::_parseLine(std::string line)
 			i++;
 		}
 		_indexes.push_back(_convertCharArrayToFloat(coordinates));
+
+		////Third coord parsing
+		//isIndex = 1;
+		//i++;
+		//j = 0;
+		//	while (line[i] != '/' && j < CoordMaxLength)
+		//	{
+		//		coordinates[j++] = line[i];
+		//		i++;
+		//	}
+		//_indexes.push_back(_convertCharArrayToFloat(coordinates));
+		//_clearArray(coordinates);
+
+		//i++;
+		//j = 0;
+
+		//while (line[i] != '/')
+		//{
+		//	i++;
+		//}
+		//i++;
+		//while (line[i] != ' ' && line[i] != '\n' && j < CoordMaxLength)
+		//{
+		//	coordinates[j++] = line[i];
+		//	i++;
+		//}
+		//_normalIndexes.push_back(_convertCharArrayToFloat(coordinates));
 	}
 }
 
@@ -127,8 +245,8 @@ void ObjLoader::_clearArray(char* arr)
 
 float ObjLoader::_convertCharArrayToFloat(char* arr)
 {
-		float result = static_cast<float>(std::atof(arr));
-		return result;
+	float result = static_cast<float>(std::atof(arr));
+	return result;
 }
 
 std::vector<CoordinateStruct> ObjLoader::GetVetrexVector()
@@ -140,4 +258,9 @@ std::vector<CoordinateStruct> ObjLoader::GetVetrexVector()
 std::vector<int> ObjLoader::GetIndexes()
 {
 	return _indexes;
+}
+
+std::vector<int> ObjLoader::GetNormalIndexes()
+{
+	return _normalIndexes;
 }

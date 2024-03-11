@@ -27,6 +27,7 @@ private:
 	//std::string filePath = "D:\\Bugor\\6sem\\ComputerGraphicAlghorithms\\projects\\final_v01.obj";
 	std::vector<CoordinateStruct> _vertexVector;
 	std::vector<int> _indexes;
+	std::vector<int> _normalIndexes;
 	void _parseLine(std::string line);
 	void _readFile();
 	void _clearArray(char* arr);
@@ -35,4 +36,5 @@ private:
 public:
 	std::vector<CoordinateStruct> GetVetrexVector();
 	std::vector<int> GetIndexes();
+	std::vector<int> GetNormalIndexes();
 };

@@ -14,6 +14,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	vertexes = loader->GetVetrexVector();
 	indexes = loader->GetIndexes();
+	normalIndexes = loader->GetNormalIndexes();
 
 	vertexesOutp.resize(vertexes.size());
 	std::vector<HomogeneousCoordinateStruct> vertexesHomo;
@@ -348,7 +349,7 @@ void UpdateVectors()
 
 	for (int i = 0; i < polygons.size(); i++)
 	{
-		UpdatePolygons(i);
+		if (!UpdatePolygons(i)) continue;
 		if (!IsObjectBehindClipPlanes(i, clipPlanes))
 		{
 			DrawObject(i);
@@ -391,10 +392,10 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 		bool isVertexBehindClipPlanes = true;
 
 
-		if (pointHomogeneous.x == 0 && pointHomogeneous.y == 0 && pointHomogeneous.z == 0 && pointHomogeneous.w == 1)
+		/*if (pointHomogeneous.x == 0 && pointHomogeneous.y == 0 && pointHomogeneous.z == 0 && pointHomogeneous.w == 1)
 		{
 			return true;
-		}
+		}*/
 
 		for (const Plane& clipPlane : clipPlanes) {
 			if (!modelCoordSystem->IsVertexBehindClipPlane(pointHomogeneous, clipPlane)) {
@@ -463,7 +464,7 @@ void DrawObject(int i)
 	//color.rgbBlue += 20;
 }
 
-void UpdatePolygons(int polygonIterator)
+bool UpdatePolygons(int polygonIterator)
 {
 	Triangle polygon;
 	HomogeneousCoordinateStruct pointHomogeneous;
@@ -476,19 +477,21 @@ void UpdatePolygons(int polygonIterator)
 		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 
 
-		/*if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
+		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
 		{
-			pointHomogeneous = { 0,0,0,1 };
+			return false;
+			//pointHomogeneous = { 0,0,0,1 };
 		}
 		else
-		{*/
+		{
 			pointHomogeneous *= (1 / pointHomogeneous.w);
 			pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
-		//}
+		}
 
 		polygon.vectors[i] = pointHomogeneous;
 	}
 	polygonsOutp[polygonIterator] = polygon;
+	return true;
 }
 
 Triangle UpdatePolygonsTriangle(int polygonIterator)
