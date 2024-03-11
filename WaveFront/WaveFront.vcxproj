@@ -155,6 +155,7 @@
     <ClCompile Include="CoordSystem.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="Rasterizator.cpp" />
+    <ClCompile Include="TempRasrt.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="WindowMain.cpp" />
   </ItemGroup>

@@ -29,10 +29,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	polygonsOutp.resize(polygons.size());
 
 	/////
-	
-	rasterizator = new Rasterizator();
 
-	
+	rasterizator = new Rasterizator(FrameWidth, FrameHeight);
+
+
 
 	/////
 
@@ -183,7 +183,7 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 	HDC hdc = GetDC(hWnd);
 
 
-	HBITMAP hBitMap = CreateBitmap(width, height, 1, 8 * 4, pixels); 
+	HBITMAP hBitMap = CreateBitmap(width, height, 1, 8 * 4, pixels);
 	//HBITMAP hBitMap = CreateCompatibleBitmap(hdc, width, height);
 	/*
 	  [in] nPlanes
@@ -193,7 +193,7 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 	 */
 
 
-	// ��������� DC ��� �������� bit-map'�
+	 // ��������� DC ��� �������� bit-map'�
 	HDC srcHdc = CreateCompatibleDC(hdc);
 
 	SelectObject(srcHdc, hBitMap);
@@ -235,9 +235,27 @@ void SetPoint(void* buffer, int x, int y, RGBQUAD color)
 	}
 }
 
+void SetPointWithZ(int x, int y, RGBQUAD color, float z)
+{
+	if (x >= 0 && x < FrameWidth && y >= 0 && y < FrameHeight && z < rasterizator->zBuffer[y][x]) {
+		frameBuffer[y][x] = color;
+		rasterizator->zBuffer[y][x] = z;
+	}
+}
+
 void Render()
 {
 	std::memset(frameBuffer, 0, sizeof(frameBuffer));
+
+	const float MAX_DEPTH = 3.4E+38f;
+	const float MIN_DEPTH = -3.4E+38f;
+	for (int i = 0; i < 1080; ++i) {
+		for (int j = 0; j < 1920; ++j) {
+			depthBuffer[i][j] = MAX_DEPTH;
+			//depthBuffer[i][j] = MIN_DEPTH;
+		}
+	}
+
 
 	UpdateVectors();
 
@@ -264,50 +282,55 @@ void Render()
 	//	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 1], polygonsOutp[i].vectors[j + 2], color);
 	//	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 2], polygonsOutp[i].vectors[j], color);*/
 
-	//	
+
 	//	rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
+
 	//	// Отрисовка горизонтальных отрезков
-	//	for (float y = polygonsOutp[i].vectors[0].y; y < polygonsOutp[i].vectors[2].y; y++)
-	//	{
-	//		for (float x = rasterizator->xLeft[y - polygonsOutp[i].vectors[0].y]; x < rasterizator->xRight[y - polygonsOutp[i].vectors[0].y]; x++)
-	//		{
-	//			SetPoint(frameBuffer, x, y, color);
+	//	for (int y = polygonsOutp[i].vectors[0].y; y <= polygonsOutp[i].vectors[2].y; y++) {
+
+	//		int xL = rasterizator->xLeft[y - polygonsOutp[i].vectors[0].y];
+	//		int xR = rasterizator->xRight[y - polygonsOutp[i].vectors[0].y];
+	//		for (int x = xL; x <= xR; x++) {
+	//			float zL = rasterizator->zLeft[y - polygonsOutp[i].vectors[0].y];
+	//			float zR = rasterizator->zRight[y - polygonsOutp[i].vectors[0].y];
+
+	//			float z;
+	//			if (xR - xL != 0)
+	//			{
+	//				z = zL + (x - xL) * (zR - zL) / (xR - xL);
+	//			}
+	//			else
+	//			{
+	//				z = zL;
+	//			}
+
+	//			if (z < depthBuffer[x][y])
+	//			{
+	//				SetPoint(frameBuffer, x, y, color);
+	//				depthBuffer[x][y] = z;
+	//			}
 	//		}
 	//	}
+	//	color.rgbRed += 100;
+	//	color.rgbGreen += 50;
+	//	color.rgbBlue += 20;
 	//}
 
-	Triangle test1;
-	test1.vectors[0] = { 100,100,0,0 };
-	test1.vectors[1] = { 100,300,0,0 };
-	test1.vectors[2] = { 300,100,0,0 };
-
-	rasterizator->UpdateXleftAndXRight(test1);
-	// Отрисовка горизонтальных отрезков
-	for (float y = test1.vectors[0].y; y < test1.vectors[2].y; y++)
-	{
-		for (float x = rasterizator->xLeft[y - test1.vectors[0].y]; x < rasterizator->xRight[y - test1.vectors[0].y]; x++)
-		{
-			SetPoint(frameBuffer, x, y, color);
-		}
-	}
-	//Triangle test2;
-	//test2.vectors[0] = { 300,100,0,0 };
-	//test2.vectors[1] = { 300,300,0,0 };
-	//test2.vectors[2] = { 100,100,0,0 };
-
-	//rasterizator->UpdateXleftAndXRight(test2);
-	//// Отрисовка горизонтальных отрезков
-	//for (float y = test2.vectors[0].y; y < test2.vectors[2].y; y++)
-	//{
-	//	for (float x = rasterizator->xLeft[y - test2.vectors[0].y]; x < rasterizator->xRight[y - test2.vectors[0].y]; x++)
-	//	{
-	//		SetPoint(frameBuffer, x, y, color);
-	//	}
-	//}
 }
 
 void UpdateVectors()
 {
+	std::vector<Plane> clipPlanes = {
+		{ {1, 0, 0}, 1 },
+		{ {-1, 0, 0}, -1 },
+		{ {0, 1, 0}, 1 },
+		{ {0, -1, 0}, -1 },
+		{ {0, 0, 1}, 1 },
+		{ {0, 0, -1}, -1 }
+	};
+
+
+
 	modelCoordSystem->SetRotateYMatrix(GetRadians(yAngleObject));
 	modelCoordSystem->SetRotateXMatrix(GetRadians(xAngleObject));
 	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix * modelCoordSystem->RotateXMatrix;
@@ -316,7 +339,6 @@ void UpdateVectors()
 
 	CoordinateStruct cameraGlobalCoord = { SphericalToCartesian(rSphere, phiAngleSphere, thetaAngleSphere) };
 
-	//CoordinateStruct targetGlobalCoord = { 0,0.f,0.f };
 	CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
 	CoordinateStruct cameraUpVect = { 0,1,0 };
 	modelCoordSystem->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
@@ -324,14 +346,122 @@ void UpdateVectors()
 	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
 
 
-	/*for (int i = 0; i < polygons.size(); i++)
+	for (int i = 0; i < polygons.size(); i++)
 	{
 		UpdatePolygons(i);
-	}*/
+		if (!IsObjectBehindClipPlanes(i, clipPlanes))
+		{
+			DrawObject(i);
+		}
+	}
 
-	UpdatePolygonsAsync();
+	//UpdatePolygonsAsync();
 }
 
+
+bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& clipPlanes)
+{
+	Triangle polygon;
+	HomogeneousCoordinateStruct pointHomogeneous;
+
+	polygon = polygonsOutp[polygonIterator];
+
+	HomogeneousCoordinateStruct edge1 = polygon.vectors[1] - polygon.vectors[0];
+	HomogeneousCoordinateStruct edge2 = polygon.vectors[2] - polygon.vectors[0];
+
+	HomogeneousCoordinateStruct normal = modelCoordSystem->CrossProduct(edge1, edge2);
+	CoordinateStruct normal3d = modelCoordSystem->NormalizeVector({normal.x,normal.y,normal.z});
+
+	CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
+	CoordinateStruct vector0 = { polygon.vectors[0].x, polygon.vectors[0].y, polygon.vectors[0].z };
+	CoordinateStruct viewVector = targetGlobalCoord - vector0;
+
+	viewVector = modelCoordSystem->NormalizeVector(viewVector);
+
+	float dotProduct = modelCoordSystem->DotProduct(normal3d, viewVector);
+
+	//// Если скалярное произведение отрицательное, то отбрасываем треугольник
+	//if (dotProduct < 0) {
+	//	return true; // переходим к следующему треугольнику
+	//}
+
+	for (int i = 0; i < 3; i++)
+	{
+		pointHomogeneous = polygon.vectors[i];
+		bool isVertexBehindClipPlanes = true;
+
+
+		if (pointHomogeneous.x == 0 && pointHomogeneous.y == 0 && pointHomogeneous.z == 0 && pointHomogeneous.w == 1)
+		{
+			return true;
+		}
+
+		for (const Plane& clipPlane : clipPlanes) {
+			if (!modelCoordSystem->IsVertexBehindClipPlane(pointHomogeneous, clipPlane)) {
+				isVertexBehindClipPlanes = false;
+				break;
+			}
+		}
+		if (!isVertexBehindClipPlanes) {
+			return false;
+		}
+	}
+	return true;
+}
+
+void DrawObject(int i)
+{
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], polygonsOutp[i].vectors[0 + 1], color);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], polygonsOutp[i].vectors[0 + 2], color);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color);
+
+	//rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
+
+	//// Проверяем, что размеры массивов zLeft и zRight соответствуют количеству горизонтальных отрезков
+	//int numHorizontalSegments = polygonsOutp[i].vectors[2].y - polygonsOutp[i].vectors[0].y + 1;
+	//if (rasterizator->zLeft.size() < numHorizontalSegments || rasterizator->zRight.size() < numHorizontalSegments) {
+	//	return;
+	//}
+
+
+	//if (polygonsOutp[i].vectors[2].y > 1080) return;
+
+	//// Отрисовка горизонтальных отрезков
+	//for (int y = polygonsOutp[i].vectors[0].y; y <= polygonsOutp[i].vectors[2].y; y++) {
+
+	//	int xL = rasterizator->xLeft[y - polygonsOutp[i].vectors[0].y];
+	//	int xR = rasterizator->xRight[y - polygonsOutp[i].vectors[0].y];
+	//	if (xR > 1920) return;
+
+	//	for (int x = xL; x <= xR; x++) {
+	//		if (y - polygonsOutp[i].vectors[0].y >= 0 && y - polygonsOutp[i].vectors[0].y < rasterizator->zLeft.size())
+	//		{
+	//			float zL = rasterizator->zLeft[y - polygonsOutp[i].vectors[0].y];
+	//			float zR = rasterizator->zRight[y - polygonsOutp[i].vectors[0].y];
+
+	//			float z;
+	//			if (xR - xL != 0)
+	//			{
+	//				z = zL + (x - xL) * (zR - zL) / (xR - xL);
+	//			}
+	//			else
+	//			{
+	//				z = zL;
+	//			}
+
+	//			if (z < depthBuffer[x][y])
+	//			{
+	//				SetPoint(frameBuffer, x, y, color);
+	//				depthBuffer[x][y] = z;
+	//			}
+	//		}
+
+	//	}
+	//}
+	//color.rgbRed += 100;
+	//color.rgbGreen += 50;
+	//color.rgbBlue += 20;
+}
 
 void UpdatePolygons(int polygonIterator)
 {
@@ -346,15 +476,15 @@ void UpdatePolygons(int polygonIterator)
 		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 
 
-		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
+		/*if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
 		{
 			pointHomogeneous = { 0,0,0,1 };
 		}
 		else
-		{
+		{*/
 			pointHomogeneous *= (1 / pointHomogeneous.w);
 			pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
-		}
+		//}
 
 		polygon.vectors[i] = pointHomogeneous;
 	}
@@ -363,6 +493,7 @@ void UpdatePolygons(int polygonIterator)
 
 Triangle UpdatePolygonsTriangle(int polygonIterator)
 {
+
 	Triangle polygon;
 	HomogeneousCoordinateStruct pointHomogeneous;
 	for (int i = 0; i < 3; i++)

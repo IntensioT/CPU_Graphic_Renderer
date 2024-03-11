@@ -31,6 +31,15 @@ struct HomogeneousCoordinateStruct
         w *= f;
         return *this;
     }
+
+    HomogeneousCoordinateStruct operator-(const HomogeneousCoordinateStruct& other) const {
+        return HomogeneousCoordinateStruct{ x - other.x, y - other.y, z - other.z, w-other.w };
+    }
+};
+
+struct Plane {
+    HomogeneousCoordinateStruct normal;
+    float distance;
 };
 
 
@@ -108,8 +117,7 @@ public:
     _3DMATRIX RotationMatrix;
 
 
-    HomogeneousCoordinateStruct ToGlobalCoords(HomogeneousCoordinateStruct local);
-    CoordinateStruct ToLocalCoords(CoordinateStruct global);
+
     CoordSystem(CoordinateStruct Translation);
 
     CoordinateStruct SubstractVectors(CoordinateStruct& vector1, CoordinateStruct& vector2);
@@ -117,7 +125,10 @@ public:
     HomogeneousCoordinateStruct MultiplyMatByVector(_3DMATRIX matrix, HomogeneousCoordinateStruct vector);
     _3DMATRIX MultiplyMatrixByMatrix(const _3DMATRIX& mat1, const _3DMATRIX& mat2);
     float DotProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2);
+    float DotProduct(const HomogeneousCoordinateStruct& vector1, const HomogeneousCoordinateStruct& vector2);
     CoordinateStruct CrossProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2);
+    HomogeneousCoordinateStruct CrossProduct(const HomogeneousCoordinateStruct& vector1, const HomogeneousCoordinateStruct& vector2);
+
 
 
 
@@ -128,11 +139,13 @@ public:
 
 
     void SetCameraTransformationMatrix(CoordinateStruct& cameraGlobalCoord, CoordinateStruct& targetGlobalCoord, CoordinateStruct& cameraUpVect);
-    _3DMATRIX GetViewMatrix(CoordinateStruct& Pos, CoordinateStruct& Target, CoordinateStruct& UpVect);
     void SetProjectionTransformationMatrix(float fov, float aspectRatio, float nearPlane, float farPlane);
     void SetViewPortTransformationMatrix(float width, float height, float x, float y, float zMin, float zMax);
 
-    void MoveSystem(CoordinateStruct vect);
+    bool IsVertexBehindClipPlane(const HomogeneousCoordinateStruct vertex, const Plane& clipPlane);
+    bool IsObjectBehindClipPlanes(const std::vector<CoordinateStruct>& vertices, const std::vector<Plane>& clipPlanes, const _3DMATRIX& modelMatrix, const _3DMATRIX& viewMatrix, const _3DMATRIX& projectionMatrix);
+
+
 
     void SetMovementMatrix(CoordinateStruct Translation);
     void SetScaleMatrix(CoordinateStruct Scale);

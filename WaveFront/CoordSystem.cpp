@@ -90,12 +90,27 @@ float CoordSystem::DotProduct(const CoordinateStruct& vector1, const CoordinateS
 	return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
 }
 
+float CoordSystem::DotProduct(const HomogeneousCoordinateStruct& vector1, const HomogeneousCoordinateStruct& vector2)
+{
+	return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
+}
+
 CoordinateStruct CoordSystem::CrossProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2)
 {
 	CoordinateStruct result;
 	result.x = vector1.y * vector2.z - vector1.z * vector2.y;
 	result.y = vector1.z * vector2.x - vector1.x * vector2.z;
 	result.z = vector1.x * vector2.y - vector1.y * vector2.x;
+	return result;
+}
+
+HomogeneousCoordinateStruct CoordSystem::CrossProduct(const HomogeneousCoordinateStruct& vector1, const HomogeneousCoordinateStruct& vector2)
+{
+	HomogeneousCoordinateStruct result;
+	result.x = vector1.y * vector2.z - vector1.z * vector2.y;
+	result.y = vector1.z * vector2.x - vector1.x * vector2.z;
+	result.z = vector1.x * vector2.y - vector1.y * vector2.x;
+	result.w = vector1.w * vector2.w - vector1.w * vector2.w;
 	return result;
 }
 
@@ -175,6 +190,30 @@ void CoordSystem::SetViewPortTransformationMatrix(float width, float height, flo
 										0,					0,				(zMax - zMin),	0,
 										x + halfWidth, halfHeight + y,		 zMin,			1 };
 }
+
+bool CoordSystem::IsVertexBehindClipPlane(const HomogeneousCoordinateStruct vertex, const Plane& clipPlane)
+{
+	float dotProduct = DotProduct(vertex, clipPlane.normal);
+	return dotProduct < clipPlane.distance;
+}
+
+//bool CoordSystem::IsObjectBehindClipPlanes(const std::vector<CoordinateStruct>& vertices, const std::vector<Plane>& clipPlanes, const _3DMATRIX& modelMatrix, const _3DMATRIX& viewMatrix, const _3DMATRIX& projectionMatrix)
+//{
+//	for (const CoordinateStruct& vertex : vertices) {
+//		HomogeneousCoordinateStruct vertexInClipSpace = TransformVertexToClipSpace(vertex, modelMatrix, viewMatrix, projectionMatrix);
+//		bool isVertexBehindClipPlanes = true;
+//		for (const Plane& clipPlane : clipPlanes) {
+//			if (!IsVertexBehindClipPlane(vertexInClipSpace, clipPlane)) {
+//				isVertexBehindClipPlanes = false;
+//				break;
+//			}
+//		}
+//		if (!isVertexBehindClipPlanes) {
+//			return false;
+//		}
+//	}
+//	return true;
+//}
 
 
 void CoordSystem::SetMovementMatrix(CoordinateStruct Translation)

@@ -30,6 +30,9 @@
     <ClCompile Include="Rasterizator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TempRasrt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObjLoader.h">
