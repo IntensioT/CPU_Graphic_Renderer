@@ -14,7 +14,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	vertexes = loader->GetVetrexVector();
 	indexes = loader->GetIndexes();
+
 	normalIndexes = loader->GetNormalIndexes();
+	normals = loader->GetNormals();
 
 	vertexesOutp.resize(vertexes.size());
 	std::vector<HomogeneousCoordinateStruct> vertexesHomo;
@@ -26,7 +28,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	}
 
 	polygons.resize(indexes.size() / 3);
-	polygons = GetAllPolygons(vertexesHomo, indexes);
+	polygons = GetAllPolygons(vertexesHomo, indexes, normalIndexes, normals);
 	polygonsOutp.resize(polygons.size());
 
 	/////
@@ -261,28 +263,28 @@ void Render()
 	UpdateVectors();
 
 
-	//bool isInvisible = false;
-	//for (int i = 0; i < polygonsOutp.size(); i++)
-	//{
-	//	for (int j = 0; j < 3; j++)
-	//	{
-	//		if (polygonsOutp[i].vectors[j].x == 0 && polygonsOutp[i].vectors[j].y == 0 && polygonsOutp[i].vectors[j].z == 0 && polygonsOutp[i].vectors[j].w == 1)
-	//		{
-	//			isInvisible = true;
-	//			break;
-	//		}
-	//	}
-	//	if (isInvisible)
-	//	{
-	//		isInvisible = false;
-	//		continue;
-	//	}
-	//	int j = 0;
+	/*bool isInvisible = false;
+	for (int i = 0; i < polygonsOutp.size(); i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			if (polygonsOutp[i].vectors[j].x == 0 && polygonsOutp[i].vectors[j].y == 0 && polygonsOutp[i].vectors[j].z == 0 && polygonsOutp[i].vectors[j].w == 1)
+			{
+				isInvisible = true;
+				break;
+			}
+		}
+		if (isInvisible)
+		{
+			isInvisible = false;
+			continue;
+		}
+		int j = 0;
 
-	//	/*BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j], polygonsOutp[i].vectors[j + 1], color);
-	//	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 1], polygonsOutp[i].vectors[j + 2], color);
-	//	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 2], polygonsOutp[i].vectors[j], color);*/
-
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j], polygonsOutp[i].vectors[j + 1], color);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 1], polygonsOutp[i].vectors[j + 2], color);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 2], polygonsOutp[i].vectors[j], color);
+	}*/
 
 	//	rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
 
@@ -338,9 +340,9 @@ void UpdateVectors()
 
 	modelCoordSystem->SetProjectionTransformationMatrix(45.0f, ((float)FrameWidth / (float)FrameHeight), zNear, zFar);
 
-	CoordinateStruct cameraGlobalCoord = { SphericalToCartesian(rSphere, phiAngleSphere, thetaAngleSphere) };
+	/*CoordinateStruct*/ cameraGlobalCoord = { SphericalToCartesian(rSphere, phiAngleSphere, thetaAngleSphere) };
 
-	CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
+	//CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
 	CoordinateStruct cameraUpVect = { 0,1,0 };
 	modelCoordSystem->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
 
@@ -367,7 +369,7 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 
 	polygon = polygonsOutp[polygonIterator];
 
-	HomogeneousCoordinateStruct edge1 = polygon.vectors[1] - polygon.vectors[0];
+	/*HomogeneousCoordinateStruct edge1 = polygon.vectors[1] - polygon.vectors[0];
 	HomogeneousCoordinateStruct edge2 = polygon.vectors[2] - polygon.vectors[0];
 
 	HomogeneousCoordinateStruct normal = modelCoordSystem->CrossProduct(edge1, edge2);
@@ -379,12 +381,23 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 
 	viewVector = modelCoordSystem->NormalizeVector(viewVector);
 
-	float dotProduct = modelCoordSystem->DotProduct(normal3d, viewVector);
+	float dotProduct = modelCoordSystem->DotProduct(normal3d, viewVector);*/
 
 	//// Если скалярное произведение отрицательное, то отбрасываем треугольник
 	//if (dotProduct < 0) {
 	//	return true; // переходим к следующему треугольнику
 	//}
+
+	CoordinateStruct ZAxis =modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, targetGlobalCoord));
+	
+
+	//float dotProduct = modelCoordSystem->DotProduct(polygon.normal, cameraGlobalCoord);
+	float dotProduct = modelCoordSystem->DotProduct(polygon.normal, ZAxis);
+	if (dotProduct < 0)
+	{
+		return true; // переходим к следующему треугольнику
+	}
+
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -412,9 +425,9 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 
 void DrawObject(int i)
 {
-		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], polygonsOutp[i].vectors[0 + 1], color);
-		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], polygonsOutp[i].vectors[0 + 2], color);
-		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color);
+	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], polygonsOutp[i].vectors[0 + 1], color);
+	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], polygonsOutp[i].vectors[0 + 2], color);
+	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color);
 
 	//rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
 
@@ -468,6 +481,8 @@ bool UpdatePolygons(int polygonIterator)
 {
 	Triangle polygon;
 	HomogeneousCoordinateStruct pointHomogeneous;
+
+	polygon.normal = polygons[polygonIterator].normal;
 	for (int i = 0; i < 3; i++)
 	{
 		pointHomogeneous = polygons[polygonIterator].vectors[i];
@@ -493,6 +508,7 @@ bool UpdatePolygons(int polygonIterator)
 	polygonsOutp[polygonIterator] = polygon;
 	return true;
 }
+
 
 Triangle UpdatePolygonsTriangle(int polygonIterator)
 {

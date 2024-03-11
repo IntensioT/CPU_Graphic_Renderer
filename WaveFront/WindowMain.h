@@ -16,6 +16,10 @@ float depthBuffer[1080][1920];
 
 RGBQUAD color = { 255, 255, 255, 0 };
 
+CoordinateStruct cameraGlobalCoord;
+CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
+
+
 
 std::vector<CoordinateStruct> vertexes;
 std::vector<HomogeneousCoordinateStruct> vertexesOutp;
@@ -23,6 +27,7 @@ std::vector<Triangle> polygons;
 std::vector<Triangle> polygonsOutp;
 std::vector<int> indexes;
 std::vector<int> normalIndexes;
+std::vector<CoordinateStruct> normals;
 //HomogeneousCoordinateStruct pointHomogeneous;
 CoordSystem* modelCoordSystem;
 Rasterizator* rasterizator;

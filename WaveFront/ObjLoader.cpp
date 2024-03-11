@@ -59,9 +59,9 @@ void ObjLoader::_parseLine(std::string line)
 		_vertexVector.push_back(coordStr);
 	}
 
-	if (line[0] == 'v' && line[1] == ' ')
+	if (line[0] == 'v' && line[1] == 'n' && line[2] == ' ')
 	{
-		int i = 2;
+		int i = 3;
 		int j = 0;
 		_clearArray(coordinates);
 
@@ -92,149 +92,147 @@ void ObjLoader::_parseLine(std::string line)
 		}
 		coordStr.z = _convertCharArrayToFloat(coordinates);
 
-		_vertexVector.push_back(coordStr);
+		_normalVector.push_back(coordStr);
 	}
 
 	if (line[0] == 'f' && line[1] == ' ')
 	{
 		int i = 2;
 		int j = 0;
-		int isIndex = 1;
-		_clearArray(coordinates);
-
-		//First coord parsing
-		while (line[i] != ' ' && j < CoordMaxLength)
-		{
-			if (line[i] == '/')
-			{
-				isIndex = 0;
-			}
-			if (isIndex == 1)
-			{
-				coordinates[j++] = line[i];
-			}
-			i++;
-		}
-		_indexes.push_back( _convertCharArrayToFloat(coordinates));
+		//int isIndex = 1;
 		_clearArray(coordinates);
 
 		////First coord parsing
-		//while (line[i] != '/' && j < CoordMaxLength)
+		//while (line[i] != ' ' && j < CoordMaxLength)
 		//{
-		//	coordinates[j++] = line[i];
+		//	if (line[i] == '/')
+		//	{
+		//		isIndex = 0;
+		//	}
+		//	if (isIndex == 1)
+		//	{
+		//		coordinates[j++] = line[i];
+		//	}
 		//	i++;
 		//}
-		//_indexes.push_back(_convertCharArrayToFloat(coordinates));
+		//_indexes.push_back( _convertCharArrayToFloat(coordinates));
 		//_clearArray(coordinates);
 
-		//i++;
-		//j = 0;
-
-		//while (line[i] != '/')
-		//{
-		//	i++;
-		//}
-		//i++;
-		//while (line[i] != ' ')
-		//{
-		//	coordinates[j++] = line[i];
-		//	i++;
-		//}
-		//_normalIndexes.push_back(_convertCharArrayToFloat(coordinates));
-		//_clearArray(coordinates);
-
-
-		//Second coord parsing
-		isIndex = 1;
-		i++;
-		j = 0;
-		while (line[i] != ' ' && j < CoordMaxLength)
+		//First coord parsing
+		while (line[i] != '/' && j < CoordMaxLength)
 		{
-			if (line[i] == '/')
-			{
-				isIndex = 0;
-			}
-			if (isIndex == 1)
-			{
-				coordinates[j++] = line[i];
-			}
+			coordinates[j++] = line[i];
 			i++;
 		}
 		_indexes.push_back(_convertCharArrayToFloat(coordinates));
 		_clearArray(coordinates);
+
+		i++;
+		j = 0;
+
+		while (line[i] != '/')
+		{
+			i++;
+		}
+		i++;
+		while (line[i] != ' ')
+		{
+			coordinates[j++] = line[i];
+			i++;
+		}
+		_normalIndexes.push_back(_convertCharArrayToFloat(coordinates));
+		_clearArray(coordinates);
+
 
 		////Second coord parsing
 		//isIndex = 1;
 		//i++;
 		//j = 0;
-		//while (line[i] != '/' && j < CoordMaxLength)
+		//while (line[i] != ' ' && j < CoordMaxLength)
 		//{
-		//	coordinates[j++] = line[i];
+		//	if (line[i] == '/')
+		//	{
+		//		isIndex = 0;
+		//	}
+		//	if (isIndex == 1)
+		//	{
+		//		coordinates[j++] = line[i];
+		//	}
 		//	i++;
 		//}
 		//_indexes.push_back(_convertCharArrayToFloat(coordinates));
 		//_clearArray(coordinates);
 
-		//i++;
-		//j = 0;
-
-		//while (line[i] != '/')
-		//{
-		//	i++;
-		//}
-		//i++;
-		//while (line[i] != ' ')
-		//{
-		//	coordinates[j++] = line[i];
-		//	i++;
-		//}
-		//_normalIndexes.push_back(_convertCharArrayToFloat(coordinates));
-		//_clearArray(coordinates);
-
-		//Third coord parsing
-		isIndex = 1;
+		//Second coord parsing
 		i++;
 		j = 0;
-		while (line[i] != ' ' && line[i] != '\n' && j < CoordMaxLength)
+		while (line[i] != '/' && j < CoordMaxLength)
 		{
-			if (line[i] == '/')
-			{
-				isIndex = 0;
-			}
-			if (isIndex == 1)
-			{
-				coordinates[j++] = line[i];
-			}
+			coordinates[j++] = line[i];
 			i++;
 		}
 		_indexes.push_back(_convertCharArrayToFloat(coordinates));
+		_clearArray(coordinates);
+
+		i++;
+		j = 0;
+
+		while (line[i] != '/')
+		{
+			i++;
+		}
+		i++;
+		while (line[i] != ' ')
+		{
+			coordinates[j++] = line[i];
+			i++;
+		}
+		_normalIndexes.push_back(_convertCharArrayToFloat(coordinates));
+		_clearArray(coordinates);
 
 		////Third coord parsing
 		//isIndex = 1;
 		//i++;
 		//j = 0;
-		//	while (line[i] != '/' && j < CoordMaxLength)
-		//	{
-		//		coordinates[j++] = line[i];
-		//		i++;
-		//	}
-		//_indexes.push_back(_convertCharArrayToFloat(coordinates));
-		//_clearArray(coordinates);
-
-		//i++;
-		//j = 0;
-
-		//while (line[i] != '/')
-		//{
-		//	i++;
-		//}
-		//i++;
 		//while (line[i] != ' ' && line[i] != '\n' && j < CoordMaxLength)
 		//{
-		//	coordinates[j++] = line[i];
+		//	if (line[i] == '/')
+		//	{
+		//		isIndex = 0;
+		//	}
+		//	if (isIndex == 1)
+		//	{
+		//		coordinates[j++] = line[i];
+		//	}
 		//	i++;
 		//}
-		//_normalIndexes.push_back(_convertCharArrayToFloat(coordinates));
+		//_indexes.push_back(_convertCharArrayToFloat(coordinates));
+
+		//Third coord parsing
+		i++;
+		j = 0;
+			while (line[i] != '/' && j < CoordMaxLength)
+			{
+				coordinates[j++] = line[i];
+				i++;
+			}
+		_indexes.push_back(_convertCharArrayToFloat(coordinates));
+		_clearArray(coordinates);
+
+		i++;
+		j = 0;
+
+		while (line[i] != '/')
+		{
+			i++;
+		}
+		i++;
+		while (line[i] != ' ' && line[i] != '\n' && j < CoordMaxLength)
+		{
+			coordinates[j++] = line[i];
+			i++;
+		}
+		_normalIndexes.push_back(_convertCharArrayToFloat(coordinates));
 	}
 }
 
@@ -263,4 +261,9 @@ std::vector<int> ObjLoader::GetIndexes()
 std::vector<int> ObjLoader::GetNormalIndexes()
 {
 	return _normalIndexes;
+}
+
+std::vector<CoordinateStruct> ObjLoader::GetNormals()
+{
+	return _normalVector;
 }

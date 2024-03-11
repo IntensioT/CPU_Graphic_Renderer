@@ -26,6 +26,7 @@ private:
 	//std::string filePath = "D:\\Bugor\\6sem\\ComputerGraphicAlghorithms\\projects\\DoomCombatScene.obj";
 	//std::string filePath = "D:\\Bugor\\6sem\\ComputerGraphicAlghorithms\\projects\\final_v01.obj";
 	std::vector<CoordinateStruct> _vertexVector;
+	std::vector<CoordinateStruct> _normalVector;
 	std::vector<int> _indexes;
 	std::vector<int> _normalIndexes;
 	void _parseLine(std::string line);
@@ -37,4 +38,5 @@ public:
 	std::vector<CoordinateStruct> GetVetrexVector();
 	std::vector<int> GetIndexes();
 	std::vector<int> GetNormalIndexes();
+	std::vector<CoordinateStruct> GetNormals();
 };

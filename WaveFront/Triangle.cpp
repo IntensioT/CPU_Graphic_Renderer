@@ -9,16 +9,21 @@ Triangle GetTriangle(std::vector<HomogeneousCoordinateStruct> vec, std::vector<i
 		result.vectors[i] = vec[indicies[i] - 1];
 	}
 
+
 	return result;
 }
 
-std::vector<Triangle> GetAllPolygons(std::vector<HomogeneousCoordinateStruct> vectors, std::vector<int> indicies)
+std::vector<Triangle> GetAllPolygons(std::vector<HomogeneousCoordinateStruct> vectors, std::vector<int> indicies, std::vector<int> normalIndicies, std::vector<CoordinateStruct> normals)
 {
 	std::vector<Triangle> triangles;
 
+	int j = 0;
 	for (int i = 0; i < indicies.size(); i+=3)
 	{
 		triangles.push_back(GetTriangle(vectors, { indicies[i], indicies[i + 1], indicies[i + 2] }));
+
+		triangles[j++].normal = normals[normalIndicies[i] - 1];
+
 	}
 
 	return triangles;
