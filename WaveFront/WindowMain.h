@@ -15,6 +15,7 @@ float depthBuffer[1080][1920];
 
 
 RGBQUAD color = { 255, 255, 255, 0 };
+RGBQUAD color2 = { 0, 0, 255, 0 };
 
 CoordinateStruct cameraGlobalCoord;
 CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };

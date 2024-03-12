@@ -9,17 +9,14 @@
 class Rasterizator
 {
 public:
-	Rasterizator(int width, int height);
 	//std::vector<float> zInterpolated;
 	float zInterpolated[1080][1920];
 
 	int isLeft;
 
 
-	std::vector<std::vector<float>> zBuffer;
-
 	std::vector<float> Interpolate(float x0, float y0, float x1, float y1);
-	std::vector<float> xLeft, xRight, zLeft, zRight;
+	std::vector<float> xLeft, xRight, zLeft, zRight, hLeft, hRight;
 	void UpdateXleftAndXRight(Triangle& polygon);
 
 private:
@@ -27,6 +24,7 @@ private:
 	Triangle correctOrdinary(Triangle polygon);
 	void getXleftAndRight(Triangle polygon);
 	void getZLeftAndZRight(Triangle polygon);
+	void getHLeftAndHRight(Triangle polygon);
 };
 
 #endif

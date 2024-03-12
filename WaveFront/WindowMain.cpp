@@ -33,7 +33,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	/////
 
-	rasterizator = new Rasterizator(FrameWidth, FrameHeight);
+	//rasterizator = new Rasterizator(FrameWidth, FrameHeight);
+	rasterizator = new Rasterizator();
 
 
 
@@ -238,14 +239,6 @@ void SetPoint(void* buffer, int x, int y, RGBQUAD color)
 	}
 }
 
-void SetPointWithZ(int x, int y, RGBQUAD color, float z)
-{
-	if (x >= 0 && x < FrameWidth && y >= 0 && y < FrameHeight && z < rasterizator->zBuffer[y][x]) {
-		frameBuffer[y][x] = color;
-		rasterizator->zBuffer[y][x] = z;
-	}
-}
-
 void Render()
 {
 	std::memset(frameBuffer, 0, sizeof(frameBuffer));
@@ -369,25 +362,7 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 
 	polygon = polygonsOutp[polygonIterator];
 
-	/*HomogeneousCoordinateStruct edge1 = polygon.vectors[1] - polygon.vectors[0];
-	HomogeneousCoordinateStruct edge2 = polygon.vectors[2] - polygon.vectors[0];
-
-	HomogeneousCoordinateStruct normal = modelCoordSystem->CrossProduct(edge1, edge2);
-	CoordinateStruct normal3d = modelCoordSystem->NormalizeVector({normal.x,normal.y,normal.z});
-
-	CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
-	CoordinateStruct vector0 = { polygon.vectors[0].x, polygon.vectors[0].y, polygon.vectors[0].z };
-	CoordinateStruct viewVector = targetGlobalCoord - vector0;
-
-	viewVector = modelCoordSystem->NormalizeVector(viewVector);
-
-	float dotProduct = modelCoordSystem->DotProduct(normal3d, viewVector);*/
-
-	//// Если скалярное произведение отрицательное, то отбрасываем треугольник
-	//if (dotProduct < 0) {
-	//	return true; // переходим к следующему треугольнику
-	//}
-
+	// Normal clipping
 	CoordinateStruct ZAxis =modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, targetGlobalCoord));
 	
 
@@ -425,56 +400,59 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 
 void DrawObject(int i)
 {
-	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], polygonsOutp[i].vectors[0 + 1], color);
-	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], polygonsOutp[i].vectors[0 + 2], color);
-	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color);
+	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], polygonsOutp[i].vectors[0 + 1], color2);
+	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], polygonsOutp[i].vectors[0 + 2], color2);
+	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color2);
 
-	//rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
 
+	polygonsOutp[i].vectors[0].shade = 1;
+	polygonsOutp[i].vectors[1].shade = 0.6;
+	polygonsOutp[i].vectors[2].shade = 0.3;
+
+	rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
 	//// Проверяем, что размеры массивов zLeft и zRight соответствуют количеству горизонтальных отрезков
 	//int numHorizontalSegments = polygonsOutp[i].vectors[2].y - polygonsOutp[i].vectors[0].y + 1;
 	//if (rasterizator->zLeft.size() < numHorizontalSegments || rasterizator->zRight.size() < numHorizontalSegments) {
 	//	return;
 	//}
 
+	if (polygonsOutp[i].vectors[2].y > 1080 || polygonsOutp[i].vectors[0].y < 0) return;
 
-	//if (polygonsOutp[i].vectors[2].y > 1080) return;
+	// Отрисовка горизонтальных отрезков
+	for (int y = polygonsOutp[i].vectors[0].y; y <= polygonsOutp[i].vectors[2].y; y++) {
 
-	//// Отрисовка горизонтальных отрезков
-	//for (int y = polygonsOutp[i].vectors[0].y; y <= polygonsOutp[i].vectors[2].y; y++) {
+		int xL = rasterizator->xLeft[y - polygonsOutp[i].vectors[0].y];
+		int xR = rasterizator->xRight[y - polygonsOutp[i].vectors[0].y];
+		if (xR > 1920 || xL < 0) return;
 
-	//	int xL = rasterizator->xLeft[y - polygonsOutp[i].vectors[0].y];
-	//	int xR = rasterizator->xRight[y - polygonsOutp[i].vectors[0].y];
-	//	if (xR > 1920) return;
+		std::vector<float> hSegment = rasterizator->Interpolate(xL, rasterizator->hLeft[y - polygonsOutp[i].vectors[0].y], xR, rasterizator->hRight[y - polygonsOutp[i].vectors[0].y]);
+		for (int x = xL; x <= xR; x++) {
+			if (y - polygonsOutp[i].vectors[0].y >= 0 && y - polygonsOutp[i].vectors[0].y < rasterizator->zLeft.size())
+			{
+				float zL = rasterizator->zLeft[y - polygonsOutp[i].vectors[0].y];
+				float zR = rasterizator->zRight[y - polygonsOutp[i].vectors[0].y];
 
-	//	for (int x = xL; x <= xR; x++) {
-	//		if (y - polygonsOutp[i].vectors[0].y >= 0 && y - polygonsOutp[i].vectors[0].y < rasterizator->zLeft.size())
-	//		{
-	//			float zL = rasterizator->zLeft[y - polygonsOutp[i].vectors[0].y];
-	//			float zR = rasterizator->zRight[y - polygonsOutp[i].vectors[0].y];
+				float z;
+				if (xR - xL != 0)
+				{
+					z = zL + (x - xL) * (zR - zL) / (xR - xL);
+				}
+				else
+				{
+					z = zL;
+				}
 
-	//			float z;
-	//			if (xR - xL != 0)
-	//			{
-	//				z = zL + (x - xL) * (zR - zL) / (xR - xL);
-	//			}
-	//			else
-	//			{
-	//				z = zL;
-	//			}
+				if (z < depthBuffer[x][y])
+				{
+					RGBQUAD shadedColor = { color.rgbRed * hSegment[x - xL],color.rgbGreen * hSegment[x - xL],color.rgbBlue * hSegment[x - xL], 0 };
+					SetPoint(frameBuffer, x, y, shadedColor);
+					depthBuffer[x][y] = z;
+				}
+			}
 
-	//			if (z < depthBuffer[x][y])
-	//			{
-	//				SetPoint(frameBuffer, x, y, color);
-	//				depthBuffer[x][y] = z;
-	//			}
-	//		}
+		}
+	}
 
-	//	}
-	//}
-	//color.rgbRed += 100;
-	//color.rgbGreen += 50;
-	//color.rgbBlue += 20;
 }
 
 bool UpdatePolygons(int polygonIterator)
@@ -495,14 +473,13 @@ bool UpdatePolygons(int polygonIterator)
 		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
 		{
 			return false;
-			//pointHomogeneous = { 0,0,0,1 };
 		}
 		else
 		{
 			pointHomogeneous *= (1 / pointHomogeneous.w);
 			pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
 		}
-
+		pointHomogeneous.shade = 1;
 		polygon.vectors[i] = pointHomogeneous;
 	}
 	polygonsOutp[polygonIterator] = polygon;

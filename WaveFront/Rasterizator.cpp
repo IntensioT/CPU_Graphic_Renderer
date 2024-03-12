@@ -60,14 +60,6 @@ void Rasterizator::getXleftAndRight(Triangle polygon)
 
 void Rasterizator::getZLeftAndZRight(Triangle polygon)
 {
-	//float z0 = std::abs(polygon.vectors[0].z);
-	//float z1 = std::abs(polygon.vectors[0].z);
-	//float z2 = std::abs(polygon.vectors[0].z);
-
-	//// Вычисление значений z для вершин треугольника
-	//std::vector<float> z01 = Interpolate(polygon.vectors[0].y, z0, polygon.vectors[1].y, z1);
-	//std::vector<float> z12 = Interpolate(polygon.vectors[1].y, z1, polygon.vectors[2].y, z2);
-	//std::vector<float> z02 = Interpolate(polygon.vectors[0].y, z0, polygon.vectors[2].y, z2);
 
 	// Вычисление значений z для вершин треугольника
 	std::vector<float> z01 = Interpolate(polygon.vectors[0].y, polygon.vectors[0].z, polygon.vectors[1].y, polygon.vectors[1].z);
@@ -90,6 +82,32 @@ void Rasterizator::getZLeftAndZRight(Triangle polygon)
 	{
 		zLeft = z012;
 		zRight = z02;
+	}
+}
+
+void Rasterizator::getHLeftAndHRight(Triangle polygon)
+{
+	// Вычисление значений h для вершин треугольника
+	std::vector<float> h01 = Interpolate(polygon.vectors[0].y, polygon.vectors[0].shade, polygon.vectors[1].y, polygon.vectors[1].shade);
+	std::vector<float> h12 = Interpolate(polygon.vectors[1].y, polygon.vectors[1].shade, polygon.vectors[2].y, polygon.vectors[2].shade);
+	std::vector<float> h02 = Interpolate(polygon.vectors[0].y, polygon.vectors[0].shade, polygon.vectors[2].y, polygon.vectors[2].shade);
+
+	// Конкатенация значений h для коротких сторон
+	h01.pop_back();
+	std::vector<float> h012;
+	h012.insert(h012.end(), h01.begin(), h01.end());
+	h012.insert(h012.end(), h12.begin(), h12.end());
+
+	// Определяем, какая из сторон левая и правая
+	if (isLeft == 1)
+	{
+		hLeft = h02;
+		hRight = h012;
+	}
+	else
+	{
+		hLeft = h012;
+		hRight = h02;
 	}
 }
 
@@ -128,14 +146,7 @@ void Rasterizator::UpdateXleftAndXRight(Triangle& polygon)
 	SortYPoints(polygon);
 	getXleftAndRight(polygon);
 	getZLeftAndZRight(polygon);
-}
-
-Rasterizator::Rasterizator(int width, int height) 
-{
-	zBuffer.assign(height, std::vector<float>(width, std::numeric_limits<float>::max()));
-	//zInterpolated.assign(height, 0.0f);
-
-	
+	getHLeftAndHRight(polygon);
 }
 
 

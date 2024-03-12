@@ -23,6 +23,7 @@ typedef struct _3DMATRIX {
 struct HomogeneousCoordinateStruct
 {
     float x, y, z, w;
+    float shade;
 
     HomogeneousCoordinateStruct& operator*=(const float f) {
         x *= f;
