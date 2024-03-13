@@ -24,6 +24,8 @@ struct HomogeneousCoordinateStruct
 {
     float x, y, z, w;
     float shade;
+    CoordinateStruct diffuse;
+    CoordinateStruct normal;
 
     HomogeneousCoordinateStruct& operator*=(const float f) {
         x *= f;
@@ -34,7 +36,10 @@ struct HomogeneousCoordinateStruct
     }
 
     HomogeneousCoordinateStruct operator-(const HomogeneousCoordinateStruct& other) const {
-        return HomogeneousCoordinateStruct{ x - other.x, y - other.y, z - other.z, w-other.w };
+        return HomogeneousCoordinateStruct{ x - other.x, y - other.y, z - other.z };
+    }
+    HomogeneousCoordinateStruct operator+(const HomogeneousCoordinateStruct& other) const {
+        return HomogeneousCoordinateStruct{ x + other.x, y + other.y, z + other.z };
     }
 };
 

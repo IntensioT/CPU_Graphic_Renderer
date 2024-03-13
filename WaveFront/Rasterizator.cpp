@@ -111,6 +111,32 @@ void Rasterizator::getHLeftAndHRight(Triangle polygon)
 	}
 }
 
+void Rasterizator::getDiffuseLeftAndDiffuseRight(Triangle polygon)
+{
+	//// Вычисление значений h для вершин треугольника
+	//std::vector<float> diffuse01 = Interpolate(polygon.vectors[0].y, polygon.vectors[0].diffuse., polygon.vectors[1].y, polygon.vectors[1].shade);
+	//std::vector<float> diffuse01 = Interpolate(polygon.vectors[1].y, polygon.vectors[1].shade, polygon.vectors[2].y, polygon.vectors[2].shade);
+	//std::vector<float> diffuse01 = Interpolate(polygon.vectors[0].y, polygon.vectors[0].shade, polygon.vectors[2].y, polygon.vectors[2].shade);
+
+	//// Конкатенация значений h для коротких сторон
+	//h01.pop_back();
+	//std::vector<float> h012;
+	//h012.insert(h012.end(), h01.begin(), h01.end());
+	//h012.insert(h012.end(), h12.begin(), h12.end());
+
+	//// Определяем, какая из сторон левая и правая
+	//if (isLeft == 1)
+	//{
+	//	hLeft = h02;
+	//	hRight = h012;
+	//}
+	//else
+	//{
+	//	hLeft = h012;
+	//	hRight = h02;
+	//}
+}
+
 
 
 std::vector<float> Rasterizator::Interpolate(float i0, float d0, float i1, float d1)
@@ -148,5 +174,23 @@ void Rasterizator::UpdateXleftAndXRight(Triangle& polygon)
 	getZLeftAndZRight(polygon);
 	getHLeftAndHRight(polygon);
 }
+
+//void Rasterizator::LambertShading(CoordSystem* modelCoord, Triangle curPolygon, CoordinateStruct lightPos, CoordinateStruct polygonPos)
+//{
+//	for (int i = 0; i < 3; i++)
+//	{
+//
+//	}
+//	CoordinateStruct normal = modelCoord->NormalizeVector(curNormal);
+//	// получаем вектор направления света
+//	CoordinateStruct lightDirection = modelCoord->NormalizeVector(modelCoord->SubstractVectors(lightPos, polygonPos));
+//
+//	// получаем скалярное произведение векторов нормали и направления света
+//	float lambertTerm = (modelCoord->DotProduct(normal, lightDirection) >= 0.0) ? modelCoord->DotProduct(normal, lightDirection) : 0.0f;
+//	//CoordinateStruct diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
+//	return { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
+//
+//	
+//}
 
 

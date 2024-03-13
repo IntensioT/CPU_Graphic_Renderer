@@ -20,6 +20,12 @@ RGBQUAD color2 = { 0, 0, 255, 0 };
 CoordinateStruct cameraGlobalCoord;
 CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
 
+CoordinateStruct lightGlobalCoord = { 10.f,15.f,30.5f };
+
+CoordinateStruct DiffuseMaterialColor = { 0.8f,0.8f,0.8f };
+CoordinateStruct DiffuseLightColor = { 255,255,255 };
+
+
 
 
 std::vector<CoordinateStruct> vertexes;

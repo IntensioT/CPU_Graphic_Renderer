@@ -6,10 +6,11 @@
 struct Triangle
 {
 	HomogeneousCoordinateStruct vectors[3];
-	CoordinateStruct normal;
+	//HomogeneousCoordinateStruct normals[3];
+	
 };
 
-Triangle GetTriangle(std::vector<HomogeneousCoordinateStruct> vec, std::vector<int> indicies);
+Triangle GetTriangle(std::vector<HomogeneousCoordinateStruct> vec, std::vector<int> indicies, std::vector<int> normalIndicies, std::vector<CoordinateStruct> normals);
 //std::vector<Triangle> GetAllPolygons(std::vector<HomogeneousCoordinateStruct> vectors, std::vector<int> indicies);
 std::vector<Triangle> GetAllPolygons(std::vector<HomogeneousCoordinateStruct> vectors, std::vector<int> indicies, std::vector<int> normalIndicies, std::vector<CoordinateStruct> normals);
 void SwapVectorsInPolygon(Triangle polygon, int indVec1, int indVec2);

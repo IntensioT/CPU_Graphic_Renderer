@@ -18,13 +18,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	normalIndexes = loader->GetNormalIndexes();
 	normals = loader->GetNormals();
 
-	vertexesOutp.resize(vertexes.size());
+	vertexesOutp.resize(vertexes.size() + normals.size());
 	std::vector<HomogeneousCoordinateStruct> vertexesHomo;
+	//std::vector<HomogeneousCoordinateStruct> normalsHomo;
+
 	vertexesHomo.resize(vertexes.size());
+	//normalsHomo.resize(normals.size());
 
 	for (int i = 0; i < vertexes.size(); i++)
 	{
 		vertexesHomo[i] = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1 };
+		//normalsHomo[i] = { normals[i].x, normals[i].y, normals[i].z, 1 };
 	}
 
 	polygons.resize(indexes.size() / 3);
@@ -367,15 +371,18 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 	
 
 	//float dotProduct = modelCoordSystem->DotProduct(polygon.normal, cameraGlobalCoord);
-	float dotProduct = modelCoordSystem->DotProduct(polygon.normal, ZAxis);
-	if (dotProduct < 0)
-	{
-		return true; // переходим к следующему треугольнику
-	}
+
 
 
 	for (int i = 0; i < 3; i++)
 	{
+		CoordinateStruct normal = { polygon.vectors[i].normal.x, polygon.vectors[i].normal.y, polygon.vectors[i].normal.z};
+		float dotProduct = modelCoordSystem->DotProduct(normal, ZAxis);
+		if (dotProduct < 0)
+		{
+			return true;
+		}
+
 		pointHomogeneous = polygon.vectors[i];
 		bool isVertexBehindClipPlanes = true;
 
@@ -400,21 +407,36 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 
 void DrawObject(int i)
 {
-	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], polygonsOutp[i].vectors[0 + 1], color2);
-	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], polygonsOutp[i].vectors[0 + 2], color2);
-	BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color2);
+	//BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], polygonsOutp[i].vectors[0 + 1], color2);
+	//BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], polygonsOutp[i].vectors[0 + 2], color2);
+	//BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color2);
 
 
-	polygonsOutp[i].vectors[0].shade = 1;
-	polygonsOutp[i].vectors[1].shade = 0.6;
-	polygonsOutp[i].vectors[2].shade = 0.3;
+	//for (int j = 0; j < 3; j++)
+	//{
+	//	CoordinateStruct normal = modelCoordSystem->NormalizeVector({polygonsOutp[i].vectors[j].normal.x,polygonsOutp[i].vectors[j].normal.y, polygonsOutp[i].vectors[j].normal.z});
+	//	// получаем вектор направления света
+	//	CoordinateStruct curPos = { polygonsOutp[i].vectors[j].x,polygonsOutp[i].vectors[j].y,polygonsOutp[i].vectors[j].z };
+	//	CoordinateStruct lightDirection = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(lightGlobalCoord, curPos));
 
-	rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
-	//// Проверяем, что размеры массивов zLeft и zRight соответствуют количеству горизонтальных отрезков
-	//int numHorizontalSegments = polygonsOutp[i].vectors[2].y - polygonsOutp[i].vectors[0].y + 1;
-	//if (rasterizator->zLeft.size() < numHorizontalSegments || rasterizator->zRight.size() < numHorizontalSegments) {
-	//	return;
+	//	// получаем скалярное произведение векторов нормали и направления света
+	//	float lambertTerm = (modelCoordSystem->DotProduct(normal, lightDirection) >= 0.0) ? modelCoordSystem->DotProduct(normal, lightDirection) : 0.0f;
+	//	//CoordinateStruct diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
+	//	polygonsOutp[i].vectors[j].shade = lambertTerm;
+	//	polygonsOutp[i].vectors[j].diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
 	//}
+	
+
+	////////////////////////////
+
+	/*omogeneousCoordinateStruct tmp = polygonsOutp[i].vectors[0] + polygonsOutp[i].vectors[1] + polygonsOutp[i].vectors[2];
+	CoordinateStruct polygonCenter = {tmp.x * 0.3333333333, tmp.y * 0.3333333333, tmp.z * 0.3333333333};*/
+
+	//CoordinateStruct diffuse = rasterizator->LambertShading(modelCoordSystem, polygonsOutp[i].normals[i], lightGlobalCoord, polygonCenter);
+	//RGBQUAD shadedColor = { color.rgbRed * diffuse.x,color.rgbGreen * diffuse.y,color.rgbBlue * diffuse.z, 0 };
+	
+	rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
+
 
 	if (polygonsOutp[i].vectors[2].y > 1080 || polygonsOutp[i].vectors[0].y < 0) return;
 
@@ -457,19 +479,20 @@ void DrawObject(int i)
 
 bool UpdatePolygons(int polygonIterator)
 {
+	float sus = 0.f;
 	Triangle polygon;
 	HomogeneousCoordinateStruct pointHomogeneous;
 
-	polygon.normal = polygons[polygonIterator].normal;
 	for (int i = 0; i < 3; i++)
 	{
+
 		pointHomogeneous = polygons[polygonIterator].vectors[i];
 
 		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 
-
+		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
 		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
 		{
 			return false;
@@ -481,7 +504,24 @@ bool UpdatePolygons(int polygonIterator)
 		}
 		pointHomogeneous.shade = 1;
 		polygon.vectors[i] = pointHomogeneous;
+		polygon.vectors[i].normal = polygons[polygonIterator].vectors[i].normal;
+
+		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////
+		CoordinateStruct normal = modelCoordSystem->NormalizeVector(polygon.vectors[i].normal);
+		// получаем вектор направления света
+		CoordinateStruct curPos = { polygon.vectors[i].x,polygon.vectors[i].y,polygon.vectors[i].z };
+		CoordinateStruct lightDirection = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(lightGlobalCoord, curVector));
+
+		// получаем скалярное произведение векторов нормали и направления света
+		float lambertTerm = (modelCoordSystem->DotProduct(normal, lightDirection) >= 0.0) ? modelCoordSystem->DotProduct(normal, lightDirection) : 0.0f;
+		polygon.vectors[i].shade = lambertTerm;
+		
+		//sus = ((sus + 0.3) < 1) ? (sus + 0.3) : (sus + 0.3 - 1) ;
+		//polygon.vectors[i].shade = sus;
+		polygon.vectors[i].diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
 	}
+
+	 
 	polygonsOutp[polygonIterator] = polygon;
 	return true;
 }
