@@ -20,15 +20,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	vertexesOutp.resize(vertexes.size() + normals.size());
 	std::vector<HomogeneousCoordinateStruct> vertexesHomo;
-	//std::vector<HomogeneousCoordinateStruct> normalsHomo;
 
 	vertexesHomo.resize(vertexes.size());
-	//normalsHomo.resize(normals.size());
 
 	for (int i = 0; i < vertexes.size(); i++)
 	{
 		vertexesHomo[i] = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1 };
-		//normalsHomo[i] = { normals[i].x, normals[i].y, normals[i].z, 1 };
 	}
 
 	polygons.resize(indexes.size() / 3);
@@ -37,10 +34,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	/////
 
-	//rasterizator = new Rasterizator(FrameWidth, FrameHeight);
 	rasterizator = new Rasterizator();
-
-
 
 	/////
 
@@ -144,9 +138,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 
 		case 'S':
-			zCamera -= 0.05f;
-			rSphere -= 0.05f;
-			InvalidateRect(hwnd, NULL, TRUE);
+			if (zCamera > 2.f)
+			{
+				zCamera -= 0.05f;
+				rSphere -= 0.05f;
+				InvalidateRect(hwnd, NULL, TRUE);
+			}
 			return 0;
 
 		case 'Z':
@@ -177,7 +174,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				InvalidateRect(hwnd, NULL, TRUE);
 			}
 			return 0;
+		case '1':
+			curGraphic = 1;
+			return 0;
+		case '2':
+			curGraphic = 2;
+			return 0;
 		}
+
 
 	default:
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -194,10 +198,12 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 	HBITMAP hBitMap = CreateBitmap(width, height, 1, 8 * 4, pixels);
 	//HBITMAP hBitMap = CreateCompatibleBitmap(hdc, width, height);
 	/*
+	Однако для повышения производительности приложения должны использовать CreateBitmap для создания монохромных растровых изображений и 
+	CreateCompatibleBitmap для создания цветных растровых изображений
 	  [in] nPlanes
-	  ���������� �������� ����������, ������������ �����������.
-	  [in] nBitCount (4 �����)
-	  ���������� �����, ����������� ��� ������������� ����� ������ �������.
+	Количество цветовых плоскостей, используемых устройством.
+	  [in] nBitCount (4)
+	Количество битов, необходимых для идентификации цвета одного пикселя.
 	 */
 
 
@@ -208,24 +214,24 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 
 	BitBlt(hdc, 0, 0, static_cast<int>(width), static_cast<int>(height), srcHdc, 0, 0, SRCCOPY);
 	/*[in] hdc
-		���������� ��������� �������� ����������.
+		Дескриптор контекста целевого устройства.
 		[in] x
-		���������� X � ���������� �������� �������� ������ ���� �������������� ����������.
+		Координата X в логических единицах левого верхнего угла целевого прямоугольника.
 		[in] y
-		���������� Y � ���������� �������� �������� ������ ���� �������������� ����������.
+		Координата Y в логических единицах левого верхнего угла целевого прямоугольника.
 		[in] cx
-		������(� ���������� ��������) ��������� � �������� ���������������.
+		Ширина (в логических единицах) исходного и целевого прямоугольников.
 		[in] cy
-		������(� ���������� ��������) ��������� � �������� ���������������.
+		Высота (в логических единицах) исходного и целевого прямоугольников.
 		[in] hdcSrc
-		���������� ��������� ��������� ����������.
+		Дескриптор контекста исходного устройства.
 		[in] x1
-		���������� X � ���������� �������� �������� ������ ���� ��������� ��������������.
+		Координата X в логических единицах верхнего левого угла исходного прямоугольника.
 		[in] y1
-		���������� Y � ���������� �������� �������� ������ ���� ��������� ��������������.
+		Координата Y в логических единицах верхнего левого угла исходного прямоугольника.
 		[in] rop
-		��� ��������� ��������.��� ���� ����������, ��� ������ ����� ��������� �������������� ������ ���������� � ������� ����� ��� �������������� ���������� ��� ���������� �������������� �����.*/
-
+		Код растровой операции. Эти коды определяют, как данные цвета исходного прямоугольника должны сочетаться с данными цвета для целевого прямоугольника для достижения окончательного цвета.
+		*/
 
 	DeleteObject(hBitMap);
 	DeleteDC(srcHdc);
@@ -234,12 +240,10 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 }
 
 void SetPoint(void* buffer, int x, int y, RGBQUAD color)
-//void SetPoint(const std::vector<std::vector<RGBQUAD>>& frameBuffer, int x, int y, RGBQUAD color)
 {
 	if (x >= 0 && x <= (FrameWidth - 1) && y >= 0 && y <= (FrameHeight - 1))
 	{
 		reinterpret_cast<RGBQUAD*>(buffer)[y * FrameWidth + x] = color;
-		//frameBuffer[y][x] = color;
 	}
 }
 
@@ -258,64 +262,6 @@ void Render()
 
 
 	UpdateVectors();
-
-
-	/*bool isInvisible = false;
-	for (int i = 0; i < polygonsOutp.size(); i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			if (polygonsOutp[i].vectors[j].x == 0 && polygonsOutp[i].vectors[j].y == 0 && polygonsOutp[i].vectors[j].z == 0 && polygonsOutp[i].vectors[j].w == 1)
-			{
-				isInvisible = true;
-				break;
-			}
-		}
-		if (isInvisible)
-		{
-			isInvisible = false;
-			continue;
-		}
-		int j = 0;
-
-		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j], polygonsOutp[i].vectors[j + 1], color);
-		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 1], polygonsOutp[i].vectors[j + 2], color);
-		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[j + 2], polygonsOutp[i].vectors[j], color);
-	}*/
-
-	//	rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
-
-	//	// Отрисовка горизонтальных отрезков
-	//	for (int y = polygonsOutp[i].vectors[0].y; y <= polygonsOutp[i].vectors[2].y; y++) {
-
-	//		int xL = rasterizator->xLeft[y - polygonsOutp[i].vectors[0].y];
-	//		int xR = rasterizator->xRight[y - polygonsOutp[i].vectors[0].y];
-	//		for (int x = xL; x <= xR; x++) {
-	//			float zL = rasterizator->zLeft[y - polygonsOutp[i].vectors[0].y];
-	//			float zR = rasterizator->zRight[y - polygonsOutp[i].vectors[0].y];
-
-	//			float z;
-	//			if (xR - xL != 0)
-	//			{
-	//				z = zL + (x - xL) * (zR - zL) / (xR - xL);
-	//			}
-	//			else
-	//			{
-	//				z = zL;
-	//			}
-
-	//			if (z < depthBuffer[x][y])
-	//			{
-	//				SetPoint(frameBuffer, x, y, color);
-	//				depthBuffer[x][y] = z;
-	//			}
-	//		}
-	//	}
-	//	color.rgbRed += 100;
-	//	color.rgbGreen += 50;
-	//	color.rgbBlue += 20;
-	//}
-
 }
 
 void UpdateVectors()
@@ -367,16 +313,20 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 	polygon = polygonsOutp[polygonIterator];
 
 	// Normal clipping
-	CoordinateStruct ZAxis =modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, targetGlobalCoord));
-	
+	CoordinateStruct ZAxis = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, targetGlobalCoord));
+
 
 	//float dotProduct = modelCoordSystem->DotProduct(polygon.normal, cameraGlobalCoord);
 
-
+	//CoordinateStruct vect, ZAxis;
 
 	for (int i = 0; i < 3; i++)
 	{
-		CoordinateStruct normal = { polygon.vectors[i].normal.x, polygon.vectors[i].normal.y, polygon.vectors[i].normal.z};
+		//vect = { polygon.vectors[i].x, polygon.vectors[i].y, polygon.vectors[i].z };
+		//ZAxis = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, vect));
+
+		CoordinateStruct normal = { polygon.vectors[i].normal.x, polygon.vectors[i].normal.y, polygon.vectors[i].normal.z };
+
 		float dotProduct = modelCoordSystem->DotProduct(normal, ZAxis);
 		if (dotProduct < 0)
 		{
@@ -407,74 +357,28 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 
 void DrawObject(int i)
 {
-	//BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], polygonsOutp[i].vectors[0 + 1], color2);
-	//BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], polygonsOutp[i].vectors[0 + 2], color2);
-	//BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color2);
+	int vectorCount = sizeof(polygonsOutp[i].vectors) / sizeof(polygonsOutp[i].vectors[0]);
 
-
-	//for (int j = 0; j < 3; j++)
-	//{
-	//	CoordinateStruct normal = modelCoordSystem->NormalizeVector({polygonsOutp[i].vectors[j].normal.x,polygonsOutp[i].vectors[j].normal.y, polygonsOutp[i].vectors[j].normal.z});
-	//	// получаем вектор направления света
-	//	CoordinateStruct curPos = { polygonsOutp[i].vectors[j].x,polygonsOutp[i].vectors[j].y,polygonsOutp[i].vectors[j].z };
-	//	CoordinateStruct lightDirection = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(lightGlobalCoord, curPos));
-
-	//	// получаем скалярное произведение векторов нормали и направления света
-	//	float lambertTerm = (modelCoordSystem->DotProduct(normal, lightDirection) >= 0.0) ? modelCoordSystem->DotProduct(normal, lightDirection) : 0.0f;
-	//	//CoordinateStruct diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
-	//	polygonsOutp[i].vectors[j].shade = lambertTerm;
-	//	polygonsOutp[i].vectors[j].diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
-	//}
-	
-
-	////////////////////////////
-
-	/*omogeneousCoordinateStruct tmp = polygonsOutp[i].vectors[0] + polygonsOutp[i].vectors[1] + polygonsOutp[i].vectors[2];
-	CoordinateStruct polygonCenter = {tmp.x * 0.3333333333, tmp.y * 0.3333333333, tmp.z * 0.3333333333};*/
-
-	//CoordinateStruct diffuse = rasterizator->LambertShading(modelCoordSystem, polygonsOutp[i].normals[i], lightGlobalCoord, polygonCenter);
-	//RGBQUAD shadedColor = { color.rgbRed * diffuse.x,color.rgbGreen * diffuse.y,color.rgbBlue * diffuse.z, 0 };
-	
-	rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
-
-
-	if (polygonsOutp[i].vectors[2].y > 1080 || polygonsOutp[i].vectors[0].y < 0) return;
-
-	// Отрисовка горизонтальных отрезков
-	for (int y = polygonsOutp[i].vectors[0].y; y <= polygonsOutp[i].vectors[2].y; y++) {
-
-		int xL = rasterizator->xLeft[y - polygonsOutp[i].vectors[0].y];
-		int xR = rasterizator->xRight[y - polygonsOutp[i].vectors[0].y];
-		if (xR > 1920 || xL < 0) return;
-
-		std::vector<float> hSegment = rasterizator->Interpolate(xL, rasterizator->hLeft[y - polygonsOutp[i].vectors[0].y], xR, rasterizator->hRight[y - polygonsOutp[i].vectors[0].y]);
-		for (int x = xL; x <= xR; x++) {
-			if (y - polygonsOutp[i].vectors[0].y >= 0 && y - polygonsOutp[i].vectors[0].y < rasterizator->zLeft.size())
-			{
-				float zL = rasterizator->zLeft[y - polygonsOutp[i].vectors[0].y];
-				float zR = rasterizator->zRight[y - polygonsOutp[i].vectors[0].y];
-
-				float z;
-				if (xR - xL != 0)
-				{
-					z = zL + (x - xL) * (zR - zL) / (xR - xL);
-				}
-				else
-				{
-					z = zL;
-				}
-
-				if (z < depthBuffer[x][y])
-				{
-					RGBQUAD shadedColor = { color.rgbRed * hSegment[x - xL],color.rgbGreen * hSegment[x - xL],color.rgbBlue * hSegment[x - xL], 0 };
-					SetPoint(frameBuffer, x, y, shadedColor);
-					depthBuffer[x][y] = z;
-				}
-			}
-
+	switch (curGraphic)
+	{
+	case 1:
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], polygonsOutp[i].vectors[0 + 1], color2);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], polygonsOutp[i].vectors[0 + 2], color2);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color2);
+		break;
+	case 2:
+		for (auto j = 0; j < vectorCount; j++)
+		{
+			if (polygonsOutp[i].vectors[j].x > 1920 || polygonsOutp[i].vectors[j].x < 0 || polygonsOutp[i].vectors[j].y > 1080 || polygonsOutp[i].vectors[j].y < 0) return;
 		}
-	}
 
+		rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
+
+		rasterizator->DrawLines(polygonsOutp[i], frameBuffer, depthBuffer, color);
+		break;
+	case 3:
+		break;
+	}
 }
 
 bool UpdatePolygons(int polygonIterator)
@@ -485,7 +389,6 @@ bool UpdatePolygons(int polygonIterator)
 
 	for (int i = 0; i < 3; i++)
 	{
-
 		pointHomogeneous = polygons[polygonIterator].vectors[i];
 
 		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
@@ -493,9 +396,67 @@ bool UpdatePolygons(int polygonIterator)
 		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 
 		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
+		CoordinateStruct ZAxis = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, curVector));
+
+		CoordinateStruct curNormal = { polygons[polygonIterator].vectors[i].normal.x, polygons[polygonIterator].vectors[i].normal.y, polygons[polygonIterator].vectors[i].normal.z };
+
+
+		float dotProduct = modelCoordSystem->DotProduct(curNormal, ZAxis);
+		/*if (dotProduct < 0)
+		{
+			return false;
+		}*/
+
 		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
 		{
 			return false;
+		}
+		else
+		{
+			pointHomogeneous *= (1 / pointHomogeneous.w);
+			pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
+		}
+		pointHomogeneous.shade = 1;
+		polygon.vectors[i] = pointHomogeneous;
+		polygon.vectors[i].normal = polygons[polygonIterator].vectors[i].normal;
+
+		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////
+		CoordinateStruct normal = modelCoordSystem->NormalizeVector(polygon.vectors[i].normal);
+		CoordinateStruct curPos = { polygon.vectors[i].x,polygon.vectors[i].y,polygon.vectors[i].z };
+
+
+		CoordinateStruct lightDirection = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(lightGlobalCoord, curVector));
+
+		float lambertTerm = (modelCoordSystem->DotProduct(normal, lightDirection) >= 0.0) ? modelCoordSystem->DotProduct(normal, lightDirection) : 0.0f;
+		polygon.vectors[i].shade = lambertTerm;
+
+		polygon.vectors[i].diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
+	}
+
+
+	polygonsOutp[polygonIterator] = polygon;
+	return true;
+}
+
+
+Triangle UpdatePolygonsTriangle(int polygonIterator)
+{
+
+	Triangle polygon;
+	HomogeneousCoordinateStruct pointHomogeneous;
+	for (int i = 0; i < 3; i++)
+	{
+		pointHomogeneous = polygons[polygonIterator].vectors[i];
+
+		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
+		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
+		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
+
+		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
+
+		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
+		{
+			pointHomogeneous = { 0,0,0,1 };
 		}
 		else
 		{
@@ -515,50 +476,14 @@ bool UpdatePolygons(int polygonIterator)
 		// получаем скалярное произведение векторов нормали и направления света
 		float lambertTerm = (modelCoordSystem->DotProduct(normal, lightDirection) >= 0.0) ? modelCoordSystem->DotProduct(normal, lightDirection) : 0.0f;
 		polygon.vectors[i].shade = lambertTerm;
-		
-		//sus = ((sus + 0.3) < 1) ? (sus + 0.3) : (sus + 0.3 - 1) ;
-		//polygon.vectors[i].shade = sus;
+
 		polygon.vectors[i].diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
-	}
-
-	 
-	polygonsOutp[polygonIterator] = polygon;
-	return true;
-}
-
-
-Triangle UpdatePolygonsTriangle(int polygonIterator)
-{
-
-	Triangle polygon;
-	HomogeneousCoordinateStruct pointHomogeneous;
-	for (int i = 0; i < 3; i++)
-	{
-		pointHomogeneous = polygons[polygonIterator].vectors[i];
-
-		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
-		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
-		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
-
-
-		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
-		{
-			pointHomogeneous = { 0,0,0,1 };
-		}
-		else
-		{
-			pointHomogeneous *= (1 / pointHomogeneous.w);
-			pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
-		}
-
-		polygon.vectors[i] = pointHomogeneous;
 	}
 	return polygon;
 }
 
 void UpdateWindowSize(HWND hWnd)
 {
-
 	RECT clientRect;
 	GetClientRect(hWnd, &clientRect);
 

@@ -27,10 +27,10 @@
     <ClCompile Include="Triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rasterizator.cpp">
+    <ClCompile Include="TempRasrt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TempRasrt.cpp">
+    <ClCompile Include="Rasterizator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

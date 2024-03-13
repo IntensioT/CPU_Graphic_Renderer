@@ -175,22 +175,41 @@ void Rasterizator::UpdateXleftAndXRight(Triangle& polygon)
 	getHLeftAndHRight(polygon);
 }
 
-//void Rasterizator::LambertShading(CoordSystem* modelCoord, Triangle curPolygon, CoordinateStruct lightPos, CoordinateStruct polygonPos)
-//{
-//	for (int i = 0; i < 3; i++)
-//	{
-//
-//	}
-//	CoordinateStruct normal = modelCoord->NormalizeVector(curNormal);
-//	// получаем вектор направления света
-//	CoordinateStruct lightDirection = modelCoord->NormalizeVector(modelCoord->SubstractVectors(lightPos, polygonPos));
-//
-//	// получаем скалярное произведение векторов нормали и направления света
-//	float lambertTerm = (modelCoord->DotProduct(normal, lightDirection) >= 0.0) ? modelCoord->DotProduct(normal, lightDirection) : 0.0f;
-//	//CoordinateStruct diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
-//	return { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
-//
-//	
-//}
+void Rasterizator::DrawLines(Triangle polygon, RGBQUAD (&frameBuffer)[1080][1920], float (&depthBuffer)[1080][1920], RGBQUAD color)
+{
+	// Отрисовка горизонтальных отрезков
+	for (int y = polygon.vectors[0].y; y <= polygon.vectors[2].y; y++) {
 
+		int xL = this->xLeft[y - polygon.vectors[0].y];
+		int xR = this->xRight[y - polygon.vectors[0].y];
+		if (xR > 1920 || xL < 0) return;
+
+		std::vector<float> hSegment = this->Interpolate(xL, this->hLeft[y - polygon.vectors[0].y], xR, this->hRight[y - polygon.vectors[0].y]);
+		for (int x = xL; x <= xR; x++) {
+			if (y - polygon.vectors[0].y >= 0 && y - polygon.vectors[0].y < this->zLeft.size())
+			{
+				float zL = this->zLeft[y - polygon.vectors[0].y];
+				float zR = this->zRight[y - polygon.vectors[0].y];
+
+				float z;
+				if (xR - xL != 0)
+				{
+					z = zL + (x - xL) * (zR - zL) / (xR - xL);
+				}
+				else
+				{
+					z = zL;
+				}
+
+				if (z < depthBuffer[x][y])
+				{
+					RGBQUAD shadedColor = { color.rgbRed * hSegment[x - xL],color.rgbGreen * hSegment[x - xL],color.rgbBlue * hSegment[x - xL], 0 };
+					SetPoint(frameBuffer, x, y, shadedColor);
+					depthBuffer[x][y] = z;
+				}
+			}
+
+		}
+	}
+}
 
