@@ -352,7 +352,7 @@ void UpdateNormals()
 
 			homoNormal *= modelCoordSystem->GlobalTransformationMatrix;
 			homoNormal *= modelCoordSystem->TranslationMatrix;
-			homoNormal *= modelCoordSystem->CameraTransformationMatrix;
+			//homoNormal *= modelCoordSystem->CameraTransformationMatrix;
 
 			polygonsOutp[i].vectors[j].normal = { homoNormal.x, homoNormal.y , homoNormal.z };
 			polygonsOutp[i].vectors[j].normalW = homoNormal.w;
@@ -380,10 +380,10 @@ void UpdateVectors()
 	for (int i = 0; i < polygons.size(); i++)
 	{
 		if (!UpdatePolygons(i)) continue;
-		if (!IsObjectBehindClipPlanes(i, clipPlanes))
-		{
+		//if (!IsObjectBehindClipPlanes(i, clipPlanes))
+		//{
 			DrawObject(i);
-		}
+		//}
 	}
 
 	//UpdatePolygonsAsync();
@@ -479,16 +479,20 @@ bool UpdatePolygons(int polygonIterator)
 	for (int i = 0; i < 3; i++)
 	{
 		pointHomogeneous = polygons[polygonIterator].vectors[i];
-		normalHomogeneous = { polygonsOutp[polygonIterator].vectors[i].normal.x, polygonsOutp[polygonIterator].vectors[i].normal.y, polygonsOutp[polygonIterator].vectors[i].normal.z,polygonsOutp[polygonIterator].vectors[i].normalW };
-		
 
 
 		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
-		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
 
+
+		normalHomogeneous = { polygonsOutp[polygonIterator].vectors[i].normal.x, polygonsOutp[polygonIterator].vectors[i].normal.y, polygonsOutp[polygonIterator].vectors[i].normal.z,polygonsOutp[polygonIterator].vectors[i].normalW };
+		CoordinateStruct curNormal = modelCoordSystem->NormalizeVector(polygonsOutp[polygonIterator].vectors[i].normal);
+
+		normalHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
+
+		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
+		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
 
-		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 
 
 		//////////////////////////////////////////Clipping////////////////////////////////////////////////////////////////
@@ -496,13 +500,13 @@ bool UpdatePolygons(int polygonIterator)
 		CoordinateStruct cameraDirectionOnPoint = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, curVector));
 
 		//CoordinateStruct curNormal = polygons[polygonIterator].vectors[i].normal;
-		CoordinateStruct curNormal = { normalHomogeneous.x, normalHomogeneous.y, normalHomogeneous.z };
+		//CoordinateStruct curNormal = { normalHomogeneous.x, normalHomogeneous.y, normalHomogeneous.z };
 
 		float dotProduct = modelCoordSystem->DotProduct(curNormal, cameraDirectionOnPoint);
-		/*if (dotProduct < 0)
+		if (dotProduct < 0)
 		{
 			return false;
-		}*/
+		}
 
 		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
 		{
@@ -523,13 +527,13 @@ bool UpdatePolygons(int polygonIterator)
 
 		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////
 		//CoordinateStruct normal = modelCoordSystem->NormalizeVector(polygon.vectors[i].normal);
-		CoordinateStruct normal = modelCoordSystem->NormalizeVector(polygonsOutp[polygonIterator].vectors[i].normal);
+		//CoordinateStruct normal = modelCoordSystem->NormalizeVector(polygonsOutp[polygonIterator].vectors[i].normal);
 		CoordinateStruct curPos = { polygon.vectors[i].x,polygon.vectors[i].y,polygon.vectors[i].z };
 
 
 		CoordinateStruct lightDirection = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(lightGlobalCoord, curVector));
 
-		float lambertTerm = (modelCoordSystem->DotProduct(normal, lightDirection) >= 0.0) ? modelCoordSystem->DotProduct(normal, lightDirection) : 0.0f;
+		float lambertTerm = (modelCoordSystem->DotProduct(curNormal, lightDirection) >= 0.0) ? modelCoordSystem->DotProduct(curNormal, lightDirection) : 0.0f;
 		polygon.vectors[i].shade = lambertTerm;
 
 		polygon.vectors[i].diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
