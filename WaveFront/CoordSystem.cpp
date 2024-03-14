@@ -114,15 +114,6 @@ HomogeneousCoordinateStruct CoordSystem::CrossProduct(const HomogeneousCoordinat
 	return result;
 }
 
-HomogeneousCoordinateStruct CoordSystem::TransformVector(HomogeneousCoordinateStruct& originalVector, CoordinateStruct& scale, float angle, CoordinateStruct& axis, CoordinateStruct& translation)
-{
-	SetScaleMatrix(scale);
-	SetRotationMatrixOptimized(angle, axis);
-	SetMovementMatrix(translation);
-	_3DMATRIX ModelMatrix = MultiplyMatrixByMatrix(MovementMatrix, MultiplyMatrixByMatrix(RotationMatrix, ScaleMatrix));
-	HomogeneousCoordinateStruct res = MultiplyMatByVector(ModelMatrix, originalVector);
-	return res;
-}
 
 void CoordSystem::SetCameraTransformationMatrix(CoordinateStruct& cameraGlobalCoord, CoordinateStruct& targetGlobalCoord, CoordinateStruct& cameraUpVect)
 {
@@ -216,12 +207,17 @@ bool CoordSystem::IsVertexBehindClipPlane(const HomogeneousCoordinateStruct vert
 //}
 
 
-void CoordSystem::SetMovementMatrix(CoordinateStruct Translation)
+void CoordSystem::SetTranslationMatrix(CoordinateStruct Translation)
 {
-	MovementMatrix = { 1, 0, 0, Translation.x,
+	/*TranslationMatrix = { 1, 0, 0, Translation.x,
 						0, 1, 0, Translation.y,
 						0, 0, 1, Translation.z,
-						0, 0, 0,	1 };
+						0, 0, 0,	1 };*/
+	
+	TranslationMatrix = { 1,				0,				0,			0,
+						0,					1,				0,			0,
+						0,					0,				1,			0,
+						Translation.x, Translation.y, Translation.z,	1 };
 }
 
 void CoordSystem::SetScaleMatrix(CoordinateStruct Scale)

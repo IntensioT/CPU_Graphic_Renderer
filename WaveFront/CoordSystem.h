@@ -26,6 +26,8 @@ struct HomogeneousCoordinateStruct
     float shade;
     CoordinateStruct diffuse;
     CoordinateStruct normal;
+    float normalW;
+    CoordinateStruct projectedNormal;
 
     HomogeneousCoordinateStruct& operator*=(const float f) {
         x *= f;
@@ -68,7 +70,7 @@ inline HomogeneousCoordinateStruct AddHomogeneousVectors(const HomogeneousCoordi
 
 inline HomogeneousCoordinateStruct operator* (HomogeneousCoordinateStruct& p, const _3DMATRIX& m) 
 {
-    HomogeneousCoordinateStruct t;
+    HomogeneousCoordinateStruct t = p;
 
     t.x = p.x * m.m[0][0] + p.y * m.m[1][0] + p.z * m.m[2][0] + p.w * m.m[3][0];
     t.y = p.x * m.m[0][1] + p.y * m.m[1][1] + p.z * m.m[2][1] + p.w * m.m[3][1];
@@ -112,7 +114,7 @@ public:
     _3DMATRIX ProjectionTransformationMatrix;
     _3DMATRIX ViewPortTransformationMatrix;
 
-    _3DMATRIX MovementMatrix;
+    _3DMATRIX TranslationMatrix;
 
     _3DMATRIX ScaleMatrix;
 
@@ -153,7 +155,7 @@ public:
 
 
 
-    void SetMovementMatrix(CoordinateStruct Translation);
+    void SetTranslationMatrix(CoordinateStruct Translation);
     void SetScaleMatrix(CoordinateStruct Scale);
     void SetRotateXMatrix(float angle);
     void SetRotateYMatrix(float angle);

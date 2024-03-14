@@ -5,11 +5,14 @@
 
 
 
+
 LONG FrameHeight = 720, FrameWidth = 1280;
+int prevMouseX, prevMouseY;
+bool mouseDown = false;
+
 
 RGBQUAD frameBuffer[1080][1920];
 float depthBuffer[1080][1920];
-
 
 RGBQUAD color = { 255, 255, 255, 0 };
 RGBQUAD color2 = { 0, 0, 255, 0 };
@@ -19,7 +22,7 @@ CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
 //CoordinateStruct targetGlobalCoord = { 0,50.f,0.f };
 
 //CoordinateStruct lightGlobalCoord = { 10.f,15.f,500.5f };
-CoordinateStruct lightGlobalCoord = { 10.f,15.f,8.5f };
+CoordinateStruct lightGlobalCoord = { 0.f,3.f,8.5f };
 
 CoordinateStruct DiffuseMaterialColor = { 0.8f,0.8f,0.8f };
 CoordinateStruct DiffuseLightColor = { 255,255,255 };
@@ -36,6 +39,8 @@ std::vector<int> normalIndexes;
 std::vector<CoordinateStruct> normals;
 CoordSystem* modelCoordSystem;
 Rasterizator* rasterizator;
+
+int vectorCount = 3;
 
 
 float yAngleObject = 0.0f;
@@ -60,9 +65,9 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 void SetPoint(void* buffer, int x, int y, RGBQUAD color = { 0,0,0,0 });
 void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void Render();
+void UpdateNormals();
 void UpdateVectors();
 void UpdateWindowSize(HWND hWnd);
-//void UpdatePolygons(int polygonIterator);
 bool UpdatePolygons(int polygonIterator);
 void BresenhamLineOptimised(void* buffer, HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color);
 void UpdatePolygonsAsync();

@@ -257,3 +257,29 @@
 //	}
 //	_normalIndexes.push_back(_convertCharArrayToFloat(coordinates));
 //}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//void UpdateProjectedNormals(int polygonIterator)
+//{
+//	HomogeneousCoordinateStruct normalHomogeneous;
+//
+//	for (int i = 0; i < 3; i++)
+//	{
+//		normalHomogeneous = { polygonsOutp[polygonIterator].vectors[i].normal.x, polygonsOutp[polygonIterator].vectors[i].normal.y, polygonsOutp[polygonIterator].vectors[i].normal.z,polygonsOutp[polygonIterator].vectors[i].normalW };
+//		normalHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
+//		normalHomogeneous *= (1 / normalHomogeneous.w);
+//		normalHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
+//		polygonsOutp[polygonIterator].vectors[i].projectedNormal = { normalHomogeneous.x, normalHomogeneous.y, normalHomogeneous.z };
+//	}
+//}

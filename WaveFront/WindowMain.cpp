@@ -103,6 +103,70 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
+	case WM_LBUTTONDOWN:
+	{
+		// Сохраняем текущие координаты курсора как предыдущие
+		prevMouseX = LOWORD(lParam);
+		prevMouseY = HIWORD(lParam);
+
+		mouseDown = true;
+		return 0;
+	}
+
+	case WM_LBUTTONUP:
+	{
+		// Сбрасываем флаг, что кнопка мыши нажата
+		mouseDown = false;
+		return 0;
+	}
+
+	case WM_MOUSEMOVE:
+	{
+		if (mouseDown)
+		{
+			int currMouseX = LOWORD(lParam);
+			int currMouseY = HIWORD(lParam);
+
+			int deltaX = currMouseX - prevMouseX;
+			int deltaY = currMouseY - prevMouseY;
+
+			phiAngleSphere -= deltaX * 0.1f;
+			thetaAngleSphere -= deltaY * 0.1f;
+
+			thetaAngleSphere = (thetaAngleSphere > 175.f) ? 175.f : ((thetaAngleSphere < 5.f) ? 5.f : thetaAngleSphere);
+
+			prevMouseX = currMouseX;
+			prevMouseY = currMouseY;
+
+			InvalidateRect(hwnd, NULL, TRUE);
+		}
+		return 0;
+	}
+
+	case WM_MOUSEWHEEL:
+	{
+		int wheelDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+
+		if (wheelDelta > 0)
+		{
+			zCamera += 0.05f;
+			rSphere += 0.05f;
+		}
+		else if (wheelDelta < 0)
+		{
+			if (zCamera > 1.f)
+			{
+				zCamera -= 0.05f;
+				rSphere -= 0.05f;
+			}
+		}
+
+		// Перерисовать окно
+		InvalidateRect(hwnd, NULL, TRUE);
+		return 0;
+	}
+
+
 	case WM_KEYDOWN:
 		switch (wParam)
 		{
@@ -138,7 +202,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 
 		case 'S':
-			if (zCamera > 2.f)
+			if (zCamera > 1.f)
 			{
 				zCamera -= 0.05f;
 				rSphere -= 0.05f;
@@ -180,6 +244,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case '2':
 			curGraphic = 2;
 			return 0;
+		case '3':
+			curGraphic = 3;
+			return 0;
 		}
 
 
@@ -198,7 +265,7 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 	HBITMAP hBitMap = CreateBitmap(width, height, 1, 8 * 4, pixels);
 	//HBITMAP hBitMap = CreateCompatibleBitmap(hdc, width, height);
 	/*
-	Однако для повышения производительности приложения должны использовать CreateBitmap для создания монохромных растровых изображений и 
+	Однако для повышения производительности приложения должны использовать CreateBitmap для создания монохромных растровых изображений и
 	CreateCompatibleBitmap для создания цветных растровых изображений
 	  [in] nPlanes
 	Количество цветовых плоскостей, используемых устройством.
@@ -260,8 +327,37 @@ void Render()
 		}
 	}
 
-
+	UpdateNormals();
 	UpdateVectors();
+}
+
+void UpdateNormals()
+{
+	modelCoordSystem->SetRotateYMatrix(GetRadians(yAngleObject));
+	modelCoordSystem->SetRotateXMatrix(GetRadians(xAngleObject));
+	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix * modelCoordSystem->RotateXMatrix;
+
+	cameraGlobalCoord = { SphericalToCartesian(rSphere, phiAngleSphere, thetaAngleSphere) };
+	CoordinateStruct cameraUpVect = { 0,1,0 };
+	modelCoordSystem->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
+
+	HomogeneousCoordinateStruct homoNormal;
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		for (int j = 0; j < vectorCount; j++)
+		{
+			modelCoordSystem->SetTranslationMatrix({ polygons[i].vectors[j].x, polygons[i].vectors[j].y, polygons[i].vectors[j].z });
+
+			homoNormal = { polygons[i].vectors[j].normal.x, polygons[i].vectors[j].normal.y, polygons[i].vectors[j].normal.z, 1 };
+
+			homoNormal *= modelCoordSystem->GlobalTransformationMatrix;
+			homoNormal *= modelCoordSystem->TranslationMatrix;
+			homoNormal *= modelCoordSystem->CameraTransformationMatrix;
+
+			polygonsOutp[i].vectors[j].normal = { homoNormal.x, homoNormal.y , homoNormal.z };
+			polygonsOutp[i].vectors[j].normalW = homoNormal.w;
+		}
+	}
 }
 
 void UpdateVectors()
@@ -276,18 +372,7 @@ void UpdateVectors()
 	};
 
 
-
-	modelCoordSystem->SetRotateYMatrix(GetRadians(yAngleObject));
-	modelCoordSystem->SetRotateXMatrix(GetRadians(xAngleObject));
-	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix * modelCoordSystem->RotateXMatrix;
-
 	modelCoordSystem->SetProjectionTransformationMatrix(45.0f, ((float)FrameWidth / (float)FrameHeight), zNear, zFar);
-
-	/*CoordinateStruct*/ cameraGlobalCoord = { SphericalToCartesian(rSphere, phiAngleSphere, thetaAngleSphere) };
-
-	//CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
-	CoordinateStruct cameraUpVect = { 0,1,0 };
-	modelCoordSystem->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
 
 	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
 
@@ -313,7 +398,7 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 	polygon = polygonsOutp[polygonIterator];
 
 	// Normal clipping
-	CoordinateStruct ZAxis = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, targetGlobalCoord));
+	CoordinateStruct cameraDirection = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, targetGlobalCoord));
 
 
 	//float dotProduct = modelCoordSystem->DotProduct(polygon.normal, cameraGlobalCoord);
@@ -327,20 +412,14 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 
 		CoordinateStruct normal = { polygon.vectors[i].normal.x, polygon.vectors[i].normal.y, polygon.vectors[i].normal.z };
 
-		float dotProduct = modelCoordSystem->DotProduct(normal, ZAxis);
-		if (dotProduct < 0)
-		{
-			return true;
-		}
-
-		pointHomogeneous = polygon.vectors[i];
-		bool isVertexBehindClipPlanes = true;
-
-
-		/*if (pointHomogeneous.x == 0 && pointHomogeneous.y == 0 && pointHomogeneous.z == 0 && pointHomogeneous.w == 1)
+		float dotProduct = modelCoordSystem->DotProduct(normal, cameraDirection);
+		/*if (dotProduct < 0)
 		{
 			return true;
 		}*/
+
+		pointHomogeneous = polygon.vectors[i];
+		bool isVertexBehindClipPlanes = true;
 
 		for (const Plane& clipPlane : clipPlanes) {
 			if (!modelCoordSystem->IsVertexBehindClipPlane(pointHomogeneous, clipPlane)) {
@@ -357,7 +436,8 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 
 void DrawObject(int i)
 {
-	int vectorCount = sizeof(polygonsOutp[i].vectors) / sizeof(polygonsOutp[i].vectors[0]);
+	vectorCount = sizeof(polygonsOutp[i].vectors) / sizeof(polygonsOutp[i].vectors[0]);
+	HomogeneousCoordinateStruct homoNormal0, homoNormal1, homoNormal2;
 
 	switch (curGraphic)
 	{
@@ -377,31 +457,48 @@ void DrawObject(int i)
 		rasterizator->DrawLines(polygonsOutp[i], frameBuffer, depthBuffer, color);
 		break;
 	case 3:
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], polygonsOutp[i].vectors[0 + 1], color2);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], polygonsOutp[i].vectors[0 + 2], color2);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color2);
+
+		homoNormal0 = { polygonsOutp[i].vectors[0].projectedNormal.x, polygonsOutp[i].vectors[0].projectedNormal.y, polygonsOutp[i].vectors[0].projectedNormal.z, 1 };
+		homoNormal1 = { polygonsOutp[i].vectors[1].projectedNormal.x, polygonsOutp[i].vectors[1].projectedNormal.y, polygonsOutp[i].vectors[1].projectedNormal.z, 1 };
+		homoNormal2 = { polygonsOutp[i].vectors[2].projectedNormal.x, polygonsOutp[i].vectors[2].projectedNormal.y, polygonsOutp[i].vectors[2].projectedNormal.z, 1 };
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], homoNormal0, color);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], homoNormal1, color);
+		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], homoNormal2, color);
 		break;
 	}
 }
 
 bool UpdatePolygons(int polygonIterator)
 {
-	float sus = 0.f;
 	Triangle polygon;
-	HomogeneousCoordinateStruct pointHomogeneous;
+	HomogeneousCoordinateStruct pointHomogeneous, normalHomogeneous;
 
 	for (int i = 0; i < 3; i++)
 	{
 		pointHomogeneous = polygons[polygonIterator].vectors[i];
+		normalHomogeneous = { polygonsOutp[polygonIterator].vectors[i].normal.x, polygonsOutp[polygonIterator].vectors[i].normal.y, polygonsOutp[polygonIterator].vectors[i].normal.z,polygonsOutp[polygonIterator].vectors[i].normalW };
+		
+
 
 		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
-		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 
 		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
-		CoordinateStruct ZAxis = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, curVector));
 
-		CoordinateStruct curNormal = { polygons[polygonIterator].vectors[i].normal.x, polygons[polygonIterator].vectors[i].normal.y, polygons[polygonIterator].vectors[i].normal.z };
+		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 
 
-		float dotProduct = modelCoordSystem->DotProduct(curNormal, ZAxis);
+		//////////////////////////////////////////Clipping////////////////////////////////////////////////////////////////
+
+		CoordinateStruct cameraDirectionOnPoint = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, curVector));
+
+		//CoordinateStruct curNormal = polygons[polygonIterator].vectors[i].normal;
+		CoordinateStruct curNormal = { normalHomogeneous.x, normalHomogeneous.y, normalHomogeneous.z };
+
+		float dotProduct = modelCoordSystem->DotProduct(curNormal, cameraDirectionOnPoint);
 		/*if (dotProduct < 0)
 		{
 			return false;
@@ -411,17 +508,22 @@ bool UpdatePolygons(int polygonIterator)
 		{
 			return false;
 		}
-		else
-		{
-			pointHomogeneous *= (1 / pointHomogeneous.w);
-			pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
-		}
-		pointHomogeneous.shade = 1;
+
+		pointHomogeneous *= (1 / pointHomogeneous.w);
+		pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
+
+
+		normalHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
+		normalHomogeneous *= (1 / normalHomogeneous.w);
+		normalHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
+
+		//pointHomogeneous.shade = 1;
 		polygon.vectors[i] = pointHomogeneous;
-		polygon.vectors[i].normal = polygons[polygonIterator].vectors[i].normal;
+		polygon.vectors[i].projectedNormal = { normalHomogeneous.x, normalHomogeneous.y, normalHomogeneous.z };
 
 		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////
-		CoordinateStruct normal = modelCoordSystem->NormalizeVector(polygon.vectors[i].normal);
+		//CoordinateStruct normal = modelCoordSystem->NormalizeVector(polygon.vectors[i].normal);
+		CoordinateStruct normal = modelCoordSystem->NormalizeVector(polygonsOutp[polygonIterator].vectors[i].normal);
 		CoordinateStruct curPos = { polygon.vectors[i].x,polygon.vectors[i].y,polygon.vectors[i].z };
 
 
