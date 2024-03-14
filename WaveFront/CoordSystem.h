@@ -43,6 +43,10 @@ struct HomogeneousCoordinateStruct
     HomogeneousCoordinateStruct operator+(const HomogeneousCoordinateStruct& other) const {
         return HomogeneousCoordinateStruct{ x + other.x, y + other.y, z + other.z };
     }
+    CoordinateStruct toCoordinateStruct()
+    {
+        return { x,y,z };
+    }
 };
 
 struct Plane {
@@ -141,7 +145,9 @@ public:
 
 
     float VectorLength(const CoordinateStruct& vector);
+    float VectorLength(const HomogeneousCoordinateStruct& vector);
     CoordinateStruct NormalizeVector(const CoordinateStruct& vector);
+    HomogeneousCoordinateStruct NormalizeVector(const HomogeneousCoordinateStruct& vector);
 
     HomogeneousCoordinateStruct TransformVector(HomogeneousCoordinateStruct& originalVector, CoordinateStruct& scale, float angle, CoordinateStruct& axis, CoordinateStruct& translation);
 

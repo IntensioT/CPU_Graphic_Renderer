@@ -40,7 +40,7 @@ std::vector<CoordinateStruct> normals;
 CoordSystem* modelCoordSystem;
 Rasterizator* rasterizator;
 
-int vectorCount = 3;
+float vectorCount = 0.333333333333333f;
 
 
 float yAngleObject = 0.0f;

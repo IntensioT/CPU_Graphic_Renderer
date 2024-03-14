@@ -6,6 +6,8 @@
 struct Triangle
 {
 	HomogeneousCoordinateStruct vectors[3];
+	HomogeneousCoordinateStruct polygonNormal;
+	HomogeneousCoordinateStruct polygonCenter;
 };
 
 Triangle GetTriangle(std::vector<HomogeneousCoordinateStruct> vec, std::vector<int> indicies, std::vector<int> normalIndicies, std::vector<CoordinateStruct> normals);

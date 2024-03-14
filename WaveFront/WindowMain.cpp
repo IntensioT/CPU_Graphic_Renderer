@@ -341,22 +341,29 @@ void UpdateNormals()
 	CoordinateStruct cameraUpVect = { 0,1,0 };
 	modelCoordSystem->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
 
-	HomogeneousCoordinateStruct homoNormal;
+	HomogeneousCoordinateStruct homoNormal, normalSum, vertexSum;
 	for (int i = 0; i < polygons.size(); i++)
 	{
+		normalSum = { 0,0,0,0 };
+		vertexSum = { 0,0,0,0 };
 		for (int j = 0; j < vectorCount; j++)
 		{
-			modelCoordSystem->SetTranslationMatrix({ polygons[i].vectors[j].x, polygons[i].vectors[j].y, polygons[i].vectors[j].z });
 
-			homoNormal = { polygons[i].vectors[j].normal.x, polygons[i].vectors[j].normal.y, polygons[i].vectors[j].normal.z, 1 };
+			homoNormal = { polygons[i].vectors[j].normal.x, polygons[i].vectors[j].normal.y, polygons[i].vectors[j].normal.z, 0 };
 
-			homoNormal *= modelCoordSystem->GlobalTransformationMatrix;
-			homoNormal *= modelCoordSystem->TranslationMatrix;
-			//homoNormal *= modelCoordSystem->CameraTransformationMatrix;
+			//homoNormal *= modelCoordSystem->GlobalTransformationMatrix;
 
 			polygonsOutp[i].vectors[j].normal = { homoNormal.x, homoNormal.y , homoNormal.z };
 			polygonsOutp[i].vectors[j].normalW = homoNormal.w;
+			normalSum = normalSum + homoNormal;
+
+			// For center of poly
+			vertexSum = vertexSum + polygons[i].vectors[j];
 		}
+		vertexSum *= vectorCount;
+		normalSum *= vectorCount;
+		polygonsOutp[i].polygonNormal = modelCoordSystem->NormalizeVector(normalSum);
+		polygonsOutp[i].polygonCenter = vertexSum;
 	}
 }
 
@@ -382,7 +389,7 @@ void UpdateVectors()
 		if (!UpdatePolygons(i)) continue;
 		//if (!IsObjectBehindClipPlanes(i, clipPlanes))
 		//{
-			DrawObject(i);
+		DrawObject(i);
 		//}
 	}
 
@@ -436,7 +443,7 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 
 void DrawObject(int i)
 {
-	vectorCount = sizeof(polygonsOutp[i].vectors) / sizeof(polygonsOutp[i].vectors[0]);
+	vectorCount = 1 / (sizeof(polygonsOutp[i].vectors) / sizeof(polygonsOutp[i].vectors[0]));
 	HomogeneousCoordinateStruct homoNormal0, homoNormal1, homoNormal2;
 
 	switch (curGraphic)
@@ -474,39 +481,64 @@ void DrawObject(int i)
 bool UpdatePolygons(int polygonIterator)
 {
 	Triangle polygon;
-	HomogeneousCoordinateStruct pointHomogeneous, normalHomogeneous;
+	HomogeneousCoordinateStruct pointHomogeneous, normalHomogeneous, cameraConvertedToGlobal, polygonCenter, polygonNormal;
+
+	polygonCenter = polygonsOutp[polygonIterator].polygonCenter;
+	polygonNormal = polygonsOutp[polygonIterator].polygonNormal;
+
+	polygonCenter *= modelCoordSystem->GlobalTransformationMatrix;
+	polygonNormal *= modelCoordSystem->GlobalTransformationMatrix;
+
+	/*polygonCenter *= modelCoordSystem->CameraTransformationMatrix;
+	polygonNormal *= modelCoordSystem->CameraTransformationMatrix;*/
+
+	CoordinateStruct curPolygonCenter = polygonCenter.toCoordinateStruct();
+	CoordinateStruct curCameraPos = { 0,0,0 };
+	CoordinateStruct cameraDirectionOnPoint = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, curPolygonCenter));
+
+	float dotProduct = modelCoordSystem->DotProduct(polygonNormal.toCoordinateStruct(), cameraDirectionOnPoint);
+	if (dotProduct < 0)
+	{
+		return false;
+	}
 
 	for (int i = 0; i < 3; i++)
 	{
 		pointHomogeneous = polygons[polygonIterator].vectors[i];
 
+		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;	
+		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
 
-		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
+		normalHomogeneous = { polygonsOutp[polygonIterator].vectors[i].normal.x, polygonsOutp[polygonIterator].vectors[i].normal.y, polygonsOutp[polygonIterator].vectors[i].normal.z, 1 };
+		//CoordinateStruct curNormal = normalHomogeneous.toCoordinateStruct();
 
-
-		normalHomogeneous = { polygonsOutp[polygonIterator].vectors[i].normal.x, polygonsOutp[polygonIterator].vectors[i].normal.y, polygonsOutp[polygonIterator].vectors[i].normal.z,polygonsOutp[polygonIterator].vectors[i].normalW };
-		CoordinateStruct curNormal = modelCoordSystem->NormalizeVector(polygonsOutp[polygonIterator].vectors[i].normal);
-
+		modelCoordSystem->SetTranslationMatrix(pointHomogeneous.toCoordinateStruct());
+		normalHomogeneous *= modelCoordSystem->TranslationMatrix;
 		normalHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
+		CoordinateStruct normalInCameraCoords = normalHomogeneous.toCoordinateStruct();
 
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
+		CoordinateStruct vectInCameraCoords = pointHomogeneous.toCoordinateStruct();
+
 		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
-		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
 
 
 
 		//////////////////////////////////////////Clipping////////////////////////////////////////////////////////////////
+		//CoordinateStruct curCenter = polygonsOutp[polygonIterator].polygonCenter.toCoordinateStruct();
 
-		CoordinateStruct cameraDirectionOnPoint = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, curVector));
+		//cameraConvertedToGlobal = { cameraGlobalCoord.x, cameraGlobalCoord.y, cameraGlobalCoord.z, 1};
+		//cameraConvertedToGlobal *= modelCoordSystem->CameraTransformationMatrix;
+		//CoordinateStruct cameraCurPos = cameraConvertedToGlobal.toCoordinateStruct();
+		//CoordinateStruct cameraDirectionOnPoint = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraCurPos, vectInCameraCoords));
 
-		//CoordinateStruct curNormal = polygons[polygonIterator].vectors[i].normal;
-		//CoordinateStruct curNormal = { normalHomogeneous.x, normalHomogeneous.y, normalHomogeneous.z };
-
-		float dotProduct = modelCoordSystem->DotProduct(curNormal, cameraDirectionOnPoint);
-		if (dotProduct < 0)
-		{
-			return false;
-		}
+		//CoordinateStruct curNormalFromCenter = polygonsOutp[polygonIterator].polygonNormal.toCoordinateStruct();
+		////float dotProduct = modelCoordSystem->DotProduct(curNormalFromCenter, cameraDirectionOnPoint);
+		//float dotProduct = modelCoordSystem->DotProduct(normalInCameraCoords, cameraDirectionOnPoint);
+		//if (dotProduct < 0)
+		//{
+		//	return false;
+		//}
 
 		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
 		{
@@ -518,6 +550,8 @@ bool UpdatePolygons(int polygonIterator)
 
 
 		normalHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
+
+
 		normalHomogeneous *= (1 / normalHomogeneous.w);
 		normalHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
 
@@ -526,10 +560,7 @@ bool UpdatePolygons(int polygonIterator)
 		polygon.vectors[i].projectedNormal = { normalHomogeneous.x, normalHomogeneous.y, normalHomogeneous.z };
 
 		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////
-		//CoordinateStruct normal = modelCoordSystem->NormalizeVector(polygon.vectors[i].normal);
-		//CoordinateStruct normal = modelCoordSystem->NormalizeVector(polygonsOutp[polygonIterator].vectors[i].normal);
-		CoordinateStruct curPos = { polygon.vectors[i].x,polygon.vectors[i].y,polygon.vectors[i].z };
-
+		CoordinateStruct curNormal = polygonsOutp[polygonIterator].vectors[i].normal;
 
 		CoordinateStruct lightDirection = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(lightGlobalCoord, curVector));
 
