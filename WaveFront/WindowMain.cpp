@@ -327,7 +327,7 @@ void Render()
 		}
 	}
 
-	UpdateNormals();
+	UpdateNormals();	
 	UpdateVectors();
 }
 
@@ -346,7 +346,7 @@ void UpdateNormals()
 	{
 		normalSum = { 0,0,0,0 };
 		vertexSum = { 0,0,0,0 };
-		for (int j = 0; j < vectorCount; j++)
+		for (int j = 0; j < (1/vectorCount); j++)
 		{
 
 			homoNormal = { polygons[i].vectors[j].normal.x, polygons[i].vectors[j].normal.y, polygons[i].vectors[j].normal.z, 0 };
@@ -443,7 +443,7 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 
 void DrawObject(int i)
 {
-	vectorCount = 1 / (sizeof(polygonsOutp[i].vectors) / sizeof(polygonsOutp[i].vectors[0]));
+	//vectorCount = 1 / (sizeof(polygonsOutp[i].vectors) / sizeof(polygonsOutp[i].vectors[0]));
 	HomogeneousCoordinateStruct homoNormal0, homoNormal1, homoNormal2;
 
 	switch (curGraphic)
@@ -480,7 +480,7 @@ void DrawObject(int i)
 
 bool UpdatePolygons(int polygonIterator)
 {
-	Triangle polygon;
+	Triangle polygon = polygonsOutp[polygonIterator];
 	HomogeneousCoordinateStruct pointHomogeneous, normalHomogeneous, cameraConvertedToGlobal, polygonCenter, polygonNormal;
 
 	polygonCenter = polygonsOutp[polygonIterator].polygonCenter;
