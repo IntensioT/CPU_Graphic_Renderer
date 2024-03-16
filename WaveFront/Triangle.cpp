@@ -1,5 +1,6 @@
 #include "Triangle.h"
 
+
 Triangle GetTriangle(std::vector<HomogeneousCoordinateStruct> vec, std::vector<int> indicies, std::vector<int> normalIndicies, std::vector<CoordinateStruct> normals)
 {
 	Triangle result;
@@ -22,8 +23,6 @@ std::vector<Triangle> GetAllPolygons(std::vector<HomogeneousCoordinateStruct> ve
 	for (int i = 0; i < indicies.size(); i+=3)
 	{
 		triangles.push_back(GetTriangle(vectors, { indicies[i], indicies[i + 1], indicies[i + 2] }, { normalIndicies[i], normalIndicies[i + 1], normalIndicies[i + 2] }, normals));
-
-		//triangles[j++].normal = normals[normalIndicies[i] - 1];
 	}
 
 	return triangles;

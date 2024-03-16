@@ -17,7 +17,6 @@ void ObjLoader::_readFile()
 }
 
 
-
 void ObjLoader::_parseLine(std::string line)
 {
 	char coordinates[CoordMaxLength];
@@ -102,24 +101,9 @@ void ObjLoader::_parseLine(std::string line)
 		//int isIndex = 1;
 		_clearArray(coordinates);
 
-		////First coord parsing
-		//while (line[i] != ' ' && j < CoordMaxLength)
-		//{
-		//	if (line[i] == '/')
-		//	{
-		//		isIndex = 0;
-		//	}
-		//	if (isIndex == 1)
-		//	{
-		//		coordinates[j++] = line[i];
-		//	}
-		//	i++;
-		//}
-		//_indexes.push_back( _convertCharArrayToFloat(coordinates));
-		//_clearArray(coordinates);
 
 		//First coord parsing
-		while (line[i] != '/' && j < CoordMaxLength)
+		while (i < line.length() && line[i] != '/' && j < CoordMaxLength)
 		{
 			coordinates[j++] = line[i];
 			i++;
@@ -130,43 +114,23 @@ void ObjLoader::_parseLine(std::string line)
 		i++;
 		j = 0;
 
-		while (line[i] != '/')
+		while (i < line.length() && line[i] != '/')
 		{
 			i++;
 		}
 		i++;
-		while (line[i] != ' ')
+		while (i < line.length() && line[i] != ' ')
 		{
 			coordinates[j++] = line[i];
 			i++;
 		}
 		_normalIndexes.push_back(_convertCharArrayToFloat(coordinates));
 		_clearArray(coordinates);
-
-
-		////Second coord parsing
-		//isIndex = 1;
-		//i++;
-		//j = 0;
-		//while (line[i] != ' ' && j < CoordMaxLength)
-		//{
-		//	if (line[i] == '/')
-		//	{
-		//		isIndex = 0;
-		//	}
-		//	if (isIndex == 1)
-		//	{
-		//		coordinates[j++] = line[i];
-		//	}
-		//	i++;
-		//}
-		//_indexes.push_back(_convertCharArrayToFloat(coordinates));
-		//_clearArray(coordinates);
 
 		//Second coord parsing
 		i++;
 		j = 0;
-		while (line[i] != '/' && j < CoordMaxLength)
+		while (i < line.length() && line[i] != '/' && j < CoordMaxLength)
 		{
 			coordinates[j++] = line[i];
 			i++;
@@ -177,12 +141,12 @@ void ObjLoader::_parseLine(std::string line)
 		i++;
 		j = 0;
 
-		while (line[i] != '/')
+		while (i < line.length() && line[i] != '/')
 		{
 			i++;
 		}
 		i++;
-		while (line[i] != ' ')
+		while (i < line.length() && line[i] != ' ')
 		{
 			coordinates[j++] = line[i];
 			i++;
@@ -190,28 +154,10 @@ void ObjLoader::_parseLine(std::string line)
 		_normalIndexes.push_back(_convertCharArrayToFloat(coordinates));
 		_clearArray(coordinates);
 
-		////Third coord parsing
-		//isIndex = 1;
-		//i++;
-		//j = 0;
-		//while (line[i] != ' ' && line[i] != '\n' && j < CoordMaxLength)
-		//{
-		//	if (line[i] == '/')
-		//	{
-		//		isIndex = 0;
-		//	}
-		//	if (isIndex == 1)
-		//	{
-		//		coordinates[j++] = line[i];
-		//	}
-		//	i++;
-		//}
-		//_indexes.push_back(_convertCharArrayToFloat(coordinates));
-
 		//Third coord parsing
 		i++;
 		j = 0;
-			while (line[i] != '/' && j < CoordMaxLength)
+			while (i < line.length() && line[i] != '/' && j < CoordMaxLength)
 			{
 				coordinates[j++] = line[i];
 				i++;
@@ -222,12 +168,12 @@ void ObjLoader::_parseLine(std::string line)
 		i++;
 		j = 0;
 
-		while (line[i] != '/')
+		while (i < line.length() && line[i] != '/')
 		{
 			i++;
 		}
 		i++;
-		while (line[i] != ' ' && line[i] != '\n' && j < CoordMaxLength)
+		while (i < line.length() && line[i] != ' ' && line[i] != '\n' && j < CoordMaxLength)
 		{
 			coordinates[j++] = line[i];
 			i++;

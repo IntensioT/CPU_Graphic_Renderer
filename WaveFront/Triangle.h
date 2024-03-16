@@ -3,6 +3,7 @@
 
 #include "CoordSystem.h"
 
+
 struct Triangle
 {
 	HomogeneousCoordinateStruct vectors[3];
@@ -10,6 +11,12 @@ struct Triangle
 	HomogeneousCoordinateStruct polygonCenter;
 
 };
+
+void AddTriangle(std::vector<Triangle>& triangles,const std::vector<HomogeneousCoordinateStruct>& homogeneousCoordinates,
+				const std::vector<int>& vertexIndices, const std::vector<int>& normalIndices,const std::vector<CoordinateStruct>& normalVectors,int index);
+
+std::vector<Triangle> GetAllTriangles(const std::vector<HomogeneousCoordinateStruct>& homogeneousCoordinates,const std::vector<int>& vertexIndices,
+									const std::vector<int>& normalIndices,const std::vector<CoordinateStruct>& normalVectors);
 
 Triangle GetTriangle(std::vector<HomogeneousCoordinateStruct> vec, std::vector<int> indicies, std::vector<int> normalIndicies, std::vector<CoordinateStruct> normals);
 //std::vector<Triangle> GetAllPolygons(std::vector<HomogeneousCoordinateStruct> vectors, std::vector<int> indicies);

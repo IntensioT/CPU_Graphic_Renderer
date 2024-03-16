@@ -28,8 +28,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		vertexesHomo[i] = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1 };
 	}
 
-	polygons.resize(indexes.size() / 3);
-	polygons = GetAllPolygons(vertexesHomo, indexes, normalIndexes, normals);
+	//polygons.resize(indexes.size() / 3);
+
+	for (int i = 0; i < indexes.size(); i+= 3)
+	{
+		vertexesHomo[indexes[i] - 1].normal = normals[normalIndexes[i] - 1];
+		vertexesHomo[indexes[i+1] - 1].normal = normals[normalIndexes[i+1] - 1];
+		vertexesHomo[indexes[i+2] - 1].normal = normals[normalIndexes[i+2] - 1];
+		polygons.push_back({vertexesHomo[indexes[i] - 1], vertexesHomo[indexes[i + 1] - 1], vertexesHomo[indexes[i + 2] - 1]});
+	}
+	//polygons = GetAllPolygons(vertexesHomo, indexes, normalIndexes, normals);
 	polygonsOutp.resize(polygons.size());
 
 	/////
@@ -274,7 +282,7 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 	 */
 
 
-	 // ��������� DC ��� �������� bit-map'�
+	 // DC  bit-map
 	HDC srcHdc = CreateCompatibleDC(hdc);
 
 	SelectObject(srcHdc, hBitMap);
@@ -357,7 +365,7 @@ void UpdateNormals()
 			polygonsOutp[i].vectors[j].normalW = homoNormal.w;
 			normalSum = normalSum + homoNormal;
 
-			// For center of poly
+			// For center of polygon
 			vertexSum = vertexSum + polygons[i].vectors[j];
 		}
 		vertexSum *= vectorCount;
@@ -405,27 +413,8 @@ bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& cli
 
 	polygon = polygonsOutp[polygonIterator];
 
-	// Normal clipping
-	CoordinateStruct cameraDirection = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, targetGlobalCoord));
-
-
-	//float dotProduct = modelCoordSystem->DotProduct(polygon.normal, cameraGlobalCoord);
-
-	//CoordinateStruct vect, ZAxis;
-
 	for (int i = 0; i < 3; i++)
 	{
-		//vect = { polygon.vectors[i].x, polygon.vectors[i].y, polygon.vectors[i].z };
-		//ZAxis = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, vect));
-
-		CoordinateStruct normal = { polygon.vectors[i].normal.x, polygon.vectors[i].normal.y, polygon.vectors[i].normal.z };
-
-		float dotProduct = modelCoordSystem->DotProduct(normal, cameraDirection);
-		/*if (dotProduct < 0)
-		{
-			return true;
-		}*/
-
 		pointHomogeneous = polygon.vectors[i];
 		bool isVertexBehindClipPlanes = true;
 

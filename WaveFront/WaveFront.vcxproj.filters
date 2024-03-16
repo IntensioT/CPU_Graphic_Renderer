@@ -13,14 +13,23 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ObjLoader">
+      <UniqueIdentifier>{2d953798-fb95-4983-9dbd-6ffe2d120375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoordinateSystemLogic">
+      <UniqueIdentifier>{21ef3da2-13f9-4ebb-abba-e420c1bb9e55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoordinateSystemLogic\Headers">
+      <UniqueIdentifier>{7fae32e9-53d1-4784-99bd-daa56c4a0fc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ObjLoader\Headers">
+      <UniqueIdentifier>{f231388d-1f5b-4b9a-9152-9e436eef1092}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoordinateSystemLogic\Headers\Vectors">
+      <UniqueIdentifier>{45713749-9dfb-46e3-bc4e-1b6aaceeb6dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ObjLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CoordSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WindowMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -36,14 +45,14 @@
     <ClCompile Include="PolygonsLogic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ObjLoader.cpp">
+      <Filter>ObjLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="CoordSystem.cpp">
+      <Filter>CoordinateSystemLogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ObjLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CoordSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -55,6 +64,21 @@
     </ClInclude>
     <ClInclude Include="WindowMain.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjLoader.h">
+      <Filter>ObjLoader\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="tiny_obj_loader.h">
+      <Filter>ObjLoader\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="3DVectorStruct.h">
+      <Filter>CoordinateSystemLogic\Headers\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="HomogeneousVectorStruct.h">
+      <Filter>CoordinateSystemLogic\Headers\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="CoordSystem.h">
+      <Filter>CoordinateSystemLogic\Headers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

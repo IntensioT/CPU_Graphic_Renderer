@@ -1,5 +1,6 @@
 #pragma once
 #include "ObjLoader.h"
+#include "HomogeneousVectorStruct.h"
 
 #define M_PI       3.14159265358979323846   // pi
 
@@ -20,34 +21,7 @@ typedef struct _3DMATRIX {
     _3DMATRIX operator*(const _3DMATRIX& a);
 }; 
 
-struct HomogeneousCoordinateStruct
-{
-    float x, y, z, w;
-    float shade;
-    CoordinateStruct diffuse;
-    CoordinateStruct normal;
-    float normalW;
-    CoordinateStruct projectedNormal;
 
-    HomogeneousCoordinateStruct& operator*=(const float f) {
-        x *= f;
-        y *= f;
-        z *= f;
-        w *= f;
-        return *this;
-    }
-
-    HomogeneousCoordinateStruct operator-(const HomogeneousCoordinateStruct& other) const {
-        return HomogeneousCoordinateStruct{ x - other.x, y - other.y, z - other.z };
-    }
-    HomogeneousCoordinateStruct operator+(const HomogeneousCoordinateStruct& other) const {
-        return HomogeneousCoordinateStruct{ x + other.x, y + other.y, z + other.z };
-    }
-    CoordinateStruct toCoordinateStruct()
-    {
-        return { x,y,z };
-    }
-};
 
 struct Plane {
     HomogeneousCoordinateStruct normal;
@@ -158,7 +132,7 @@ public:
     void SetViewPortTransformationMatrix(float width, float height, float x, float y, float zMin, float zMax);
 
     bool IsVertexBehindClipPlane(const HomogeneousCoordinateStruct vertex, const Plane& clipPlane);
-    bool IsObjectBehindClipPlanes(const std::vector<CoordinateStruct>& vertices, const std::vector<Plane>& clipPlanes, const _3DMATRIX& modelMatrix, const _3DMATRIX& viewMatrix, const _3DMATRIX& projectionMatrix);
+    //bool IsObjectBehindClipPlanes(const std::vector<CoordinateStruct>& vertices, const std::vector<Plane>& clipPlanes, const _3DMATRIX& modelMatrix, const _3DMATRIX& viewMatrix, const _3DMATRIX& projectionMatrix);
 
     HomogeneousCoordinateStruct CalculateNormalProjections(HomogeneousCoordinateStruct homoVector);
 
