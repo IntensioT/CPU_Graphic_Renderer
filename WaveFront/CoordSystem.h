@@ -107,6 +107,7 @@ inline CoordinateStruct SphericalToCartesian(float radius, float phiAngle, float
     return res;
 }
 
+
 class CoordSystem
 {
     CoordinateStruct XAxis, YAxis, ZAxis;
@@ -159,6 +160,7 @@ public:
     bool IsVertexBehindClipPlane(const HomogeneousCoordinateStruct vertex, const Plane& clipPlane);
     bool IsObjectBehindClipPlanes(const std::vector<CoordinateStruct>& vertices, const std::vector<Plane>& clipPlanes, const _3DMATRIX& modelMatrix, const _3DMATRIX& viewMatrix, const _3DMATRIX& projectionMatrix);
 
+    HomogeneousCoordinateStruct CalculateNormalProjections(HomogeneousCoordinateStruct homoVector);
 
 
     void SetTranslationMatrix(CoordinateStruct Translation);

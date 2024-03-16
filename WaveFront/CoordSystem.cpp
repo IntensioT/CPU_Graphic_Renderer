@@ -310,6 +310,19 @@ void CoordSystem::SetRotationMatrixOptimized(float angle, const CoordinateStruct
 	matrix[2][2] = rcos + w * w * (1 - rcos);*/
 }
 
+HomogeneousCoordinateStruct CoordSystem::CalculateNormalProjections(HomogeneousCoordinateStruct homoVector)
+{
+	homoVector *= this->TranslationMatrix;
+	homoVector *= this->CameraTransformationMatrix;
+
+	homoVector *= this->ProjectionTransformationMatrix;
+
+	homoVector *= (1 / homoVector.w);
+	homoVector *= this->ViewPortTransformationMatrix;
+
+	return homoVector;
+}
+
 _3DMATRIX _3DMATRIX::operator*(const _3DMATRIX& a)
 {
 	_3DMATRIX result;

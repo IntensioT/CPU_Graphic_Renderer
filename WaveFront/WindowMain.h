@@ -4,8 +4,6 @@
 #include "Rasterizator.h"
 
 
-
-
 LONG FrameHeight = 720, FrameWidth = 1280;
 int prevMouseX, prevMouseY;
 bool mouseDown = false;
@@ -65,6 +63,7 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 void SetPoint(void* buffer, int x, int y, RGBQUAD color = { 0,0,0,0 });
 void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color);
 void Render();
+bool ClipFacePolygons(int polygonIterator);
 void UpdateNormals();
 void UpdateVectors();
 void UpdateWindowSize(HWND hWnd);
@@ -74,3 +73,6 @@ void UpdatePolygonsAsync();
 
 bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& clipPlanes);
 void DrawObject(int i);
+
+
+Triangle CalculateLambertTermAndShade(int polygonIterator, int vectorIterator, CoordinateStruct curVector, Triangle inputPolygon);

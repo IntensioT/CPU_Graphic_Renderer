@@ -13,19 +13,15 @@ class Rasterizator
 {
 public:
 
-	//CoordinateStruct DiffuseMaterialColor = { 0.8f,0.8f,0.8f };
-	//CoordinateStruct DiffuseLightColor = { 255,255,255 };
-
 	float zInterpolated[1080][1920];
 
 	int isLeft;
 
 
 	std::vector<float> Interpolate(float x0, float y0, float x1, float y1);
-std::vector<float> xLeft, xRight, zLeft, zRight, hLeft, hRight, diffuseLeft, diffuseRight;
+	std::vector<float> xLeft, xRight, zLeft, zRight, hLeft, hRight, diffuseLeft, diffuseRight;
 	void UpdateXleftAndXRight(Triangle& polygon);
-	void DrawLines(Triangle polygon, RGBQUAD (&frameBuffer) [1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
-	//CoordinateStruct LambertShading(CoordSystem* modelCoord, Triangle curPolygon,CoordinateStruct lightPos, CoordinateStruct CameraGlobalCoordinates);
+	void DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
 
 private:
 
