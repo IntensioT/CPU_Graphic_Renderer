@@ -3,6 +3,9 @@
 
 
 #include "Triangle.h"
+#include "Rectangle2D.h"
+#include "MathLogic.h"
+
 #include <windows.h>
 
 
@@ -22,16 +25,19 @@ public:
 	std::vector<float> xLeft, xRight, zLeft, zRight, hLeft, hRight, diffuseLeft, diffuseRight;
 	void UpdateXleftAndXRight(Triangle& polygon);
 	void DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
+	void DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
+	
+
 
 private:
-
+	RectangleStruct FindTriangleBoundingRectangle2D(Triangle polygon);
+	bool IsInTriangle(float x, float y, Triangle polygon);
 
 	void SortYPoints(Triangle& polygon);
 	Triangle correctOrdinary(Triangle polygon);
 	void getXleftAndRight(Triangle polygon);
 	void getZLeftAndZRight(Triangle polygon);
 	void getHLeftAndHRight(Triangle polygon);
-	void getDiffuseLeftAndDiffuseRight(Triangle polygon);
 };
 
 #endif

@@ -89,5 +89,11 @@
     <ClInclude Include="Rasterizator.h">
       <Filter>Rasterizator</Filter>
     </ClInclude>
+    <ClInclude Include="Rectangle2D.h">
+      <Filter>Rasterizator</Filter>
+    </ClInclude>
+    <ClInclude Include="MathLogic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

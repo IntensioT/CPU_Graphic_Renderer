@@ -163,8 +163,10 @@
     <ClInclude Include="3DVectorStruct.h" />
     <ClInclude Include="CoordSystem.h" />
     <ClInclude Include="HomogeneousVectorStruct.h" />
+    <ClInclude Include="MathLogic.h" />
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="Rasterizator.h" />
+    <ClInclude Include="Rectangle2D.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="Triangle.h" />

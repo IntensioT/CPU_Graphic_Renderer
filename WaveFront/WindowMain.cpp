@@ -259,7 +259,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case '3':
 			curGraphic = 3;
 			return 0;
+		case '4':
+			curGraphic = 4;
+			return 0;
 		}
+
 
 
 	default:
@@ -505,6 +509,14 @@ void DrawObject(int i)
 		break;
 	case 4: 
 		
+
+		for (int j = 0; j < (1 / vectorCount); j++)
+		{
+			if (polygonsOutp[i].vectors[j].x > 1920 || polygonsOutp[i].vectors[j].x < 0 || polygonsOutp[i].vectors[j].y > 1080 || polygonsOutp[i].vectors[j].y < 0) return;
+		}
+
+		rasterizator->DrawPolygon(polygonsOutp[i], frameBuffer, depthBuffer, color);
+
 		break;
 	}
 }

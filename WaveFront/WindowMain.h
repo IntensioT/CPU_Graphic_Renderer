@@ -25,8 +25,8 @@ CoordinateStruct cameraGlobalCoord;
 //CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
 CoordinateStruct targetGlobalCoord = { 0,50.f,0.f };
 
-CoordinateStruct lightGlobalCoord = { 10.f,15.f,500.5f };
 //CoordinateStruct lightGlobalCoord = { 0.f,3.f,8.5f };
+CoordinateStruct lightGlobalCoord = { 10.f,15.f,500.5f };
 
 CoordinateStruct DiffuseMaterialColor = { 0.8f,0.8f,0.8f };
 CoordinateStruct DiffuseLightColor = { 255,255,255 };
@@ -51,9 +51,9 @@ float yAngleObject = 0.0f;
 float xAngleObject = 0.0f;
 float xCamera = 0.0f;
 float yCamera = 0.0f;
+//float zCamera = 4.f;
 float zCamera = 250.5f;
 //float zCamera = 10.5f;
-//float zCamera = 4.f;
 float rSphere = zCamera;
 float phiAngleSphere = 0.0f;
 float thetaAngleSphere = 90.0f;

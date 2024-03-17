@@ -111,32 +111,6 @@ void Rasterizator::getHLeftAndHRight(Triangle polygon)
 	}
 }
 
-void Rasterizator::getDiffuseLeftAndDiffuseRight(Triangle polygon)
-{
-	//// Вычисление значений h для вершин треугольника
-	//std::vector<float> diffuse01 = Interpolate(polygon.vectors[0].y, polygon.vectors[0].diffuse., polygon.vectors[1].y, polygon.vectors[1].shade);
-	//std::vector<float> diffuse01 = Interpolate(polygon.vectors[1].y, polygon.vectors[1].shade, polygon.vectors[2].y, polygon.vectors[2].shade);
-	//std::vector<float> diffuse01 = Interpolate(polygon.vectors[0].y, polygon.vectors[0].shade, polygon.vectors[2].y, polygon.vectors[2].shade);
-
-	//// Конкатенация значений h для коротких сторон
-	//h01.pop_back();
-	//std::vector<float> h012;
-	//h012.insert(h012.end(), h01.begin(), h01.end());
-	//h012.insert(h012.end(), h12.begin(), h12.end());
-
-	//// Определяем, какая из сторон левая и правая
-	//if (isLeft == 1)
-	//{
-	//	hLeft = h02;
-	//	hRight = h012;
-	//}
-	//else
-	//{
-	//	hLeft = h012;
-	//	hRight = h02;
-	//}
-}
-
 
 
 std::vector<float> Rasterizator::Interpolate(float i0, float d0, float i1, float d1)
@@ -211,5 +185,46 @@ void Rasterizator::DrawLines(Triangle polygon, RGBQUAD (&frameBuffer)[1080][1920
 
 		}
 	}
+}
+
+void Rasterizator::DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
+{
+	RectangleStruct rect = FindTriangleBoundingRectangle2D(polygon);
+
+	for (int y = rect.top; y <= rect.bottom; y++)
+	{
+		for (int x = rect.left; x <= rect.right; x++)
+		{
+			if (IsInTriangle(x, y, polygon))
+			{
+				SetPoint(frameBuffer, x, y, color);
+			}
+		}
+	}
+}
+
+RectangleStruct Rasterizator::FindTriangleBoundingRectangle2D(Triangle polygon)
+{
+	RectangleStruct result;
+	result.bottom = getMax(polygon.vectors[0].y, polygon.vectors[1].y, polygon.vectors[2].y);
+	result.top = getMin(polygon.vectors[0].y, polygon.vectors[1].y, polygon.vectors[2].y);
+
+	result.left = getMin(polygon.vectors[0].x, polygon.vectors[1].x, polygon.vectors[2].x);
+	result.right = getMax(polygon.vectors[0].x, polygon.vectors[1].x, polygon.vectors[2].x);
+
+	return result;
+}
+
+bool Rasterizator::IsInTriangle(float x, float y, Triangle polygon)
+{
+	float inASide, inBSide, inCSide;
+
+
+	inASide = (polygon.vectors[0].y - polygon.vectors[1].y) * x + (polygon.vectors[1].x - polygon.vectors[0].x) * y + polygon.vectors[0].x * polygon.vectors[1].y - polygon.vectors[1].x * polygon.vectors[0].y;
+	inBSide = (polygon.vectors[1].y - polygon.vectors[2].y) * x + (polygon.vectors[2].x - polygon.vectors[1].x) * y + polygon.vectors[1].x * polygon.vectors[2].y - polygon.vectors[2].x * polygon.vectors[1].y;
+	inCSide = (polygon.vectors[2].y - polygon.vectors[0].y) * x + (polygon.vectors[0].x - polygon.vectors[2].x) * y + polygon.vectors[2].x * polygon.vectors[0].y - polygon.vectors[0].x * polygon.vectors[2].y;
+
+
+	return (inASide >= 0 && inBSide >= 0 && inCSide >= 0) || (inASide < 0 && inBSide < 0 && inCSide < 0);
 }
 
