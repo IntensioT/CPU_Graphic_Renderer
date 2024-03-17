@@ -28,21 +28,24 @@
     <Filter Include="CoordinateSystemLogic\Headers\Vectors">
       <UniqueIdentifier>{45713749-9dfb-46e3-bc4e-1b6aaceeb6dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThreadPool">
+      <UniqueIdentifier>{19f6673d-24ba-47f3-9110-db31f259bc5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Polygon">
+      <UniqueIdentifier>{7469d485-e67d-4975-b1ec-48a5e5e4b685}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Polygon\Headers">
+      <UniqueIdentifier>{08bf1309-70bc-4d0c-8d0b-1c30cba9f88f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rasterizator">
+      <UniqueIdentifier>{9e91b89e-e170-4537-b99f-659b315ed4cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WindowMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Triangle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TempRasrt.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rasterizator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PolygonsLogic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ObjLoader.cpp">
@@ -51,17 +54,14 @@
     <ClCompile Include="CoordSystem.cpp">
       <Filter>CoordinateSystemLogic</Filter>
     </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>Polygon</Filter>
+    </ClCompile>
+    <ClCompile Include="Rasterizator.cpp">
+      <Filter>Rasterizator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Triangle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ThreadPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rasterizator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="WindowMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -79,6 +79,15 @@
     </ClInclude>
     <ClInclude Include="CoordSystem.h">
       <Filter>CoordinateSystemLogic\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>ThreadPool</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>Polygon\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rasterizator.h">
+      <Filter>Rasterizator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

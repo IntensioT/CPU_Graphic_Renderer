@@ -1,61 +1,11 @@
-﻿  Rasterizator.cpp
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(21,2): warning C4091: 'typedef ': ignored on left of '_3DMATRIX' when no variable is declared
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(88,20): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(48,8): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(153,13): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(181,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,26): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
-          with
-          [
-              _Ty=float
-          ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(184,27): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(184,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
-          with
-          [
-              _Ty=float
-          ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(187,69): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(187,113): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(187,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(187,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(191,30): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(192,31): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(206,43): warning C4838: conversion from '_Ty' to 'BYTE' requires a narrowing conversion
-          with
-          [
-              _Ty=float
-          ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(206,43): warning C4244: 'initializing': conversion from '_Ty' to 'BYTE', possible loss of data
-          with
-          [
-              _Ty=float
-          ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(206,77): warning C4838: conversion from '_Ty' to 'BYTE' requires a narrowing conversion
-          with
-          [
-              _Ty=float
-          ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(206,77): warning C4244: 'initializing': conversion from '_Ty' to 'BYTE', possible loss of data
-          with
-          [
-              _Ty=float
-          ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(206,110): warning C4838: conversion from '_Ty' to 'BYTE' requires a narrowing conversion
-          with
-          [
-              _Ty=float
-          ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(206,110): warning C4244: 'initializing': conversion from '_Ty' to 'BYTE', possible loss of data
-          with
-          [
-              _Ty=float
-          ]
+﻿  WindowMain.cpp
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(22,2): warning C4091: 'typedef ': ignored on left of '_3DMATRIX' when no variable is declared
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(68,20): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(335,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   Generating code
-  7 of 809 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
-    1 functions were new in current compilation
-    5 functions had inline decision re-evaluated but remain unchanged
+  2 of 805 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   WaveFront.vcxproj -> D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\x64\Release\WaveFront.exe
   "pwsh.exe" не является внутренней или внешней

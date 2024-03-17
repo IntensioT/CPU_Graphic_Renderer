@@ -107,6 +107,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_PAINT:
 	{
+		// Update the window title with the frame count
+		std::string title = "3D Engine - FPS: " + std::to_string(fps);
+		SetWindowTextA(hwnd, title.c_str());
+
 		Render();
 		ShowFrame(FrameWidth, FrameHeight, frameBuffer, hwnd);
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -324,6 +328,24 @@ void SetPoint(void* buffer, int x, int y, RGBQUAD color)
 
 void Render()
 {
+	///////////////////////////////////////////////////////////
+	frameCount++;
+
+	// Measure the elapsed time since the last frame
+	float deltaTime = getElapsedTime();
+	accumulatedTime += deltaTime;
+
+	// Update the FPS every updateInterval seconds
+	if (accumulatedTime >= updateInterval)
+	{
+		fps = static_cast<int>(frameCount / accumulatedTime);
+		frameCount = 0;
+		accumulatedTime -= updateInterval;
+	}
+
+
+	//////////////////////////////////////////////////////////
+
 	std::memset(frameBuffer, 0, sizeof(frameBuffer));
 
 	const float MAX_DEPTH = 3.4E+38f;
@@ -460,7 +482,7 @@ void DrawObject(int i)
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color2);
 		break;
 	case 2:
-		for (int j = 0; j < vectorCount; j++)
+		for (int j = 0; j < (1/vectorCount); j++)
 		{
 			if (polygonsOutp[i].vectors[j].x > 1920 || polygonsOutp[i].vectors[j].x < 0 || polygonsOutp[i].vectors[j].y > 1080 || polygonsOutp[i].vectors[j].y < 0) return;
 		}
@@ -480,6 +502,9 @@ void DrawObject(int i)
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], homoNormal0, color);
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], homoNormal1, color);
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], homoNormal2, color);
+		break;
+	case 4: 
+		
 		break;
 	}
 }
@@ -747,4 +772,13 @@ void UpdatePolygonsAsync()
 	{
 		polygonsOutp[i] = futures[i].get();
 	}
+}
+
+double getElapsedTime()
+{
+	static auto lastTime = std::chrono::high_resolution_clock::now();
+	auto currentTime = std::chrono::high_resolution_clock::now();
+	auto elapsedTime = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime);
+	lastTime = currentTime;
+	return elapsedTime.count();
 }

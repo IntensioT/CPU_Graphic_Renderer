@@ -8,6 +8,12 @@ LONG FrameHeight = 720, FrameWidth = 1280;
 int prevMouseX, prevMouseY;
 bool mouseDown = false;
 
+const float updateInterval = 1.f; // Update FPS
+float accumulatedTime = 0.0f;
+int fps = 0;
+int frameCount = 0;
+
+
 
 RGBQUAD frameBuffer[1080][1920];
 float depthBuffer[1080][1920];
@@ -16,8 +22,8 @@ RGBQUAD color = { 255, 255, 255, 0 };
 RGBQUAD color2 = { 0, 0, 255, 0 };
 
 CoordinateStruct cameraGlobalCoord;
-CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
-//CoordinateStruct targetGlobalCoord = { 0,50.f,0.f };
+//CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
+CoordinateStruct targetGlobalCoord = { 0,50.f,0.f };
 
 CoordinateStruct lightGlobalCoord = { 10.f,15.f,500.5f };
 //CoordinateStruct lightGlobalCoord = { 0.f,3.f,8.5f };
@@ -45,8 +51,8 @@ float yAngleObject = 0.0f;
 float xAngleObject = 0.0f;
 float xCamera = 0.0f;
 float yCamera = 0.0f;
-//float zCamera = 250.5f;
-float zCamera = 10.5f;
+float zCamera = 250.5f;
+//float zCamera = 10.5f;
 //float zCamera = 4.f;
 float rSphere = zCamera;
 float phiAngleSphere = 0.0f;
@@ -70,6 +76,9 @@ void UpdateWindowSize(HWND hWnd);
 bool UpdatePolygons(int polygonIterator);
 void BresenhamLineOptimised(void* buffer, HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color);
 void UpdatePolygonsAsync();
+
+double getElapsedTime();
+
 
 bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& clipPlanes);
 void DrawObject(int i);

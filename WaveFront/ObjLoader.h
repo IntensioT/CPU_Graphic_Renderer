@@ -18,8 +18,8 @@ private:
 	//std::string filePath = "D:\\Bugor\\6sem\\ComputerGraphicAlghorithms\\projects\\Miyu_Akey_Rigging.obj";
 	//std::string filePath = "D:\\bsuir\\6 term\\ACG\\Miyu_Akey_Rigging.obj";
 	//std::string filePath = "D:\\Bugor\\6sem\\ComputerGraphicAlghorithms\\projects\\DoomCombatScene.obj";
-	//std::string filePath = "D:\\Bugor\\6sem\\ComputerGraphicAlghorithms\\projects\\final_v01.obj";
-	std::string filePath = "D:\\Bugor\\6sem\\ComputerGraphicAlghorithms\\projects\\shovel.obj";
+	std::string filePath = "D:\\Bugor\\6sem\\ComputerGraphicAlghorithms\\projects\\final_v01.obj";
+	//std::string filePath = "D:\\Bugor\\6sem\\ComputerGraphicAlghorithms\\projects\\shovel.obj";
 	std::vector<CoordinateStruct> _vertexVector;
 	std::vector<CoordinateStruct> _normalVector;
 	std::vector<int> _indexes;

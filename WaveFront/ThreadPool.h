@@ -12,11 +12,14 @@
 
 
 class ThreadPool {
+
 public:
     ThreadPool(size_t);
+
     template<class F, class... Args>
     auto enqueue(F&& f, Args&&... args)
         -> std::future<typename std::result_of<F(Args...)>::type>;
+
     ~ThreadPool();
 private:
     // need to keep track of threads so we can join them
