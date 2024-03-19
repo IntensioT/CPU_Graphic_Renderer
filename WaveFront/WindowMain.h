@@ -1,5 +1,8 @@
 #pragma once
 
+#include <concurrent_vector.h>
+#include <ppl.h>
+
 #include "ThreadPool.h"
 #include "Rasterizator.h"
 
@@ -37,12 +40,15 @@ CoordinateStruct DiffuseLightColor = { 255,255,255 };
 std::vector<CoordinateStruct> vertexes;
 std::vector<HomogeneousCoordinateStruct> vertexesOutp;
 std::vector<Triangle> polygons;
-std::vector<Triangle> polygonsOutp;
+//std::vector<Triangle> polygonsOutp;
+concurrency::concurrent_vector<Triangle> polygonsOutp;
 std::vector<int> indexes;
 std::vector<int> normalIndexes;
 std::vector<CoordinateStruct> normals;
 CoordSystem* modelCoordSystem;
 Rasterizator* rasterizator;
+
+std::mutex polygonsMutex, polygonOutputMutex;
 
 float vectorCount = 0.333333333333333f;
 
@@ -64,6 +70,8 @@ float zFar = 100.0f;
 int curGraphic = 1;
 
 
+
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd);
 void SetPoint(void* buffer, int x, int y, RGBQUAD color = { 0,0,0,0 });
@@ -76,12 +84,14 @@ void UpdateWindowSize(HWND hWnd);
 bool UpdatePolygons(int polygonIterator);
 void BresenhamLineOptimised(void* buffer, HomogeneousCoordinateStruct vectorA, HomogeneousCoordinateStruct vectorB, RGBQUAD color);
 void UpdatePolygonsAsync();
+void DrawPolygonsAsync();
 
 double getElapsedTime();
 
 
 bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& clipPlanes);
 void DrawObject(int i);
+void DrawTriangle(Triangle& triangle);
 
 
 Triangle CalculateLambertTermAndShade(int polygonIterator, int vectorIterator, CoordinateStruct curVector, Triangle inputPolygon);

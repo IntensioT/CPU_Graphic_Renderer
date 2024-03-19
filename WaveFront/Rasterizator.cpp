@@ -205,7 +205,7 @@ void Rasterizator::DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1080][192
 }
 
 
-RectangleStruct Rasterizator::FindTriangleBoundingRectangle2D(Triangle polygon)
+RectangleStruct FindTriangleBoundingRectangle2D(Triangle polygon)
 {
 	RectangleStruct result;
 	result.bottom = getMax(polygon.vectors[0].y, polygon.vectors[1].y, polygon.vectors[2].y);

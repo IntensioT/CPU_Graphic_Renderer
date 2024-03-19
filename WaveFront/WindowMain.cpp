@@ -44,6 +44,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	rasterizator = new Rasterizator();
 
+	
+	UpdateNormals();
 	/////
 
 	// Register the window class.
@@ -294,35 +296,8 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 	//SelectObject(srcHdc, hBitMap);
 
 	//BitBlt(hdc, 0, 0, static_cast<int>(width), static_cast<int>(height), srcHdc, 0, 0, SRCCOPY);
-	/*[in] hdc
-		Дескриптор контекста целевого устройства.
-		[in] x
-		Координата X в логических единицах левого верхнего угла целевого прямоугольника.
-		[in] y
-		Координата Y в логических единицах левого верхнего угла целевого прямоугольника.
-		[in] cx
-		Ширина (в логических единицах) исходного и целевого прямоугольников.
-		[in] cy
-		Высота (в логических единицах) исходного и целевого прямоугольников.
-		[in] hdcSrc
-		Дескриптор контекста исходного устройства.
-		[in] x1
-		Координата X в логических единицах верхнего левого угла исходного прямоугольника.
-		[in] y1
-		Координата Y в логических единицах верхнего левого угла исходного прямоугольника.
-		[in] rop
-		Код растровой операции. Эти коды определяют, как данные цвета исходного прямоугольника должны сочетаться с данными цвета для целевого прямоугольника для достижения окончательного цвета.
-		*/
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////
-	//HDC memDC = CreateCompatibleDC(hdc);
-	//HBITMAP memBM = CreateCompatibleBitmap(hdc, width, height);
-	//SelectObject(memDC, memBM);
-
-
-	//bResult = BitBlt(hdc, 0, 0, static_cast<int>(width), static_cast<int>(height), memDC, 0, 0, SRCCOPY);
-	//DeleteObject(memBM);
-	//DeleteDC(memDC);
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Создаем битмап, совместимый с устройством
 	HBITMAP hBitMap = CreateCompatibleBitmap(hdc, width, height);
@@ -345,7 +320,25 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 
 	// Копируем битмап в целевое устройство
 	BitBlt(hdc, 0, 0, width, height, srcHdc, 0, 0, SRCCOPY);
-
+	/*[in] hdc
+		Дескриптор контекста целевого устройства.
+		[in] x
+		Координата X в логических единицах левого верхнего угла целевого прямоугольника.
+		[in] y
+		Координата Y в логических единицах левого верхнего угла целевого прямоугольника.
+		[in] cx
+		Ширина (в логических единицах) исходного и целевого прямоугольников.
+		[in] cy
+		Высота (в логических единицах) исходного и целевого прямоугольников.
+		[in] hdcSrc
+		Дескриптор контекста исходного устройства.
+		[in] x1
+		Координата X в логических единицах верхнего левого угла исходного прямоугольника.
+		[in] y1
+		Координата Y в логических единицах верхнего левого угла исходного прямоугольника.
+		[in] rop
+		Код растровой операции. Эти коды определяют, как данные цвета исходного прямоугольника должны сочетаться с данными цвета для целевого прямоугольника для достижения окончательного цвета.
+		*/
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// Освобождаем ресурсы
@@ -407,8 +400,21 @@ void Render()
 	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	UpdateNormals();
+	//UpdateNormals();
 	UpdateVectors();
+
+
+	/*for (int i = 0; i < polygonsOutp.size(); i++)
+	{
+		DrawObject(i);
+	}*/
+
+	Concurrency::parallel_for(0, static_cast<int>(polygonsOutp.size()), [&](int i)
+		{
+			DrawTriangle(polygonsOutp[i]);
+		});
+	
+
 
 	//UpdatePolygonsAsync();
 }
@@ -439,6 +445,9 @@ void UpdateNormals()
 		normalSum *= vectorCount;
 		polygonsOutp[i].polygonNormal = modelCoordSystem->NormalizeVector(normalSum);
 		polygonsOutp[i].polygonCenter = vertexSum;
+
+		polygons[i].isOnScreen = true;
+		polygonsOutp[i].isOnScreen = true;
 	}
 }
 
@@ -451,7 +460,7 @@ void UpdateVectors()
 		if (!UpdatePolygons(i)) continue;
 		//if (!IsObjectBehindClipPlanes(i, clipPlanes))
 		//{
-		DrawObject(i);
+		//DrawObject(i);
 		//}
 	}
 
@@ -518,17 +527,21 @@ Triangle CalculateLambertTermAndShade(int polygonIterator, int vectorIterator, C
 
 void DrawObject(int i)
 {
+	if (polygonsOutp[i].isOnScreen == false) return;
 	//vectorCount = 1 / (sizeof(polygonsOutp[i].vectors) / sizeof(polygonsOutp[i].vectors[0]));
 	HomogeneousCoordinateStruct homoNormal0, homoNormal1, homoNormal2;
 
 	switch (curGraphic)
 	{
 	case 1:
+		polygonOutputMutex.lock();
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], polygonsOutp[i].vectors[0 + 1], color2);
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], polygonsOutp[i].vectors[0 + 2], color2);
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color2);
+		polygonOutputMutex.unlock();
 		break;
 	case 2:
+		polygonOutputMutex.lock();
 		for (int j = 0; j < (1/vectorCount); j++)
 		{
 			if (polygonsOutp[i].vectors[j].x > 1920 || polygonsOutp[i].vectors[j].x < 0 || polygonsOutp[i].vectors[j].y > 1080 || polygonsOutp[i].vectors[j].y < 0) return;
@@ -537,8 +550,10 @@ void DrawObject(int i)
 		rasterizator->UpdateXleftAndXRight(polygonsOutp[i]);
 
 		rasterizator->DrawLines(polygonsOutp[i], frameBuffer, depthBuffer, color);
+		polygonOutputMutex.unlock();
 		break;
 	case 3:
+		polygonOutputMutex.lock();
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], polygonsOutp[i].vectors[0 + 1], color2);
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], polygonsOutp[i].vectors[0 + 2], color2);
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], polygonsOutp[i].vectors[0], color2);
@@ -549,6 +564,7 @@ void DrawObject(int i)
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0], homoNormal0, color);
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 1], homoNormal1, color);
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], homoNormal2, color);
+		polygonOutputMutex.unlock();
 		break;
 	case 4: 
 		
@@ -559,6 +575,68 @@ void DrawObject(int i)
 		}
 
 		rasterizator->DrawPolygon(polygonsOutp[i], frameBuffer, depthBuffer, color);
+
+		break;
+	}
+}
+
+void DrawTriangle(Triangle& triangle)
+{
+	if (triangle.isOnScreen == false) return;
+	int curVectorCount = (1 / vectorCount);
+	RectangleStruct bbox;
+	HomogeneousCoordinateStruct homoNormal0, homoNormal1, homoNormal2;
+
+	switch (curGraphic)
+	{
+	case 1:
+		polygonOutputMutex.lock();
+		BresenhamLineOptimised(frameBuffer, triangle.vectors[0], triangle.vectors[0 + 1], color2);
+		BresenhamLineOptimised(frameBuffer, triangle.vectors[0 + 1], triangle.vectors[0 + 2], color2);
+		BresenhamLineOptimised(frameBuffer, triangle.vectors[0 + 2], triangle.vectors[0], color2);
+		polygonOutputMutex.unlock();
+		break;
+	case 2:
+		bbox = FindTriangleBoundingRectangle2D(triangle);
+		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
+
+
+		polygonOutputMutex.lock();
+		/*for (int j = 0; j < curVectorCount; j++)
+		{
+			if (triangle.vectors[j].x > 1920 || triangle.vectors[j].x < 0 || triangle.vectors[j].y > 1080 || triangle.vectors[j].y < 0) return;
+		}*/
+
+		rasterizator->UpdateXleftAndXRight(triangle);
+
+		rasterizator->DrawLines(triangle, frameBuffer, depthBuffer, color);
+		polygonOutputMutex.unlock();
+		break;
+	case 3:
+		polygonOutputMutex.lock();
+		BresenhamLineOptimised(frameBuffer, triangle.vectors[0], triangle.vectors[0 + 1], color2);
+		BresenhamLineOptimised(frameBuffer, triangle.vectors[0 + 1], triangle.vectors[0 + 2], color2);
+		BresenhamLineOptimised(frameBuffer, triangle.vectors[0 + 2], triangle.vectors[0], color2);
+
+		homoNormal0 = { triangle.vectors[0].projectedNormal.x, triangle.vectors[0].projectedNormal.y, triangle.vectors[0].projectedNormal.z, 1 };
+		homoNormal1 = { triangle.vectors[1].projectedNormal.x, triangle.vectors[1].projectedNormal.y, triangle.vectors[1].projectedNormal.z, 1 };
+		homoNormal2 = { triangle.vectors[2].projectedNormal.x, triangle.vectors[2].projectedNormal.y, triangle.vectors[2].projectedNormal.z, 1 };
+		BresenhamLineOptimised(frameBuffer, triangle.vectors[0], homoNormal0, color);
+		BresenhamLineOptimised(frameBuffer, triangle.vectors[0 + 1], homoNormal1, color);
+		BresenhamLineOptimised(frameBuffer, triangle.vectors[0 + 2], homoNormal2, color);
+		polygonOutputMutex.unlock();
+		break;
+	case 4:
+		bbox = FindTriangleBoundingRectangle2D(triangle);
+		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
+
+
+		/*for (int j = 0; j < curVectorCount; j++)
+		{
+			if (triangle.vectors[j].x > 1920 || triangle.vectors[j].x < 0 || triangle.vectors[j].y > 1080 || triangle.vectors[j].y < 0) return;
+		}*/
+
+		rasterizator->DrawPolygon(triangle, frameBuffer, depthBuffer, color);
 
 		break;
 	}
@@ -582,8 +660,10 @@ bool ClipFacePolygons(int polygonIterator)
 	float dotProduct = modelCoordSystem->DotProduct(polygonNormal.toCoordinateStruct(), cameraDirectionOnPoint);
 	if (dotProduct < 0)
 	{
+		polygonsOutp[polygonIterator].isOnScreen = false;
 		return false;
 	}
+	polygonsOutp[polygonIterator].isOnScreen = true;
 	return true;
 }
 
@@ -596,21 +676,24 @@ bool UpdatePolygons(int polygonIterator)
 
 	for (int i = 0; i < (1 / vectorCount); i++)
 	{
+		polygonsMutex.lock();
 		pointHomogeneous = polygons[polygonIterator].vectors[i];
+		polygonsMutex.unlock();
+
+		polygonOutputMutex.lock();
 		normalHomogeneous = { polygonsOutp[polygonIterator].vectors[i].normal.x, polygonsOutp[polygonIterator].vectors[i].normal.y, polygonsOutp[polygonIterator].vectors[i].normal.z, 1 };
+		polygonOutputMutex.unlock();
 
 		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;	
 		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
-
 		modelCoordSystem->SetTranslationMatrix(pointHomogeneous.toCoordinateStruct());
 		
-
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
-
 		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 
 		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
 		{
+			polygonsOutp[polygonIterator].isOnScreen = false;
 			return false;
 		}
 
@@ -620,9 +703,11 @@ bool UpdatePolygons(int polygonIterator)
 		//////////////////////////////Normals Showcase//////////////////////////////////
 		if (curGraphic == 3)
 		{
+			polygonOutputMutex.lock();
 			normalHomogeneous = modelCoordSystem->CalculateNormalProjections({ polygonsOutp[polygonIterator].vectors[i].normal.x,
 																				polygonsOutp[polygonIterator].vectors[i].normal.y,
 																				polygonsOutp[polygonIterator].vectors[i].normal.z, 1 });
+			polygonOutputMutex.unlock();
 		}
 		///////////////////////////////////////////////////////////////////////////////
 
@@ -631,8 +716,9 @@ bool UpdatePolygons(int polygonIterator)
 		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////
 		polygon = CalculateLambertTermAndShade(polygonIterator, i, curVector, polygon);
 	}
-
+	polygonOutputMutex.lock();
 	polygonsOutp[polygonIterator] = polygon;
+	polygonOutputMutex.unlock();
 	return true;
 }
 
@@ -646,20 +732,20 @@ Triangle UpdatePolygonsTriangle(int polygonIterator)
 		pointHomogeneous = polygons[polygonIterator].vectors[i];
 
 		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
+		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
+		modelCoordSystem->SetTranslationMatrix(pointHomogeneous.toCoordinateStruct());
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
-
-		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
 
 		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
 		{
 			pointHomogeneous = { 0,0,0,1 };
+			//return false;
 		}
-		else
-		{
-			pointHomogeneous *= (1 / pointHomogeneous.w);
-			pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
-		}
+
+		pointHomogeneous *= (1 / pointHomogeneous.w);
+		pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
+
 		pointHomogeneous.shade = 1;
 		polygon.vectors[i] = pointHomogeneous;
 		polygon.vectors[i].normal = polygons[polygonIterator].vectors[i].normal;

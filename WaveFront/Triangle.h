@@ -10,6 +10,7 @@ struct Triangle
 	HomogeneousCoordinateStruct polygonNormal;
 	HomogeneousCoordinateStruct polygonCenter;
 
+	bool isOnScreen;
 };
 
 void AddTriangle(std::vector<Triangle>& triangles,const std::vector<HomogeneousCoordinateStruct>& homogeneousCoordinates,

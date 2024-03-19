@@ -11,6 +11,8 @@
 
 inline void SetPoint(void* buffer, int x, int y, RGBQUAD color);
 
+RectangleStruct FindTriangleBoundingRectangle2D(Triangle polygon);
+
 
 class Rasterizator
 {
@@ -30,7 +32,6 @@ public:
 
 
 private:
-	RectangleStruct FindTriangleBoundingRectangle2D(Triangle polygon);
 	bool IsInTriangle(float x, float y, Triangle polygon);
 
 	void SortYPoints(Triangle& polygon);
