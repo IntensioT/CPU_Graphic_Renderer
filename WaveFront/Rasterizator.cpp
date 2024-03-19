@@ -145,7 +145,7 @@ void Rasterizator::UpdateXleftAndXRight(Triangle& polygon)
 {
 	SortYPoints(polygon);
 	getXleftAndRight(polygon);
-	getZLeftAndZRight(polygon);
+	getZLeftAndZRight	(polygon);
 	getHLeftAndHRight(polygon);
 }
 
@@ -197,11 +197,13 @@ void Rasterizator::DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1080][192
 		{
 			if (IsInTriangle(x, y, polygon))
 			{
+
 				SetPoint(frameBuffer, x, y, color);
 			}
 		}
 	}
 }
+
 
 RectangleStruct Rasterizator::FindTriangleBoundingRectangle2D(Triangle polygon)
 {
@@ -218,7 +220,8 @@ RectangleStruct Rasterizator::FindTriangleBoundingRectangle2D(Triangle polygon)
 bool Rasterizator::IsInTriangle(float x, float y, Triangle polygon)
 {
 	float inASide, inBSide, inCSide;
-
+	
+	// (y1-y2)x + (x2-x1)y + x1y2 - x2y1 = 0 
 
 	inASide = (polygon.vectors[0].y - polygon.vectors[1].y) * x + (polygon.vectors[1].x - polygon.vectors[0].x) * y + polygon.vectors[0].x * polygon.vectors[1].y - polygon.vectors[1].x * polygon.vectors[0].y;
 	inBSide = (polygon.vectors[1].y - polygon.vectors[2].y) * x + (polygon.vectors[2].x - polygon.vectors[1].x) * y + polygon.vectors[1].x * polygon.vectors[2].y - polygon.vectors[2].x * polygon.vectors[1].y;

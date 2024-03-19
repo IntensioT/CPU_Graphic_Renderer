@@ -161,15 +161,15 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		if (wheelDelta > 0)
 		{
-			zCamera += 0.05f;
-			rSphere += 0.05f;
+			zCamera += 0.5f;
+			rSphere += 0.5f;
 		}
 		else if (wheelDelta < 0)
 		{
 			if (zCamera > 1.f)
 			{
-				zCamera -= 0.05f;
-				rSphere -= 0.05f;
+				zCamera -= 0.5f;
+				rSphere -= 0.5f;
 			}
 		}
 
@@ -277,25 +277,23 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 {
 	HDC hdc = GetDC(hWnd);
 
+	//HBITMAP hBitMap = CreateBitmap(width, height, 1, 8 * 4, pixels);
+	////HBITMAP hBitMap = CreateCompatibleBitmap(hdc, width, height);
+	///*
+	////Однако для повышения производительности приложения должны использовать CreateBitmap для создания монохромных растровых изображений и
+	////CreateCompatibleBitmap для создания цветных растровых изображений
+	////  [in] nPlanes
+	////Количество цветовых плоскостей, используемых устройством.
+	////  [in] nBitCount (4)
+	////Количество битов, необходимых для идентификации цвета одного пикселя.
+	//// */
 
-	HBITMAP hBitMap = CreateBitmap(width, height, 1, 8 * 4, pixels);
-	//HBITMAP hBitMap = CreateCompatibleBitmap(hdc, width, height);
-	/*
-	Однако для повышения производительности приложения должны использовать CreateBitmap для создания монохромных растровых изображений и
-	CreateCompatibleBitmap для создания цветных растровых изображений
-	  [in] nPlanes
-	Количество цветовых плоскостей, используемых устройством.
-	  [in] nBitCount (4)
-	Количество битов, необходимых для идентификации цвета одного пикселя.
-	 */
+	// // DC  bit-map
+	//HDC srcHdc = CreateCompatibleDC(hdc);
 
+	//SelectObject(srcHdc, hBitMap);
 
-	 // DC  bit-map
-	HDC srcHdc = CreateCompatibleDC(hdc);
-
-	SelectObject(srcHdc, hBitMap);
-
-	BitBlt(hdc, 0, 0, static_cast<int>(width), static_cast<int>(height), srcHdc, 0, 0, SRCCOPY);
+	//BitBlt(hdc, 0, 0, static_cast<int>(width), static_cast<int>(height), srcHdc, 0, 0, SRCCOPY);
 	/*[in] hdc
 		Дескриптор контекста целевого устройства.
 		[in] x
@@ -315,7 +313,42 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 		[in] rop
 		Код растровой операции. Эти коды определяют, как данные цвета исходного прямоугольника должны сочетаться с данными цвета для целевого прямоугольника для достижения окончательного цвета.
 		*/
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	//HDC memDC = CreateCompatibleDC(hdc);
+	//HBITMAP memBM = CreateCompatibleBitmap(hdc, width, height);
+	//SelectObject(memDC, memBM);
 
+
+	//bResult = BitBlt(hdc, 0, 0, static_cast<int>(width), static_cast<int>(height), memDC, 0, 0, SRCCOPY);
+	//DeleteObject(memBM);
+	//DeleteDC(memDC);
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Создаем битмап, совместимый с устройством
+	HBITMAP hBitMap = CreateCompatibleBitmap(hdc, width, height);
+
+	// Получаем доступ к битам битмапа
+	BITMAPINFO bitmapInfo;
+	ZeroMemory(&bitmapInfo, sizeof(bitmapInfo));
+	bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
+	bitmapInfo.bmiHeader.biWidth = width;
+	//bitmapInfo.bmiHeader.biHeight = height; 
+	bitmapInfo.bmiHeader.biHeight = (height == 0) ? 0 : -static_cast<LONG>(height); // Отрицательная высота означает, что битмап будет перевернут
+	bitmapInfo.bmiHeader.biPlanes = 1;
+	bitmapInfo.bmiHeader.biBitCount = 32; // 32 бита на пиксель - 8 бит на канал RGBA
+	bitmapInfo.bmiHeader.biCompression = BI_RGB;
+
+	void* bits = nullptr;
+	HDC srcHdc = CreateCompatibleDC(hdc);
+	SelectObject(srcHdc, hBitMap);
+	SetDIBits(srcHdc, hBitMap, 0, height, pixels, &bitmapInfo, DIB_RGB_COLORS);
+
+	// Копируем битмап в целевое устройство
+	BitBlt(hdc, 0, 0, width, height, srcHdc, 0, 0, SRCCOPY);
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// Освобождаем ресурсы
 	DeleteObject(hBitMap);
 	DeleteDC(srcHdc);
 	ReleaseDC(hWnd, hdc);
@@ -360,13 +393,7 @@ void Render()
 			//depthBuffer[i][j] = MIN_DEPTH;
 		}
 	}
-
-	UpdateNormals();	
-	UpdateVectors();
-}
-
-void UpdateNormals()
-{
+	/////////////////////////////////////////SET MATRIXES////////////////////////////////////////////////////////////////
 	modelCoordSystem->SetRotateYMatrix(GetRadians(yAngleObject));
 	modelCoordSystem->SetRotateXMatrix(GetRadians(xAngleObject));
 	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix * modelCoordSystem->RotateXMatrix;
@@ -375,6 +402,20 @@ void UpdateNormals()
 	CoordinateStruct cameraUpVect = { 0,1,0 };
 	modelCoordSystem->SetCameraTransformationMatrix(cameraGlobalCoord, targetGlobalCoord, cameraUpVect);
 
+	modelCoordSystem->SetProjectionTransformationMatrix(45.0f, ((float)FrameWidth / (float)FrameHeight), zNear, zFar);
+
+	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	UpdateNormals();
+	UpdateVectors();
+
+	//UpdatePolygonsAsync();
+}
+
+void UpdateNormals()
+{
+	
 	HomogeneousCoordinateStruct homoNormal, normalSum, vertexSum;
 	for (int i = 0; i < polygons.size(); i++)
 	{
@@ -403,20 +444,6 @@ void UpdateNormals()
 
 void UpdateVectors()
 {
-	std::vector<Plane> clipPlanes = {
-		{ {1, 0, 0}, 1 },
-		{ {-1, 0, 0}, -1 },
-		{ {0, 1, 0}, 1 },
-		{ {0, -1, 0}, -1 },
-		{ {0, 0, 1}, 1 },
-		{ {0, 0, -1}, -1 }
-	};
-
-
-	modelCoordSystem->SetProjectionTransformationMatrix(45.0f, ((float)FrameWidth / (float)FrameHeight), zNear, zFar);
-
-	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
-
 
 	for (int i = 0; i < polygons.size(); i++)
 	{
@@ -430,6 +457,22 @@ void UpdateVectors()
 
 	//UpdatePolygonsAsync();
 }
+
+//void UpdateVectors(int polygonIterator)
+//{
+//
+//	//for (int i = 0; i < polygons.size(); i++)
+//	//{
+//		if (!ClipFacePolygons(polygonIterator)) return;
+//		if (!UpdatePolygons(polygonIterator)) return;
+//		//if (!IsObjectBehindClipPlanes(i, clipPlanes))
+//		//{
+//		DrawObject(polygonIterator);
+//		//}
+//	//}
+//
+//	//UpdatePolygonsAsync();
+//}
 
 
 bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& clipPlanes)
@@ -770,19 +813,51 @@ void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 }
 
 
-void UpdatePolygonsAsync()
+//void UpdatePolygonsAsync()
+//{
+//	ThreadPool pool(8);
+//	std::vector<std::future<Triangle>> futures;
+//
+//	for (int i = 0; i < polygons.size(); i++)
+//	{
+//		futures.emplace_back(pool.enqueue([i] { return UpdatePolygonsTriangle(i); }));
+//	}
+//
+//	for (int i = 0; i < polygons.size(); i++)
+//	{
+//		polygonsOutp[i] = futures[i].get();
+//	}
+//}
+
+//void UpdatePolygonsAsync()
+//{
+//	ThreadPool pool(8);
+//	std::vector<std::future<void>> futures;
+//
+//	for (int i = 0; i < polygons.size(); i++)
+//	{
+//		futures.emplace_back(pool.enqueue([i] { return UpdateVectors(i); }));
+//	}
+//
+//	for (int i = 0; i < polygons.size(); i++)
+//	{
+//		futures[i].get();
+//	}
+//}
+
+void DrawPolygonsAsync()
 {
 	ThreadPool pool(8);
-	std::vector<std::future<Triangle>> futures;
+	std::vector<std::future<void>> futures;
 
-	for (int i = 0; i < polygons.size(); i++)
+	for (int i = 0; i < polygonsOutp.size(); i++)
 	{
-		futures.emplace_back(pool.enqueue([i] { return UpdatePolygonsTriangle(i); }));
+		futures.emplace_back(pool.enqueue([i] { return DrawObject(i); }));
 	}
 
 	for (int i = 0; i < polygons.size(); i++)
 	{
-		polygonsOutp[i] = futures[i].get();
+		futures[i].get();
 	}
 }
 
