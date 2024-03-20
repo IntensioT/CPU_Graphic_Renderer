@@ -128,7 +128,7 @@ std::vector<float> Rasterizator::Interpolate(float i0, float d0, float i1, float
 
 	int imax = static_cast<int>((i1 - i0) / step) + 1;
 	for (int i = 0; i < imax; i++) // »нкрементируем i с использованием шага
-	//for (float i = i0; i != i1; i += step) // »нкрементируем i с использованием шага
+		//for (float i = i0; i != i1; i += step) // »нкрементируем i с использованием шага
 	{
 		values.push_back(d);
 		d = d + accretion;
@@ -145,11 +145,11 @@ void Rasterizator::UpdateXleftAndXRight(Triangle& polygon)
 {
 	SortYPoints(polygon);
 	getXleftAndRight(polygon);
-	getZLeftAndZRight	(polygon);
+	getZLeftAndZRight(polygon);
 	getHLeftAndHRight(polygon);
 }
 
-void Rasterizator::DrawLines(Triangle polygon, RGBQUAD (&frameBuffer)[1080][1920], float (&depthBuffer)[1080][1920], RGBQUAD color)
+void Rasterizator::DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
 {
 	// ќтрисовка горизонтальных отрезков
 	for (int y = polygon.vectors[0].y; y <= polygon.vectors[2].y; y++) {
@@ -220,7 +220,7 @@ RectangleStruct FindTriangleBoundingRectangle2D(Triangle polygon)
 bool Rasterizator::IsInTriangle(float x, float y, Triangle polygon)
 {
 	float inASide, inBSide, inCSide;
-	
+
 	// (y1-y2)x + (x2-x1)y + x1y2 - x2y1 = 0 
 
 	inASide = (polygon.vectors[0].y - polygon.vectors[1].y) * x + (polygon.vectors[1].x - polygon.vectors[0].x) * y + polygon.vectors[0].x * polygon.vectors[1].y - polygon.vectors[1].x * polygon.vectors[0].y;
@@ -231,3 +231,101 @@ bool Rasterizator::IsInTriangle(float x, float y, Triangle polygon)
 	return (inASide >= 0 && inBSide >= 0 && inCSide >= 0) || (inASide < 0 && inBSide < 0 && inCSide < 0);
 }
 
+
+// E01(P) = (P.x - V0.x) * (V1.y - V0.y) - (P.y - V0.y) * (V1.x - V0.x)
+bool isInEdgeFunction(const HomogeneousCoordinateStruct& a, const HomogeneousCoordinateStruct& b, float x, float y)
+{
+	return ((x - a.x) * (b.y - a.y) - (y - a.y) * (b.x - a.x) >= 0);
+}
+
+bool Rasterizator::IsInPolygon(float x, float y, const Triangle& polygon)
+{
+	bool inside = true;
+	inside &= isInEdgeFunction(polygon.vectors[0], polygon.vectors[1], x, y);
+	inside &= isInEdgeFunction(polygon.vectors[1], polygon.vectors[2], x, y);
+	inside &= isInEdgeFunction(polygon.vectors[2], polygon.vectors[0], x, y);
+
+
+	return inside;
+}
+
+// E01(P) = (P.x - V0.x) * (V1.y - V0.y) - (P.y - V0.y) * (V1.x - V0.x)
+float edgeFunction(const HomogeneousCoordinateStruct& a, const HomogeneousCoordinateStruct& b, float x, float y)
+{
+	return (x - a.x) * (b.y - a.y) - (y - a.y) * (b.x - a.x);
+}
+
+// E01(P) = (V0.x - V1.x) * (P.y - V0.y) - (V0.y - V1.y) * (P.x - V0.x)
+float edgeFunctionReversePositive(const HomogeneousCoordinateStruct& a, const HomogeneousCoordinateStruct& b, float x, float y)
+{
+	return (a.x - b.x) * (y - a.y) - (a.y - b.y) * (x - a.x);
+}
+
+void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
+{
+	bool istopleft = IsTopLeft(polygon);
+	RectangleStruct rect = FindTriangleBoundingRectangle2D(polygon);
+	float w0, w1, w2;
+
+	float area = edgeFunction(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
+
+	for (int y = rect.top; y <= rect.bottom; y++)
+	{
+		for (int x = rect.left; x <= rect.right; x++)
+		{
+			if (istopleft)
+			{
+				w0 = edgeFunction(polygon.vectors[1], polygon.vectors[2], x, y);
+				w1 = edgeFunction(polygon.vectors[2], polygon.vectors[0], x, y);
+				w2 = edgeFunction(polygon.vectors[0], polygon.vectors[1], x, y);
+			}
+			else {
+				w0 = edgeFunctionReversePositive(polygon.vectors[1], polygon.vectors[2], x, y);
+				w1 = edgeFunctionReversePositive(polygon.vectors[2], polygon.vectors[0], x, y);
+				w2 = edgeFunctionReversePositive(polygon.vectors[0], polygon.vectors[1], x, y);
+			}
+			
+
+			if (w0 >= 0 && w1 >= 0 && w2 >= 0)
+			{
+				w0 /= area; 
+				w1 /= area; 
+				w2 /= area; 
+
+				float r = w0 * polygon.vectors[0].diffuse.x + w1 * polygon.vectors[1].diffuse.x + w2 * polygon.vectors[2].diffuse.x;
+				//float r = w0 * vec0Color.x + w1 * vec1Color.x + w2 * vec2Color.x;
+				float g = w0 * polygon.vectors[0].diffuse.y + w1 * polygon.vectors[1].diffuse.y + w2 * polygon.vectors[2].diffuse.y;
+				//float g = w0 * vec0Color.y + w1 * vec1Color.y + w2 * vec2Color.y;
+				float b = w0 * polygon.vectors[0].diffuse.z + w1 * polygon.vectors[1].diffuse.z + w2 * polygon.vectors[2].diffuse.z;
+				//float b = w0 * vec0Color.z + w1 * vec1Color.z + w2 * vec2Color.z;
+
+				RGBQUAD shadedColor = { r,g,b,0 };
+				SetPoint(frameBuffer, x, y, shadedColor);
+			}
+		}
+	}
+}
+
+bool Rasterizator::IsTopLeft(const Triangle& polygon)
+{
+	// ѕровер€ем, что точки v0, v1 и v2 идут по часовой стрелке
+	float area = (polygon.vectors[1].x - polygon.vectors[0].x) * (polygon.vectors[2].y - polygon.vectors[0].y) - (polygon.vectors[1].y - polygon.vectors[0].y) * (polygon.vectors[2].x - polygon.vectors[0].x);
+	if (area < 0.0f)
+	{
+		return false;
+	}
+
+	// ѕровер€ем, что точка v0 €вл€етс€ самой верхней точкой треугольника
+	if (polygon.vectors[0].y != getMin(polygon.vectors[0].y, polygon.vectors[1].y, polygon.vectors[2].y))
+	{
+		return false;
+	}
+
+	// ѕровер€ем, что точка v0 €вл€етс€ самой левой точкой треугольника
+	if (polygon.vectors[0].x != getMin( polygon.vectors[0].x, polygon.vectors[1].x, polygon.vectors[2].x ))
+	{
+		return false;
+	}
+
+	return true;
+}

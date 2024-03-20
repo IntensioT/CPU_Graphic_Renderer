@@ -630,7 +630,8 @@ void DrawTriangle(Triangle& triangle)
 			if (triangle.vectors[j].x > 1920 || triangle.vectors[j].x < 0 || triangle.vectors[j].y > 1080 || triangle.vectors[j].y < 0) return;
 		}*/
 
-		rasterizator->DrawPolygon(triangle, frameBuffer, depthBuffer, color);
+		//rasterizator->DrawPolygon(triangle, frameBuffer, depthBuffer, color);
+		rasterizator->DrawPolygonBarycentric(triangle, frameBuffer, depthBuffer, color);
 
 		break;
 	}

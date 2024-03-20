@@ -28,11 +28,14 @@ public:
 	void UpdateXleftAndXRight(Triangle& polygon);
 	void DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
 	void DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
+	void DrawPolygonBarycentric(const Triangle& polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
 	
 
 
 private:
+	bool IsTopLeft(const Triangle& polygon);
 	bool IsInTriangle(float x, float y, Triangle polygon);
+	bool IsInPolygon(float x, float y, const Triangle& polygon);
 
 	void SortYPoints(Triangle& polygon);
 	Triangle correctOrdinary(Triangle polygon);
