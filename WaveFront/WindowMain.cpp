@@ -30,12 +30,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	//polygons.resize(indexes.size() / 3);
 
-	for (int i = 0; i < indexes.size(); i+= 3)
+	for (int i = 0; i < indexes.size(); i += 3)
 	{
 		vertexesHomo[indexes[i] - 1].normal = normals[normalIndexes[i] - 1];
-		vertexesHomo[indexes[i+1] - 1].normal = normals[normalIndexes[i+1] - 1];
-		vertexesHomo[indexes[i+2] - 1].normal = normals[normalIndexes[i+2] - 1];
-		polygons.push_back({vertexesHomo[indexes[i] - 1], vertexesHomo[indexes[i + 1] - 1], vertexesHomo[indexes[i + 2] - 1]});
+		vertexesHomo[indexes[i + 1] - 1].normal = normals[normalIndexes[i + 1] - 1];
+		vertexesHomo[indexes[i + 2] - 1].normal = normals[normalIndexes[i + 2] - 1];
+		polygons.push_back({ vertexesHomo[indexes[i] - 1], vertexesHomo[indexes[i + 1] - 1], vertexesHomo[indexes[i + 2] - 1] });
 	}
 	//polygons = GetAllPolygons(vertexesHomo, indexes, normalIndexes, normals);
 	polygonsOutp.resize(polygons.size());
@@ -44,7 +44,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	rasterizator = new Rasterizator();
 
-	
+
 	UpdateNormals();
 	/////
 
@@ -296,7 +296,7 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 	//SelectObject(srcHdc, hBitMap);
 
 	//BitBlt(hdc, 0, 0, static_cast<int>(width), static_cast<int>(height), srcHdc, 0, 0, SRCCOPY);
-	
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Создаем битмап, совместимый с устройством
@@ -339,9 +339,9 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 		[in] rop
 		Код растровой операции. Эти коды определяют, как данные цвета исходного прямоугольника должны сочетаться с данными цвета для целевого прямоугольника для достижения окончательного цвета.
 		*/
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// Освобождаем ресурсы
+		// Освобождаем ресурсы
 	DeleteObject(hBitMap);
 	DeleteDC(srcHdc);
 	ReleaseDC(hWnd, hdc);
@@ -413,7 +413,7 @@ void Render()
 		{
 			DrawTriangle(polygonsOutp[i]);
 		});
-	
+
 
 
 	//UpdatePolygonsAsync();
@@ -421,13 +421,13 @@ void Render()
 
 void UpdateNormals()
 {
-	
+
 	HomogeneousCoordinateStruct homoNormal, normalSum, vertexSum;
 	for (int i = 0; i < polygons.size(); i++)
 	{
 		normalSum = { 0,0,0,0 };
 		vertexSum = { 0,0,0,0 };
-		for (int j = 0; j < (1/vectorCount); j++)
+		for (int j = 0; j < (1 / vectorCount); j++)
 		{
 
 			homoNormal = { polygons[i].vectors[j].normal.x, polygons[i].vectors[j].normal.y, polygons[i].vectors[j].normal.z, 0 };
@@ -453,35 +453,29 @@ void UpdateNormals()
 
 void UpdateVectors()
 {
-
+	//omp_set_num_threads(6);
+	// Цикл будет выполняться в g_nNumberOfThreads потоков.
+	// Параметры цикла будут автоматически распределены между потоками.
+	//#pragma omp parallel for
 	for (int i = 0; i < polygons.size(); i++)
 	{
 		if (!ClipFacePolygons(i)) continue;
 		if (!UpdatePolygons(i)) continue;
-		//if (!IsObjectBehindClipPlanes(i, clipPlanes))
-		//{
-		//DrawObject(i);
-		//}
 	}
-
-	//UpdatePolygonsAsync();
 }
-
-//void UpdateVectors(int polygonIterator)
+//void UpdateVectors()
 //{
-//
-//	//for (int i = 0; i < polygons.size(); i++)
-//	//{
-//		if (!ClipFacePolygons(polygonIterator)) return;
-//		if (!UpdatePolygons(polygonIterator)) return;
+//	for (int i = 0; i < polygons.size(); i++)
+//	{
+//		if (!ClipFacePolygons(i)) continue;
+//		if (!UpdatePolygons(i)) continue;
 //		//if (!IsObjectBehindClipPlanes(i, clipPlanes))
 //		//{
-//		DrawObject(polygonIterator);
+//		//DrawObject(i);
 //		//}
-//	//}
-//
-//	//UpdatePolygonsAsync();
+//	}
 //}
+
 
 
 bool IsObjectBehindClipPlanes(int polygonIterator, const std::vector<Plane>& clipPlanes)
@@ -542,7 +536,7 @@ void DrawObject(int i)
 		break;
 	case 2:
 		polygonOutputMutex.lock();
-		for (int j = 0; j < (1/vectorCount); j++)
+		for (int j = 0; j < (1 / vectorCount); j++)
 		{
 			if (polygonsOutp[i].vectors[j].x > 1920 || polygonsOutp[i].vectors[j].x < 0 || polygonsOutp[i].vectors[j].y > 1080 || polygonsOutp[i].vectors[j].y < 0) return;
 		}
@@ -566,8 +560,8 @@ void DrawObject(int i)
 		BresenhamLineOptimised(frameBuffer, polygonsOutp[i].vectors[0 + 2], homoNormal2, color);
 		polygonOutputMutex.unlock();
 		break;
-	case 4: 
-		
+	case 4:
+
 
 		for (int j = 0; j < (1 / vectorCount); j++)
 		{
@@ -684,15 +678,16 @@ bool UpdatePolygons(int polygonIterator)
 		normalHomogeneous = { polygonsOutp[polygonIterator].vectors[i].normal.x, polygonsOutp[polygonIterator].vectors[i].normal.y, polygonsOutp[polygonIterator].vectors[i].normal.z, 1 };
 		polygonOutputMutex.unlock();
 
-		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;	
+		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
 		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
 		modelCoordSystem->SetTranslationMatrix(pointHomogeneous.toCoordinateStruct());
-		
+
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 
 		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
 		{
+			//#pragma omp atomic
 			polygonsOutp[polygonIterator].isOnScreen = false;
 			return false;
 		}

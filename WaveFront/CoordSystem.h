@@ -2,6 +2,10 @@
 #include "ObjLoader.h"
 #include "HomogeneousVectorStruct.h"
 
+#include <emmintrin.h>
+#include <immintrin.h>
+
+
 #define M_PI       3.14159265358979323846   // pi
 
 
@@ -56,6 +60,7 @@ inline HomogeneousCoordinateStruct operator* (HomogeneousCoordinateStruct& p, co
     t.w = p.x * m.m[0][3] + p.y * m.m[1][3] + p.z * m.m[2][3] + p.w * m.m[3][3];
     return t;
 }
+
 
 inline HomogeneousCoordinateStruct operator*=(HomogeneousCoordinateStruct& p, const _3DMATRIX& m) {
     p = p * m;
