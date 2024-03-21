@@ -275,36 +275,29 @@ void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, RGBQUAD(&fram
 		for (int x = rect.left; x <= rect.right; x++)
 		{
 			//if (istopleft)
-			{
+			
 				w0 = edgeFunction(polygon.vectors[1], polygon.vectors[2], x, y);
 				w1 = edgeFunction(polygon.vectors[2], polygon.vectors[0], x, y);
 				w2 = edgeFunction(polygon.vectors[0], polygon.vectors[1], x, y);
 
-			}
-			/*else*/ {
-				w0 = edgeFunctionReversePositive(polygon.vectors[1], polygon.vectors[2], x, y);
-				w1 = edgeFunctionReversePositive(polygon.vectors[2], polygon.vectors[0], x, y);
-				w2 = edgeFunctionReversePositive(polygon.vectors[0], polygon.vectors[1], x, y);
+			
+			//	w0 = edgeFunctionReversePositive(polygon.vectors[1], polygon.vectors[2], x, y);
+			//	w1 = edgeFunctionReversePositive(polygon.vectors[2], polygon.vectors[0], x, y);
+			//	w2 = edgeFunctionReversePositive(polygon.vectors[0], polygon.vectors[1], x, y);
 
-			}
 			
 
-			if (w0 >= 0 && w1 >= 0 && w2 >= 0)
+			if ((w0 >= 0 && w1 >= 0 && w2 >= 0) || (w0 < 0 && w1 < 0 && w2 < 0))
 			{
 				w0 /= area;
 				w1 /= area;
 				w2 /= area;
 
-				// (1/P.z) = 1/V0.z * (1 - Lambda) + 1/V1.z * Lambda
-				// P.z = V0.z / (1 + Lambda * (V0.z/V1.z - 1))
-				/*float z = (w0 * polygon.vectors[0].z + w1 * polygon.vectors[1].z + w2 * polygon.vectors[2].z);
-				if (!(z < depthBuffer[x][y])) return;*/
-
 
 				float oneOverZ = polygon.vectors[0].z * w0 + polygon.vectors[1].z * w1 + polygon.vectors[2].z * w2;
-				float z = 1 / oneOverZ;
+				float z = 1 / ( - oneOverZ);
 
-				//if (z < depthBuffer[x][y])
+				if (z < depthBuffer[x][y])
 				{
 					depthBuffer[x][y] = z;
 

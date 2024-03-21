@@ -421,38 +421,17 @@ void Render()
 	//UpdateNormals();
 	UpdateVectors();
 
-	////////////////////////////////////TEMP//////////////////////////////////
-	Triangle sus1;
-	sus1.vectors[0] = { 300, 300, -3, 1 };
-	sus1.vectors[0].diffuse = { 255, 0, 0};
-	sus1.vectors[1] = { 300, 600, -3, 1 };
-	sus1.vectors[1].diffuse = { 0, 255, 0 };
-	sus1.vectors[2] = { 600, 400, -3, 1 };
-	sus1.vectors[2].diffuse = { 0, 255, 0 };
-
-	Triangle sus2;
-	sus2.vectors[0] = { 600, 300, -3, 1 };
-	sus2.vectors[0].diffuse = { 255, 255, 255 };
-	sus2.vectors[2] = { 600, 600, -3, 1 };
-	sus2.vectors[1].diffuse = { 255, 255, 255 };
-	sus2.vectors[1] = { 300, 400, -3, 1 };
-	sus2.vectors[2].diffuse = { 255, 255, 255 };
-
-
-	//rasterizator->DrawPolygonBarycentric(sus1, frameBuffer, depthBuffer, color);
-	rasterizator->DrawPolygonBarycentric(sus2, frameBuffer, depthBuffer, color);
-
-	////////////////////////////////////////////////////////////////////////////
+	
 
 	/*for (int i = 0; i < polygonsOutp.size(); i++)
 	{
 		DrawTriangle(polygonsOutp[i]);
 	}*/
 
-	/*Concurrency::parallel_for(0, static_cast<int>(polygonsOutp.size()), [&](int i)
+	Concurrency::parallel_for(0, static_cast<int>(polygonsOutp.size()), [&](int i)
 		{
 			DrawTriangle(polygonsOutp[i]);
-		});*/
+		});
 
 
 
@@ -685,11 +664,11 @@ bool ClipFacePolygons(int polygonIterator)
 	CoordinateStruct cameraDirectionOnPoint = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, curPolygonCenter));
 
 	float dotProduct = modelCoordSystem->DotProduct(polygonNormal.toCoordinateStruct(), cameraDirectionOnPoint);
-	/*if (dotProduct < 0)
+	if (dotProduct < 0)
 	{
 		polygonsOutp[polygonIterator].isOnScreen = false;
 		return false;
-	}*/
+	}
 	polygonsOutp[polygonIterator].isOnScreen = true;
 	return true;
 }
@@ -698,11 +677,6 @@ bool ClipFacePolygons(int polygonIterator)
 
 bool UpdatePolygons(int polygonIterator)
 {
-	sus += 50.0f;
-	while (sus >= 255.0f)
-	{
-		sus -= 255.0f;
-	}
 
 	Triangle polygon = polygonsOutp[polygonIterator];
 	HomogeneousCoordinateStruct pointHomogeneous, normalHomogeneous;
