@@ -265,42 +265,67 @@ void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, RGBQUAD(&fram
 {
 	bool istopleft = IsTopLeft(polygon);
 	RectangleStruct rect = FindTriangleBoundingRectangle2D(polygon);
-	float w0, w1, w2;
+	float w0, w1, w2, area;
+	area = edgeFunction(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
+	//area = edgeFunctionReversePositive(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
 
-	float area = edgeFunction(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
 
 	for (int y = rect.top; y <= rect.bottom; y++)
 	{
 		for (int x = rect.left; x <= rect.right; x++)
 		{
-			if (istopleft)
+			//if (istopleft)
 			{
 				w0 = edgeFunction(polygon.vectors[1], polygon.vectors[2], x, y);
 				w1 = edgeFunction(polygon.vectors[2], polygon.vectors[0], x, y);
 				w2 = edgeFunction(polygon.vectors[0], polygon.vectors[1], x, y);
+
 			}
-			else {
+			/*else*/ {
 				w0 = edgeFunctionReversePositive(polygon.vectors[1], polygon.vectors[2], x, y);
 				w1 = edgeFunctionReversePositive(polygon.vectors[2], polygon.vectors[0], x, y);
 				w2 = edgeFunctionReversePositive(polygon.vectors[0], polygon.vectors[1], x, y);
+
 			}
 			
 
 			if (w0 >= 0 && w1 >= 0 && w2 >= 0)
 			{
-				w0 /= area; 
-				w1 /= area; 
-				w2 /= area; 
+				w0 /= area;
+				w1 /= area;
+				w2 /= area;
 
-				float r = w0 * polygon.vectors[0].diffuse.x + w1 * polygon.vectors[1].diffuse.x + w2 * polygon.vectors[2].diffuse.x;
-				//float r = w0 * vec0Color.x + w1 * vec1Color.x + w2 * vec2Color.x;
-				float g = w0 * polygon.vectors[0].diffuse.y + w1 * polygon.vectors[1].diffuse.y + w2 * polygon.vectors[2].diffuse.y;
-				//float g = w0 * vec0Color.y + w1 * vec1Color.y + w2 * vec2Color.y;
-				float b = w0 * polygon.vectors[0].diffuse.z + w1 * polygon.vectors[1].diffuse.z + w2 * polygon.vectors[2].diffuse.z;
-				//float b = w0 * vec0Color.z + w1 * vec1Color.z + w2 * vec2Color.z;
+				// (1/P.z) = 1/V0.z * (1 - Lambda) + 1/V1.z * Lambda
+				// P.z = V0.z / (1 + Lambda * (V0.z/V1.z - 1))
+				/*float z = (w0 * polygon.vectors[0].z + w1 * polygon.vectors[1].z + w2 * polygon.vectors[2].z);
+				if (!(z < depthBuffer[x][y])) return;*/
 
-				RGBQUAD shadedColor = { r,g,b,0 };
-				SetPoint(frameBuffer, x, y, shadedColor);
+
+				float oneOverZ = polygon.vectors[0].z * w0 + polygon.vectors[1].z * w1 + polygon.vectors[2].z * w2;
+				float z = 1 / oneOverZ;
+
+				//if (z < depthBuffer[x][y])
+				{
+					depthBuffer[x][y] = z;
+
+					float r = w0 * polygon.vectors[0].diffuse.x + w1 * polygon.vectors[1].diffuse.x + w2 * polygon.vectors[2].diffuse.x;
+					float g = w0 * polygon.vectors[0].diffuse.y + w1 * polygon.vectors[1].diffuse.y + w2 * polygon.vectors[2].diffuse.y;
+					float b = w0 * polygon.vectors[0].diffuse.z + w1 * polygon.vectors[1].diffuse.z + w2 * polygon.vectors[2].diffuse.z;
+
+					RGBQUAD shadedColor = { r,g,b,0 };
+					SetPoint(frameBuffer, x, y, shadedColor /*temp*/);
+
+				}
+
+				//float r = w0 * polygon.vectors[0].diffuse.x + w1 * polygon.vectors[1].diffuse.x + w2 * polygon.vectors[2].diffuse.x;
+				//float g = w0 * polygon.vectors[0].diffuse.y + w1 * polygon.vectors[1].diffuse.y + w2 * polygon.vectors[2].diffuse.y;
+				//float b = w0 * polygon.vectors[0].diffuse.z + w1 * polygon.vectors[1].diffuse.z + w2 * polygon.vectors[2].diffuse.z;
+
+
+				//RGBQUAD shadedColor = { r,g,b,0 };
+				//RGBQUAD temp = { polygon.vectors[0].diffuse.x, polygon.vectors[0].diffuse.y, polygon.vectors[0].diffuse.z, 0 };
+				//SetPoint(frameBuffer, x, y, shadedColor /*temp*/);
+				//depthBuffer[x][y] = z;
 			}
 		}
 	}

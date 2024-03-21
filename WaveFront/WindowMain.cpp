@@ -264,6 +264,24 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case '4':
 			curGraphic = 4;
 			return 0;
+		case '5':
+			curGraphic = 5;
+			return 0;
+		case '6':
+			curGraphic = 6;
+			return 0;
+		case '7':
+			curGraphic = 7;
+			return 0;
+		case '8':
+			curGraphic = 8;
+			return 0;
+		case '9':
+			curGraphic = 9;
+			return 0;
+		case '0':
+			curGraphic = 0;
+			return 0;
 		}
 
 
@@ -403,16 +421,38 @@ void Render()
 	//UpdateNormals();
 	UpdateVectors();
 
+	////////////////////////////////////TEMP//////////////////////////////////
+	Triangle sus1;
+	sus1.vectors[0] = { 300, 300, -3, 1 };
+	sus1.vectors[0].diffuse = { 255, 0, 0};
+	sus1.vectors[1] = { 300, 600, -3, 1 };
+	sus1.vectors[1].diffuse = { 0, 255, 0 };
+	sus1.vectors[2] = { 600, 400, -3, 1 };
+	sus1.vectors[2].diffuse = { 0, 255, 0 };
+
+	Triangle sus2;
+	sus2.vectors[0] = { 600, 300, -3, 1 };
+	sus2.vectors[0].diffuse = { 255, 255, 255 };
+	sus2.vectors[2] = { 600, 600, -3, 1 };
+	sus2.vectors[1].diffuse = { 255, 255, 255 };
+	sus2.vectors[1] = { 300, 400, -3, 1 };
+	sus2.vectors[2].diffuse = { 255, 255, 255 };
+
+
+	//rasterizator->DrawPolygonBarycentric(sus1, frameBuffer, depthBuffer, color);
+	rasterizator->DrawPolygonBarycentric(sus2, frameBuffer, depthBuffer, color);
+
+	////////////////////////////////////////////////////////////////////////////
 
 	/*for (int i = 0; i < polygonsOutp.size(); i++)
 	{
-		DrawObject(i);
+		DrawTriangle(polygonsOutp[i]);
 	}*/
 
-	Concurrency::parallel_for(0, static_cast<int>(polygonsOutp.size()), [&](int i)
+	/*Concurrency::parallel_for(0, static_cast<int>(polygonsOutp.size()), [&](int i)
 		{
 			DrawTriangle(polygonsOutp[i]);
-		});
+		});*/
 
 
 
@@ -596,10 +636,7 @@ void DrawTriangle(Triangle& triangle)
 
 
 		polygonOutputMutex.lock();
-		/*for (int j = 0; j < curVectorCount; j++)
-		{
-			if (triangle.vectors[j].x > 1920 || triangle.vectors[j].x < 0 || triangle.vectors[j].y > 1080 || triangle.vectors[j].y < 0) return;
-		}*/
+
 
 		rasterizator->UpdateXleftAndXRight(triangle);
 
@@ -625,15 +662,10 @@ void DrawTriangle(Triangle& triangle)
 		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
 
-		/*for (int j = 0; j < curVectorCount; j++)
-		{
-			if (triangle.vectors[j].x > 1920 || triangle.vectors[j].x < 0 || triangle.vectors[j].y > 1080 || triangle.vectors[j].y < 0) return;
-		}*/
-
-		//rasterizator->DrawPolygon(triangle, frameBuffer, depthBuffer, color);
 		rasterizator->DrawPolygonBarycentric(triangle, frameBuffer, depthBuffer, color);
 
 		break;
+
 	}
 }
 
@@ -653,11 +685,11 @@ bool ClipFacePolygons(int polygonIterator)
 	CoordinateStruct cameraDirectionOnPoint = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(cameraGlobalCoord, curPolygonCenter));
 
 	float dotProduct = modelCoordSystem->DotProduct(polygonNormal.toCoordinateStruct(), cameraDirectionOnPoint);
-	if (dotProduct < 0)
+	/*if (dotProduct < 0)
 	{
 		polygonsOutp[polygonIterator].isOnScreen = false;
 		return false;
-	}
+	}*/
 	polygonsOutp[polygonIterator].isOnScreen = true;
 	return true;
 }
@@ -666,6 +698,12 @@ bool ClipFacePolygons(int polygonIterator)
 
 bool UpdatePolygons(int polygonIterator)
 {
+	sus += 50.0f;
+	while (sus >= 255.0f)
+	{
+		sus -= 255.0f;
+	}
+
 	Triangle polygon = polygonsOutp[polygonIterator];
 	HomogeneousCoordinateStruct pointHomogeneous, normalHomogeneous;
 
@@ -711,6 +749,7 @@ bool UpdatePolygons(int polygonIterator)
 		polygon.vectors[i].projectedNormal = { normalHomogeneous.x, normalHomogeneous.y, normalHomogeneous.z };
 		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////
 		polygon = CalculateLambertTermAndShade(polygonIterator, i, curVector, polygon);
+		//polygon.vectors[i].diffuse = { sus, sus+30, sus+10 };
 	}
 	polygonOutputMutex.lock();
 	polygonsOutp[polygonIterator] = polygon;
