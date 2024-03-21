@@ -163,15 +163,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		if (wheelDelta > 0)
 		{
-			zCamera += 0.5f;
-			rSphere += 0.5f;
+			zCamera += coordSpeed;
 		}
 		else if (wheelDelta < 0)
 		{
 			if (zCamera > 1.f)
 			{
-				zCamera -= 0.5f;
-				rSphere -= 0.5f;
+				zCamera -= coordSpeed;
 			}
 		}
 
@@ -186,53 +184,51 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 		case VK_LEFT:
 			// Process the LEFT ARROW key. 
-			yAngleObject -= 5.0f;
+			yAngleObject -= angleSpeed;
 			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case VK_RIGHT:
 			// Process the RIGHT ARROW key. 
-			yAngleObject += 5.0f;
+			yAngleObject += angleSpeed;
 			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case VK_UP:
 			// Process the UP ARROW key. 
-			xAngleObject += 5.0f;
+			xAngleObject += angleSpeed;
 			InvalidateRect(hwnd, NULL, TRUE);
 
 			return 0;
 
 		case VK_DOWN:
 			// Process the DOWN ARROW key. 
-			xAngleObject -= 5.0f;
+			xAngleObject -= angleSpeed;
 			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case 'W':
-			zCamera += 0.05f;
-			rSphere += 0.05f;
+			zCamera += coordSpeed;
 			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case 'S':
 			if (zCamera > 1.f)
 			{
-				zCamera -= 0.05f;
-				rSphere -= 0.05f;
+				zCamera -= coordSpeed;
 				InvalidateRect(hwnd, NULL, TRUE);
 			}
 			return 0;
 
 		case 'Z':
 
-			phiAngleSphere += 5.f;
+			phiAngleSphere += angleSpeed;
 			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case 'X':
 
-			phiAngleSphere -= 5.f;
+			phiAngleSphere -= angleSpeed;
 			InvalidateRect(hwnd, NULL, TRUE);
 
 			return 0;
@@ -538,6 +534,38 @@ Triangle CalculateLambertTermAndShade(int polygonIterator, int vectorIterator, C
 	return polygon;
 }
 
+Triangle CalculatePhongShade(int polygonIterator, int vectorIterator, CoordinateStruct curVector, Triangle inputPolygon)
+{
+	Triangle polygon = inputPolygon;
+
+	CoordinateStruct curNormal = polygonsOutp[polygonIterator].vectors[vectorIterator].normal;
+
+	CoordinateStruct lightDirection = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(lightGlobalCoord, curVector));
+	CoordinateStruct viewDirection = modelCoordSystem->NormalizeVector(modelCoordSystem->SubstractVectors(curVector, lightGlobalCoord));
+
+	CoordinateStruct reflect = lightDirection - ( curNormal * modelCoordSystem->DotProduct(curNormal, lightDirection)) * 2.0f;
+
+	float diffuseTerm = objectAlbedo * LightIntesity * (modelCoordSystem->DotProduct(curNormal, lightDirection) >= 0.0) ? 
+		objectAlbedo * LightIntesity * modelCoordSystem->DotProduct(curNormal, lightDirection) : 
+		0.0f;
+
+
+	float dotProduct = modelCoordSystem->DotProduct(reflect, viewDirection);
+	if (dotProduct < 0.0f) {
+		dotProduct = 0;
+	}
+	float specularComponent = LightIntesity * std::pow(dotProduct, objectShininess);
+	CoordinateStruct specularTerms = { (LightIntesity * specularComponent * reflect.x), (LightIntesity * specularComponent * reflect.y), (LightIntesity * specularComponent * reflect.z) };
+
+	//polygon.vectors[vectorIterator].shade = lambertTerm;
+
+	polygon.vectors[vectorIterator].diffuse = { (DiffuseLightColor.x * diffuseTerm + specularTerms.x * SpecularLightColor.x),
+	(DiffuseLightColor.y * diffuseTerm + specularTerms.y * SpecularLightColor.y), 
+	(DiffuseLightColor.z * diffuseTerm + specularTerms.z * SpecularLightColor.z), };
+
+	return polygon;
+}
+
 void DrawObject(int i)
 {
 	if (polygonsOutp[i].isOnScreen == false) return;
@@ -722,8 +750,8 @@ bool UpdatePolygons(int polygonIterator)
 		polygon.vectors[i] = pointHomogeneous;
 		polygon.vectors[i].projectedNormal = { normalHomogeneous.x, normalHomogeneous.y, normalHomogeneous.z };
 		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////
-		polygon = CalculateLambertTermAndShade(polygonIterator, i, curVector, polygon);
-		//polygon.vectors[i].diffuse = { sus, sus+30, sus+10 };
+		//polygon = CalculateLambertTermAndShade(polygonIterator, i, curVector, polygon);
+		polygon = CalculatePhongShade(polygonIterator, i, curVector, polygon);
 	}
 	polygonOutputMutex.lock();
 	polygonsOutp[polygonIterator] = polygon;

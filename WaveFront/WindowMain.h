@@ -33,8 +33,12 @@ CoordinateStruct targetGlobalCoord = { 0,50.f,0.f };
 //CoordinateStruct lightGlobalCoord = { 0.f,3.f,8.5f };
 CoordinateStruct lightGlobalCoord = { 10.f,15.f,500.5f };
 
-CoordinateStruct DiffuseMaterialColor = { 0.8f,0.8f,0.8f };
-CoordinateStruct DiffuseLightColor = { 255,255,255 };
+CoordinateStruct DiffuseLightColor = { 204,204,204 };
+CoordinateStruct SpecularLightColor = { 51,51,51 };
+
+float LightIntesity = 1;
+float objectAlbedo = 1;
+float objectShininess = 1;
 
 
 
@@ -71,7 +75,8 @@ float zFar = 100.0f;
 
 int curGraphic = 1;
 
-float sus = 50.f;
+float coordSpeed = 0.1f;
+float angleSpeed = 5.f;
 
 
 
