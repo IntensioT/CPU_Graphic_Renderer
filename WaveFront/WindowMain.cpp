@@ -164,12 +164,15 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (wheelDelta > 0)
 		{
 			zCamera += coordSpeed;
+			rSphere += coordSpeed;
+
 		}
 		else if (wheelDelta < 0)
 		{
 			if (zCamera > 1.f)
 			{
 				zCamera -= coordSpeed;
+				rSphere -= coordSpeed;
 			}
 		}
 
@@ -209,6 +212,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		case 'W':
 			zCamera += coordSpeed;
+			rSphere += coordSpeed;
 			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
@@ -216,6 +220,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (zCamera > 1.f)
 			{
 				zCamera -= coordSpeed;
+				rSphere -= coordSpeed;
 				InvalidateRect(hwnd, NULL, TRUE);
 			}
 			return 0;
