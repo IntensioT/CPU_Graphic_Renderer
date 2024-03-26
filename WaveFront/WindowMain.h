@@ -40,6 +40,22 @@ float LightIntesity = 1;
 float objectAlbedo = 1;
 float objectShininess = 1;
 
+///////////////////////////////////////////////////////////////////////////////
+//CoordinateStruct lightGlobalCoord = { 0.f,3.f,8.5f };
+//CoordinateStruct lightGlobalCoord = { 10.f,15.f,500.5f };
+//
+//CoordinateStruct DiffuseLightColor = { 204,204,204 };
+//CoordinateStruct SpecularLightColor = { 51,51,51 };
+
+float PhongDiffuseWeight = 0.8; // phong model diffuse weight
+float PhongSpecularWeight = 0.2; // phong model specular weight
+float PhongSpecularExponent = 10;   // phong specular exponent
+
+
+//float objectAlbedo = 0.18f;
+//float objectShininess = 1;
+////////////////////////////////////////////////////////////////////////////////
+
 
 
 

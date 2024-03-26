@@ -1,15 +1,21 @@
 ﻿cl : command line  warning D9002: ignoring unknown option '/arch:SSE'
   WindowMain.cpp
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(26,2): warning C4091: 'typedef ': ignored on left of '_3DMATRIX' when no variable is declared
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(29,2): warning C4091: 'typedef ': ignored on left of '_3DMATRIX' when no variable is declared
   (compiling source file 'WindowMain.cpp')
   
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(73,20): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(76,20): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'WindowMain.cpp')
   
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(379,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(627,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.h(50,26): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'WindowMain.cpp')
+  
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.h(51,27): warning C4305: 'initializing': truncation from 'double' to 'float'
+  (compiling source file 'WindowMain.cpp')
+  
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(384,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(630,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
   Generating code
-  7 of 894 functions ( 0.8%) were compiled, the rest were copied from previous compilation.
+  2 of 895 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     1 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

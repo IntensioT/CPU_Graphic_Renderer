@@ -1,4 +1,7 @@
 #pragma once
+#ifndef _HOMOGENEOUS_COORDINATE_STRUCT_H_
+#define _HOMOGENEOUS_COORDINATE_STRUCT_H_
+
 
 struct HomogeneousCoordinateStruct
 {
@@ -28,3 +31,5 @@ struct HomogeneousCoordinateStruct
         return { x,y,z };
     }
 };
+
+#endif

@@ -40,6 +40,12 @@
     <Filter Include="Rasterizator">
       <UniqueIdentifier>{9e91b89e-e170-4537-b99f-659b315ed4cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{5461486f-908f-4a47-902f-36d770220014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MathLogic">
+      <UniqueIdentifier>{c9fe28ab-48ae-4762-a59c-41adad134e35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WindowMain.cpp">
@@ -59,6 +65,21 @@
     </ClCompile>
     <ClCompile Include="Rasterizator.cpp">
       <Filter>Rasterizator</Filter>
+    </ClCompile>
+    <ClCompile Include="LightLogic.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightStruct.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="3DVectorStruct.cpp">
+      <Filter>CoordinateSystemLogic\Headers\Vectors</Filter>
+    </ClCompile>
+    <ClCompile Include="MathLogic.cpp">
+      <Filter>MathLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="IntersectionInfo.h">
+      <Filter>Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,8 +113,14 @@
     <ClInclude Include="Rectangle2D.h">
       <Filter>Rasterizator</Filter>
     </ClInclude>
+    <ClInclude Include="LightLogic.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightStruct.h">
+      <Filter>Light</Filter>
+    </ClInclude>
     <ClInclude Include="MathLogic.h">
-      <Filter>Header Files</Filter>
+      <Filter>MathLogic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

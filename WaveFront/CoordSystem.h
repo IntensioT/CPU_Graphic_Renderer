@@ -1,6 +1,9 @@
 #pragma once
+
+#ifndef _COORDINATE_SYSTEM_H_
+#define _COORDINATE_SYSTEM_H_
+
 #include "ObjLoader.h"
-#include "HomogeneousVectorStruct.h"
 
 #include <emmintrin.h>
 #include <immintrin.h>
@@ -87,6 +90,7 @@ inline CoordinateStruct SphericalToCartesian(float radius, float phiAngle, float
 }
 
 
+
 class CoordSystem
 {
     CoordinateStruct XAxis, YAxis, ZAxis;
@@ -126,8 +130,8 @@ public:
 
     float VectorLength(const CoordinateStruct& vector);
     float VectorLength(const HomogeneousCoordinateStruct& vector);
-    CoordinateStruct NormalizeVector(const CoordinateStruct& vector);
-    HomogeneousCoordinateStruct NormalizeVector(const HomogeneousCoordinateStruct& vector);
+    //CoordinateStruct NormalizeVector(const CoordinateStruct& vector);
+    //HomogeneousCoordinateStruct NormalizeVector(const HomogeneousCoordinateStruct& vector);
 
     HomogeneousCoordinateStruct TransformVector(HomogeneousCoordinateStruct& originalVector, CoordinateStruct& scale, float angle, CoordinateStruct& axis, CoordinateStruct& translation);
 
@@ -163,3 +167,4 @@ private:
     CoordinateStruct Position;
 };
 
+#endif

@@ -3,8 +3,8 @@
 #include <string>
 #include <fstream>
 
-#include "3DVectorStruct.h"
-
+#include "MathLogic.h"
+	
 #define CoordMaxLength 12
 
 
