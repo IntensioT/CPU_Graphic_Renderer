@@ -12,7 +12,7 @@ CoordinateStruct calculatePhongLight(CoordinateStruct& Point, CoordinateStruct& 
 
 		CoordinateStruct lightDirection, lightIntensity;
 
-
+		// ambient light intensity
 		lightnings[i].illuminate(Point, lightDirection, lightIntensity);
 
 		// compute diffuse 
@@ -28,7 +28,6 @@ CoordinateStruct calculatePhongLight(CoordinateStruct& Point, CoordinateStruct& 
 		// end for 
 		diffuseLightFinalColor = (diffuse * lightnings[i].PhongDiffuseWeight);
 		specularLightFinalColor = (specular * lightnings[i].PhongSpecularWeight);
-		//hitColor = ((diffuse * light.PhongDiffuseWeight) + (specular * light.PhongSpecularWeight));
 	}
 	hitColor = (diffuseLightFinalColor + specularLightFinalColor);
 	return hitColor;

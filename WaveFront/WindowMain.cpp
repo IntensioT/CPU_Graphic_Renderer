@@ -53,7 +53,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	light1.LightColor = { 255,255,255 };
 	light1.LightIntesity = 70;
 
-	//Lightnings.push_back(light1);
+	Lightnings.push_back(light1);
 	PointLightStruct light2;
 	light2.globalPosition = { 0.f,500.f,0.f };
 	light2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
@@ -438,7 +438,7 @@ void Render()
 	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	UpdateVectors();
+	//UpdateVectors();
 
 
 
@@ -494,7 +494,7 @@ void UpdateVectors()
 	//omp_set_num_threads(6);
 	// Цикл будет выполняться в g_nNumberOfThreads потоков.
 	// Параметры цикла будут автоматически распределены между потоками.
-	//#pragma omp parallel for
+	#pragma omp parallel for
 	for (int i = 0; i < polygons.size(); i++)
 	{
 		if (!ClipFacePolygons(i)) continue;
@@ -734,13 +734,9 @@ bool UpdatePolygons(int polygonIterator)
 
 	for (int i = 0; i < (1 / vectorCount); i++)
 	{
-		polygonsMutex.lock();
 		pointHomogeneous = polygons[polygonIterator].vectors[i];
-		polygonsMutex.unlock();
 
-		polygonOutputMutex.lock();
 		normalHomogeneous = { polygonsOutp[polygonIterator].vectors[i].normal.x, polygonsOutp[polygonIterator].vectors[i].normal.y, polygonsOutp[polygonIterator].vectors[i].normal.z, 1 };
-		polygonOutputMutex.unlock();
 
 		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
 		//CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
@@ -759,6 +755,14 @@ bool UpdatePolygons(int polygonIterator)
 		}
 
 		pointHomogeneous *= (1 / pointHomogeneous.w);
+
+		// Normalized Decart Coordinates here 
+		if (pointHomogeneous.x < -1.0f || pointHomogeneous.x > 1.0f ||
+			pointHomogeneous.y < -1.0f || pointHomogeneous.y > 1.0f )
+		{
+			polygonsOutp[polygonIterator].isOnScreen = false;
+			return false;
+		}
 		pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -767,11 +771,9 @@ bool UpdatePolygons(int polygonIterator)
 		//////////////////////////////Normals Showcase//////////////////////////////////
 		if (curGraphic == 3)
 		{
-			polygonOutputMutex.lock();
 			normalHomogeneous = modelCoordSystem->CalculateNormalProjections({ polygonsOutp[polygonIterator].vectors[i].normal.x,
 																				polygonsOutp[polygonIterator].vectors[i].normal.y,
 																				polygonsOutp[polygonIterator].vectors[i].normal.z, 1 });
-			polygonOutputMutex.unlock();
 		}
 		polygon.vectors[i].projectedNormal = { normalHomogeneous.x, normalHomogeneous.y, normalHomogeneous.z };
 		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////

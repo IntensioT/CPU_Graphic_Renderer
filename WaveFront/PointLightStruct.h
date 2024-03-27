@@ -10,7 +10,7 @@ struct PointLightStruct
 {
 	CoordinateStruct globalPosition;
 
-	float objectAlbedo;
+	float objectAlbedo; //  base color input that defines the diffuse color or reflectivity of the surface
 	float PhongDiffuseWeight; // phong model diffuse weight
 	float PhongSpecularWeight; // phong model specular weight
 	float PhongSpecularExponent;   // phong specular exponent

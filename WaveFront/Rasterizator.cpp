@@ -306,7 +306,7 @@ void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<P
 
 				float oneOverZ = polygon.vectors[0].z * w0 + polygon.vectors[1].z * w1 + polygon.vectors[2].z * w2;
 				float z = 1 / ( - oneOverZ);
-
+				// TODO : Lock
 				if (z < depthBuffer[x][y])
 				{
 					depthBuffer[x][y] = z;

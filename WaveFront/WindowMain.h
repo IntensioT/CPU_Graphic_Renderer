@@ -29,7 +29,8 @@ RGBQUAD color2 = { 0, 0, 255, 0 };
 
 CoordinateStruct cameraGlobalCoord;
 //CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
-CoordinateStruct targetGlobalCoord = { 0,50.f,0.f };
+//CoordinateStruct targetGlobalCoord = { 0,50.f,0.f };
+CoordinateStruct targetGlobalCoord = { 0,100.f,0.f };
 
 CoordinateStruct lightGlobalCoord = { 10.f,15.f,500.f };
 
