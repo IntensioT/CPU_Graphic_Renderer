@@ -438,7 +438,7 @@ void Render()
 	modelCoordSystem->SetViewPortTransformationMatrix((float)FrameWidth, (float)FrameHeight, 0, 0, 0.0f, 1.0f);
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	//UpdateVectors();
+	UpdateVectors();
 
 
 
@@ -501,18 +501,6 @@ void UpdateVectors()
 		if (!UpdatePolygons(i)) continue;
 	}
 }
-//void UpdateVectors()
-//{
-//	for (int i = 0; i < polygons.size(); i++)
-//	{
-//		if (!ClipFacePolygons(i)) continue;
-//		if (!UpdatePolygons(i)) continue;
-//		//if (!IsObjectBehindClipPlanes(i, clipPlanes))
-//		//{
-//		//DrawObject(i);
-//		//}
-//	}
-//}
 
 
 
@@ -747,7 +735,7 @@ bool UpdatePolygons(int polygonIterator)
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 
-		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
+		if (/*pointHomogeneous.w < 0.4 && */pointHomogeneous.w > -0.4)
 		{
 			//#pragma omp atomic
 			polygonsOutp[polygonIterator].isOnScreen = false;

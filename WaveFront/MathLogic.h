@@ -36,6 +36,12 @@ constexpr T getMax(const T& a, const T& b, const T& c)
     return getMax(getMax(a, b), c);
 }
 
+template <typename T>
+T clamp(T value, T minValue, T maxValue) {
+    return getMax(minValue, getMin(value, maxValue));
+}
+
+
 float GetVectorLength(const HomogeneousCoordinateStruct& vector);
 
 

@@ -1,4 +1,5 @@
 #include "Rasterizator.h"
+#include "MathLogic.h"
 
 void Rasterizator::SortYPoints(Triangle& polygon)
 {
@@ -330,7 +331,12 @@ void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<P
 					float b = w0 * polygon.vectors[0].diffuse.z + w1 * polygon.vectors[1].diffuse.z + w2 * polygon.vectors[2].diffuse.z;
 					RGBQUAD shadedColor = { r,g,b,0 };*/
 
-					RGBQUAD lightedColor = { color.rgbBlue * hitColor.x, color.rgbGreen * hitColor.y, color.rgbRed * hitColor.z };
+					RGBQUAD lightedColor;
+					lightedColor.rgbBlue = clamp(color.rgbBlue * hitColor.x, 0.0f, 255.0f);
+					lightedColor.rgbGreen = clamp(color.rgbGreen * hitColor.y, 0.0f, 255.0f);
+					lightedColor.rgbRed = clamp(color.rgbRed * hitColor.z, 0.0f, 255.0f);
+
+					//RGBQUAD lightedColor = { color.rgbBlue * hitColor.x, color.rgbGreen * hitColor.y, color.rgbRed * hitColor.z };
 					SetPoint(frameBuffer, x, y, /*shadedColor*/ lightedColor);
 
 				}
