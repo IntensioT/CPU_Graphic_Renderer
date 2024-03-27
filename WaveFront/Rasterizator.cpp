@@ -217,6 +217,18 @@ RectangleStruct FindTriangleBoundingRectangle2D(Triangle polygon)
 	return result;
 }
 
+RectangleStruct FindTriangleBoundingRectangleInGlobal(Triangle polygon)
+{
+	RectangleStruct result;
+	result.bottom = getMax(polygon.vectorsInGlobal[0].y, polygon.vectorsInGlobal[1].y, polygon.vectorsInGlobal[2].y);
+	result.top = getMin(polygon.vectorsInGlobal[0].y, polygon.vectorsInGlobal[1].y, polygon.vectorsInGlobal[2].y);
+
+	result.left = getMin(polygon.vectorsInGlobal[0].x, polygon.vectorsInGlobal[1].x, polygon.vectorsInGlobal[2].x);
+	result.right = getMax(polygon.vectorsInGlobal[0].x, polygon.vectorsInGlobal[1].x, polygon.vectorsInGlobal[2].x);
+
+	return result;
+}
+
 bool Rasterizator::IsInTriangle(float x, float y, Triangle polygon)
 {
 	float inASide, inBSide, inCSide;
@@ -261,29 +273,27 @@ float edgeFunctionReversePositive(const HomogeneousCoordinateStruct& a, const Ho
 	return (a.x - b.x) * (y - a.y) - (a.y - b.y) * (x - a.x);
 }
 
-void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
+void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings,CoordinateStruct& CameraGlobalCoordinates, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
 {
 	bool istopleft = IsTopLeft(polygon);
 	RectangleStruct rect = FindTriangleBoundingRectangle2D(polygon);
-	float w0, w1, w2, area;
-	area = edgeFunction(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
-	//area = edgeFunctionReversePositive(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
+	//RectangleStruct rectInGlobal = FindTriangleBoundingRectangleInGlobal(polygon);
 
+	float w0, w1, w2, area;
+	//float weightInGlobal0, weightInGlobal1, weightInGlobal2, areaInGlobal;
+
+	area = edgeFunction(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
+	//areaInGlobal = edgeFunction(polygon.vectorsInGlobal[0], polygon.vectorsInGlobal[1], polygon.vectorsInGlobal[2].x, polygon.vectorsInGlobal[2].y);
 
 	for (int y = rect.top; y <= rect.bottom; y++)
 	{
 		for (int x = rect.left; x <= rect.right; x++)
 		{
-			//if (istopleft)
 			
 				w0 = edgeFunction(polygon.vectors[1], polygon.vectors[2], x, y);
 				w1 = edgeFunction(polygon.vectors[2], polygon.vectors[0], x, y);
 				w2 = edgeFunction(polygon.vectors[0], polygon.vectors[1], x, y);
 
-			
-			//	w0 = edgeFunctionReversePositive(polygon.vectors[1], polygon.vectors[2], x, y);
-			//	w1 = edgeFunctionReversePositive(polygon.vectors[2], polygon.vectors[0], x, y);
-			//	w2 = edgeFunctionReversePositive(polygon.vectors[0], polygon.vectors[1], x, y);
 
 			
 
@@ -301,24 +311,29 @@ void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, RGBQUAD(&fram
 				{
 					depthBuffer[x][y] = z;
 
-					float r = w0 * polygon.vectors[0].diffuse.x + w1 * polygon.vectors[1].diffuse.x + w2 * polygon.vectors[2].diffuse.x;
+					///////////////////////////////////////////////////////////////////////////////////////////////////
+					float curXInGlobal = polygon.vectorsInGlobal[0].x * w0 + polygon.vectorsInGlobal[1].x * w1 + polygon.vectorsInGlobal[2].x * w2;
+					float curYInGlobal = polygon.vectorsInGlobal[0].y * w0 + polygon.vectorsInGlobal[1].y * w1 + polygon.vectorsInGlobal[2].y * w2;
+					float curZInGlobal = polygon.vectorsInGlobal[0].z * w0 + polygon.vectorsInGlobal[1].z * w1 + polygon.vectorsInGlobal[2].z * w2;
+					CoordinateStruct curPointInGlobal = { curXInGlobal, curYInGlobal, curZInGlobal };
+
+					float curXNormalInGlobal = polygon.vectorsInGlobal[0].normal.x * w0 + polygon.vectorsInGlobal[1].normal.x * w1 + polygon.vectorsInGlobal[2].normal.x * w2;
+					float curYNormalInGlobal = polygon.vectorsInGlobal[0].normal.y * w0 + polygon.vectorsInGlobal[1].normal.y * w1 + polygon.vectorsInGlobal[2].normal.y * w2;
+					float curZNormalInGlobal = polygon.vectorsInGlobal[0].normal.z * w0 + polygon.vectorsInGlobal[1].normal.z * w1 + polygon.vectorsInGlobal[2].normal.z * w2;
+					CoordinateStruct hitNormal = { curXNormalInGlobal, curYNormalInGlobal, curZNormalInGlobal };
+
+					CoordinateStruct hitColor = calculatePhongLight(curPointInGlobal, hitNormal,CameraGlobalCoordinates, lightnings);
+					///////////////////////////////////////////////////////////////////////////////////////////////////
+
+					/*float r = w0 * polygon.vectors[0].diffuse.x + w1 * polygon.vectors[1].diffuse.x + w2 * polygon.vectors[2].diffuse.x;
 					float g = w0 * polygon.vectors[0].diffuse.y + w1 * polygon.vectors[1].diffuse.y + w2 * polygon.vectors[2].diffuse.y;
 					float b = w0 * polygon.vectors[0].diffuse.z + w1 * polygon.vectors[1].diffuse.z + w2 * polygon.vectors[2].diffuse.z;
+					RGBQUAD shadedColor = { r,g,b,0 };*/
 
-					RGBQUAD shadedColor = { r,g,b,0 };
-					SetPoint(frameBuffer, x, y, shadedColor /*temp*/);
+					RGBQUAD lightedColor = { color.rgbBlue * hitColor.x, color.rgbGreen * hitColor.y, color.rgbRed * hitColor.z };
+					SetPoint(frameBuffer, x, y, /*shadedColor*/ lightedColor);
 
 				}
-
-				//float r = w0 * polygon.vectors[0].diffuse.x + w1 * polygon.vectors[1].diffuse.x + w2 * polygon.vectors[2].diffuse.x;
-				//float g = w0 * polygon.vectors[0].diffuse.y + w1 * polygon.vectors[1].diffuse.y + w2 * polygon.vectors[2].diffuse.y;
-				//float b = w0 * polygon.vectors[0].diffuse.z + w1 * polygon.vectors[1].diffuse.z + w2 * polygon.vectors[2].diffuse.z;
-
-
-				//RGBQUAD shadedColor = { r,g,b,0 };
-				//RGBQUAD temp = { polygon.vectors[0].diffuse.x, polygon.vectors[0].diffuse.y, polygon.vectors[0].diffuse.z, 0 };
-				//SetPoint(frameBuffer, x, y, shadedColor /*temp*/);
-				//depthBuffer[x][y] = z;
 			}
 		}
 	}

@@ -15,14 +15,6 @@ CoordSystem::CoordSystem(CoordinateStruct Translation)
 
 }
 
-CoordinateStruct CoordSystem::SubstractVectors(CoordinateStruct& vector1, CoordinateStruct& vector2)
-{
-	CoordinateStruct result;
-	result.x = vector1.x - vector2.x;
-	result.y = vector1.y - vector2.y;
-	result.z = vector1.z - vector2.z;
-	return result;
-}
 
 CoordinateStruct CoordSystem::MultiplyVectors(CoordinateStruct& vector1, CoordinateStruct& vector2)
 {
@@ -102,15 +94,15 @@ float CoordSystem::VectorLength(const HomogeneousCoordinateStruct& vector)
 //	}
 //}
 
-float CoordSystem::DotProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2)
-{
-	return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
-}
-
-float CoordSystem::DotProduct(const HomogeneousCoordinateStruct& vector1, const HomogeneousCoordinateStruct& vector2)
-{
-	return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
-}
+//float CoordSystem::DotProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2)
+//{
+//	return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
+//}
+//
+//float CoordSystem::DotProduct(const HomogeneousCoordinateStruct& vector1, const HomogeneousCoordinateStruct& vector2)
+//{
+//	return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
+//}
 
 CoordinateStruct CoordSystem::CrossProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2)
 {

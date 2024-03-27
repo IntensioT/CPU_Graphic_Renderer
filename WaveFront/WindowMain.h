@@ -23,38 +23,23 @@ int frameCount = 0;
 RGBQUAD frameBuffer[1080][1920];
 float depthBuffer[1080][1920];
 
-RGBQUAD color = { 255, 255, 255, 0 };
+//RGBQUAD color = { 255, 255, 255, 0 };
+RGBQUAD color = { 200, 200, 200, 0 };
 RGBQUAD color2 = { 0, 0, 255, 0 };
 
 CoordinateStruct cameraGlobalCoord;
 //CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
 CoordinateStruct targetGlobalCoord = { 0,50.f,0.f };
 
-//CoordinateStruct lightGlobalCoord = { 0.f,3.f,8.5f };
-CoordinateStruct lightGlobalCoord = { 10.f,15.f,500.5f };
+CoordinateStruct lightGlobalCoord = { 10.f,15.f,500.f };
+
+PointLightStruct light1;
 
 CoordinateStruct DiffuseLightColor = { 204,204,204 };
 CoordinateStruct SpecularLightColor = { 51,51,51 };
 
-float LightIntesity = 1;
-float objectAlbedo = 1;
-float objectShininess = 1;
 
-///////////////////////////////////////////////////////////////////////////////
-//CoordinateStruct lightGlobalCoord = { 0.f,3.f,8.5f };
-//CoordinateStruct lightGlobalCoord = { 10.f,15.f,500.5f };
-//
-//CoordinateStruct DiffuseLightColor = { 204,204,204 };
-//CoordinateStruct SpecularLightColor = { 51,51,51 };
-
-float PhongDiffuseWeight = 0.8; // phong model diffuse weight
-float PhongSpecularWeight = 0.2; // phong model specular weight
-float PhongSpecularExponent = 10;   // phong specular exponent
-
-
-//float objectAlbedo = 0.18f;
-//float objectShininess = 1;
-////////////////////////////////////////////////////////////////////////////////
+std::vector<PointLightStruct> Lightnings;
 
 
 
@@ -91,7 +76,7 @@ float zFar = 100.0f;
 
 int curGraphic = 1;
 
-float coordSpeed = 0.1f;
+float coordSpeed = 3.f;
 float angleSpeed = 5.f;
 
 

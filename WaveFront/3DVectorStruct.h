@@ -9,17 +9,19 @@ struct CoordinateStruct
 	float x, y, z;
 
 	CoordinateStruct operator*(const CoordinateStruct& other) const;
-	
 	CoordinateStruct operator*(const float other) const;
 	
 	CoordinateStruct operator/(const float other) const;
 	
+	CoordinateStruct operator+(const CoordinateStruct& other) const;
+	CoordinateStruct operator+(const float& other) const;
+	CoordinateStruct operator+=(const CoordinateStruct& other);
+
+
 	CoordinateStruct operator-(const CoordinateStruct& other) const;
-	
 	CoordinateStruct operator-(const float other) const;
 	
 	
-
 };
 
 

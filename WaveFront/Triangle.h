@@ -9,6 +9,7 @@
 struct Triangle
 {
 	HomogeneousCoordinateStruct vectors[3];
+	HomogeneousCoordinateStruct vectorsInGlobal[3];
 	HomogeneousCoordinateStruct polygonNormal;
 	HomogeneousCoordinateStruct polygonCenter;
 

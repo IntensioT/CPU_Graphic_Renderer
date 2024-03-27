@@ -45,6 +45,26 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	rasterizator = new Rasterizator();
 
 
+	light1.globalPosition = { 10.f,15.f,500.f };
+	light1.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
+	light1.PhongDiffuseWeight = 0.8; // phong model diffuse weight
+	light1.PhongSpecularWeight = 0.2; // phong model specular weight
+	light1.PhongSpecularExponent = 10;   // phong specular exponent
+	light1.LightColor = { 255,255,255 };
+	light1.LightIntesity = 70;
+
+	//Lightnings.push_back(light1);
+	PointLightStruct light2;
+	light2.globalPosition = { 0.f,500.f,0.f };
+	light2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
+	light2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
+	light2.PhongSpecularWeight = 0.2; // phong model specular weight
+	light2.PhongSpecularExponent = 10;   // phong specular exponent
+	light2.LightColor = { 255,255,255 };
+	light2.LightIntesity = 70;
+
+	Lightnings.push_back(light2);
+
 	UpdateNormals();
 	/////
 
@@ -527,9 +547,9 @@ Triangle CalculateLambertTermAndShade(int polygonIterator, int vectorIterator, C
 
 	CoordinateStruct curNormal = polygonsOutp[polygonIterator].vectors[vectorIterator].normal;
 
-	CoordinateStruct lightDirection = Normalize(modelCoordSystem->SubstractVectors(lightGlobalCoord, curVector));
+	CoordinateStruct lightDirection = Normalize(SubstractVectors(lightGlobalCoord, curVector));
 
-	float lambertTerm = (modelCoordSystem->DotProduct(curNormal, lightDirection) >= 0.0) ? modelCoordSystem->DotProduct(curNormal, lightDirection) : 0.0f;
+	float lambertTerm = (DotProduct(curNormal, lightDirection) >= 0.0) ? DotProduct(curNormal, lightDirection) : 0.0f;
 	polygon.vectors[vectorIterator].shade = lambertTerm;
 
 	polygon.vectors[vectorIterator].diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
@@ -537,37 +557,37 @@ Triangle CalculateLambertTermAndShade(int polygonIterator, int vectorIterator, C
 	return polygon;
 }
 
-Triangle  CalculatePhongShade(int polygonIterator, int vectorIterator, CoordinateStruct& curVector, Triangle inputPolygon)
-{
-	Triangle polygon = inputPolygon;
-
-	CoordinateStruct curNormal = polygonsOutp[polygonIterator].vectors[vectorIterator].normal;
-
-	CoordinateStruct lightDirection = Normalize(modelCoordSystem->SubstractVectors(lightGlobalCoord, curVector));
-	CoordinateStruct viewDirection = Normalize(modelCoordSystem->SubstractVectors(curVector, lightGlobalCoord));
-
-	CoordinateStruct reflect = lightDirection - (curNormal * modelCoordSystem->DotProduct(curNormal, lightDirection)) * 2.0f;
-
-	float diffuseTerm = objectAlbedo * LightIntesity * (modelCoordSystem->DotProduct(curNormal, lightDirection) >= 0.0) ?
-		objectAlbedo * LightIntesity * modelCoordSystem->DotProduct(curNormal, lightDirection) :
-		0.0f;
-
-
-	float dotProduct = modelCoordSystem->DotProduct(reflect, viewDirection);
-	if (dotProduct < 0.0f) {
-		dotProduct = 0;
-	}
-	float specularComponent = LightIntesity * std::pow(dotProduct, objectShininess);
-	CoordinateStruct specularTerms = { (LightIntesity * specularComponent * reflect.x), (LightIntesity * specularComponent * reflect.y), (LightIntesity * specularComponent * reflect.z) };
-
-	//polygon.vectors[vectorIterator].shade = lambertTerm;
-
-	polygon.vectors[vectorIterator].diffuse = { (DiffuseLightColor.x * diffuseTerm + specularTerms.x * SpecularLightColor.x),
-	(DiffuseLightColor.y * diffuseTerm + specularTerms.y * SpecularLightColor.y),
-	(DiffuseLightColor.z * diffuseTerm + specularTerms.z * SpecularLightColor.z), };
-
-	return polygon;
-}
+//Triangle  CalculatePhongShade(int polygonIterator, int vectorIterator, CoordinateStruct& curVector, Triangle inputPolygon)
+//{
+//	Triangle polygon = inputPolygon;
+//
+//	CoordinateStruct curNormal = polygonsOutp[polygonIterator].vectors[vectorIterator].normal;
+//
+//	CoordinateStruct lightDirection = Normalize(SubstractVectors(lightGlobalCoord, curVector));
+//	CoordinateStruct viewDirection = Normalize(SubstractVectors(curVector, lightGlobalCoord));
+//
+//	CoordinateStruct reflect = lightDirection - (curNormal * DotProduct(curNormal, lightDirection)) * 2.0f;
+//
+//	float diffuseTerm = light1.objectAlbedo * LightIntesity * (DotProduct(curNormal, lightDirection) >= 0.0) ?
+//		objectAlbedo * LightIntesity * DotProduct(curNormal, lightDirection) :
+//		0.0f;
+//
+//
+//	float dotProduct = DotProduct(reflect, viewDirection);
+//	if (dotProduct < 0.0f) {
+//		dotProduct = 0;
+//	}
+//	float specularComponent = LightIntesity * std::pow(dotProduct, objectShininess);
+//	CoordinateStruct specularTerms = { (LightIntesity * specularComponent * reflect.x), (LightIntesity * specularComponent * reflect.y), (LightIntesity * specularComponent * reflect.z) };
+//
+//	//polygon.vectors[vectorIterator].shade = lambertTerm;
+//
+//	polygon.vectors[vectorIterator].diffuse = { (DiffuseLightColor.x * diffuseTerm + specularTerms.x * SpecularLightColor.x),
+//	(DiffuseLightColor.y * diffuseTerm + specularTerms.y * SpecularLightColor.y),
+//	(DiffuseLightColor.z * diffuseTerm + specularTerms.z * SpecularLightColor.z), };
+//
+//	return polygon;
+//}
 
 void DrawObject(int i)
 {
@@ -672,7 +692,7 @@ void DrawTriangle(Triangle& triangle)
 		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
 
-		rasterizator->DrawPolygonBarycentric(triangle, frameBuffer, depthBuffer, color);
+		rasterizator->DrawPolygonBarycentric(triangle,Lightnings,cameraGlobalCoord, frameBuffer, depthBuffer, color);
 
 		break;
 
@@ -692,9 +712,9 @@ bool ClipFacePolygons(int polygonIterator)
 
 	CoordinateStruct curPolygonCenter = polygonCenter.toCoordinateStruct();
 	CoordinateStruct curCameraPos = { 0,0,0 };
-	CoordinateStruct cameraDirectionOnPoint = Normalize(modelCoordSystem->SubstractVectors(cameraGlobalCoord, curPolygonCenter));
+	CoordinateStruct cameraDirectionOnPoint = Normalize(SubstractVectors(cameraGlobalCoord, curPolygonCenter));
 
-	float dotProduct = modelCoordSystem->DotProduct(polygonNormal.toCoordinateStruct(), cameraDirectionOnPoint);
+	float dotProduct = DotProduct(polygonNormal.toCoordinateStruct(), cameraDirectionOnPoint);
 	if (dotProduct < 0)
 	{
 		polygonsOutp[polygonIterator].isOnScreen = false;
@@ -723,7 +743,9 @@ bool UpdatePolygons(int polygonIterator)
 		polygonOutputMutex.unlock();
 
 		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
-		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
+		//CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
+		polygon.vectorsInGlobal[i] = pointHomogeneous;
+
 		modelCoordSystem->SetTranslationMatrix(pointHomogeneous.toCoordinateStruct());
 
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
@@ -754,8 +776,10 @@ bool UpdatePolygons(int polygonIterator)
 		polygon.vectors[i].projectedNormal = { normalHomogeneous.x, normalHomogeneous.y, normalHomogeneous.z };
 		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////
 
+		//if (curGraphic == 2) polygon = CalculateLambertTermAndShade(polygonIterator, i, curVector, polygon);
+		CoordinateStruct curVector = { polygon.vectorsInGlobal[i].x,polygon.vectorsInGlobal[i].y,polygon.vectorsInGlobal[i].z };
 		if (curGraphic == 2) polygon = CalculateLambertTermAndShade(polygonIterator, i, curVector, polygon);
-		else if (curGraphic == 4) polygon = CalculatePhongShade(polygonIterator, i, curVector, polygon);
+		//else if (curGraphic == 4) polygon = CalculatePhongShade(polygonIterator, i, curVector, polygon);
 	}
 	polygonOutputMutex.lock();
 	polygonsOutp[polygonIterator] = polygon;
@@ -763,49 +787,49 @@ bool UpdatePolygons(int polygonIterator)
 	return true;
 }
 
-
-Triangle UpdatePolygonsTriangle(int polygonIterator)
-{
-	Triangle polygon;
-	HomogeneousCoordinateStruct pointHomogeneous;
-	for (int i = 0; i < 3; i++)
-	{
-		pointHomogeneous = polygons[polygonIterator].vectors[i];
-
-		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
-		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
-		modelCoordSystem->SetTranslationMatrix(pointHomogeneous.toCoordinateStruct());
-		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
-		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
-
-		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
-		{
-			pointHomogeneous = { 0,0,0,1 };
-			//return false;
-		}
-
-		pointHomogeneous *= (1 / pointHomogeneous.w);
-		pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
-
-		pointHomogeneous.shade = 1;
-		polygon.vectors[i] = pointHomogeneous;
-		polygon.vectors[i].normal = polygons[polygonIterator].vectors[i].normal;
-
-		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////
-		//CoordinateStruct normal = modelCoordSystem->NormalizeVector(polygon.vectors[i].normal);
-		CoordinateStruct normal = Normalize(polygon.vectors[i].normal);
-		// получаем вектор направления света
-		CoordinateStruct curPos = { polygon.vectors[i].x,polygon.vectors[i].y,polygon.vectors[i].z };
-		CoordinateStruct lightDirection = Normalize(modelCoordSystem->SubstractVectors(lightGlobalCoord, curVector));
-
-		// получаем скалярное произведение векторов нормали и направления света
-		float lambertTerm = (modelCoordSystem->DotProduct(normal, lightDirection) >= 0.0) ? modelCoordSystem->DotProduct(normal, lightDirection) : 0.0f;
-		polygon.vectors[i].shade = lambertTerm;
-
-		polygon.vectors[i].diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
-	}
-	return polygon;
-}
+// Deprecated
+//Triangle UpdatePolygonsTriangle(int polygonIterator)
+//{
+//	Triangle polygon;
+//	HomogeneousCoordinateStruct pointHomogeneous;
+//	for (int i = 0; i < 3; i++)
+//	{
+//		pointHomogeneous = polygons[polygonIterator].vectors[i];
+//
+//		pointHomogeneous *= modelCoordSystem->GlobalTransformationMatrix;
+//		CoordinateStruct curVector = { pointHomogeneous.x,pointHomogeneous.y,pointHomogeneous.z };
+//		modelCoordSystem->SetTranslationMatrix(pointHomogeneous.toCoordinateStruct());
+//		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
+//		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
+//
+//		if (pointHomogeneous.w < 0.4 && pointHomogeneous.w > -0.4)
+//		{
+//			pointHomogeneous = { 0,0,0,1 };
+//			//return false;
+//		}
+//
+//		pointHomogeneous *= (1 / pointHomogeneous.w);
+//		pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
+//
+//		pointHomogeneous.shade = 1;
+//		polygon.vectors[i] = pointHomogeneous;
+//		polygon.vectors[i].normal = polygons[polygonIterator].vectors[i].normal;
+//
+//		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////
+//		//CoordinateStruct normal = modelCoordSystem->NormalizeVector(polygon.vectors[i].normal);
+//		CoordinateStruct normal = Normalize(polygon.vectors[i].normal);
+//		// получаем вектор направления света
+//		CoordinateStruct curPos = { polygon.vectors[i].x,polygon.vectors[i].y,polygon.vectors[i].z };
+//		CoordinateStruct lightDirection = Normalize(SubstractVectors(lightGlobalCoord, curVector));
+//
+//		// получаем скалярное произведение векторов нормали и направления света
+//		float lambertTerm = (DotProduct(normal, lightDirection) >= 0.0) ? DotProduct(normal, lightDirection) : 0.0f;
+//		polygon.vectors[i].shade = lambertTerm;
+//
+//		polygon.vectors[i].diffuse = { DiffuseLightColor.x * lambertTerm, DiffuseLightColor.y * lambertTerm, DiffuseLightColor.z * lambertTerm };
+//	}
+//	return polygon;
+//}
 
 void UpdateWindowSize(HWND hWnd)
 {

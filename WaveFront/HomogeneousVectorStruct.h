@@ -26,6 +26,11 @@ struct HomogeneousCoordinateStruct
     HomogeneousCoordinateStruct operator+(const HomogeneousCoordinateStruct& other) const {
         return HomogeneousCoordinateStruct{ x + other.x, y + other.y, z + other.z };
     }
+    HomogeneousCoordinateStruct operator*(const float other) const {
+        return HomogeneousCoordinateStruct{ x * other, y * other, z * other, w * other };
+    }
+
+
     CoordinateStruct toCoordinateStruct()
     {
         return { x,y,z };

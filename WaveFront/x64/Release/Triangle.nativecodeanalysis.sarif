@@ -1,0 +1,237 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Bugor/6sem/ComputerGraphicAlghorithms/projects/WaveFront/WaveFront/WaveFront/Triangle.cpp"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 27,
+                  "endLine": 10,
+                  "endColumn": 41
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GetTriangle",
+                  "decoratedName": "?GetTriangle@@YA?AUTriangle@@V?$vector@UHomogeneousCoordinateStruct@@V?$allocator@UHomogeneousCoordinateStruct@@@std@@@std@@V?$vector@HV?$allocator@H@std@@@3@1V?$vector@UCoordinateStruct@@V?$allocator@UCoordinateStruct@@@std@@@3@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '-' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '-' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Bugor/6sem/ComputerGraphicAlghorithms/projects/WaveFront/WaveFront/WaveFront/Triangle.cpp"
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 38,
+                  "endLine": 11,
+                  "endColumn": 58
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GetTriangle",
+                  "decoratedName": "?GetTriangle@@YA?AUTriangle@@V?$vector@UHomogeneousCoordinateStruct@@V?$allocator@UHomogeneousCoordinateStruct@@@std@@@std@@V?$vector@HV?$allocator@H@std@@@3@1V?$vector@UCoordinateStruct@@V?$allocator@UCoordinateStruct@@@std@@@3@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Bugor/6sem/ComputerGraphicAlghorithms/projects/WaveFront/WaveFront/WaveFront/Triangle.cpp"
+                },
+                "region": {
+                  "startLine": 25,
+                  "startColumn": 133
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GetAllPolygons",
+                  "decoratedName": "?GetAllPolygons@@YA?AV?$vector@UTriangle@@V?$allocator@UTriangle@@@std@@@std@@V?$vector@UHomogeneousCoordinateStruct@@V?$allocator@UHomogeneousCoordinateStruct@@@std@@@2@V?$vector@HV?$allocator@H@std@@@2@1V?$vector@UCoordinateStruct@@V?$allocator@UCoordinateStruct@@@std@@@2@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Bugor/6sem/ComputerGraphicAlghorithms/projects/WaveFront/WaveFront/WaveFront/Triangle.cpp"
+                },
+                "region": {
+                  "startLine": 25,
+                  "startColumn": 156
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GetAllPolygons",
+                  "decoratedName": "?GetAllPolygons@@YA?AV?$vector@UTriangle@@V?$allocator@UTriangle@@@std@@@std@@V?$vector@UHomogeneousCoordinateStruct@@V?$allocator@UHomogeneousCoordinateStruct@@@std@@@2@V?$vector@HV?$allocator@H@std@@@2@1V?$vector@UCoordinateStruct@@V?$allocator@UCoordinateStruct@@@std@@@2@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Bugor/6sem/ComputerGraphicAlghorithms/projects/WaveFront/WaveFront/WaveFront/Triangle.cpp"
+                },
+                "region": {
+                  "startLine": 25,
+                  "startColumn": 70
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GetAllPolygons",
+                  "decoratedName": "?GetAllPolygons@@YA?AV?$vector@UTriangle@@V?$allocator@UTriangle@@@std@@@std@@V?$vector@UHomogeneousCoordinateStruct@@V?$allocator@UHomogeneousCoordinateStruct@@@std@@@2@V?$vector@HV?$allocator@H@std@@@2@1V?$vector@UCoordinateStruct@@V?$allocator@UCoordinateStruct@@@std@@@2@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Bugor/6sem/ComputerGraphicAlghorithms/projects/WaveFront/WaveFront/WaveFront/Triangle.cpp"
+                },
+                "region": {
+                  "startLine": 25,
+                  "startColumn": 87
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GetAllPolygons",
+                  "decoratedName": "?GetAllPolygons@@YA?AV?$vector@UTriangle@@V?$allocator@UTriangle@@@std@@@std@@V?$vector@UHomogeneousCoordinateStruct@@V?$allocator@UHomogeneousCoordinateStruct@@@std@@@2@V?$vector@HV?$allocator@H@std@@@2@1V?$vector@UCoordinateStruct@@V?$allocator@UCoordinateStruct@@@std@@@2@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.37.32824.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///D:/Bugor/6sem/ComputerGraphicAlghorithms/projects/WaveFront/WaveFront/WaveFront/Triangle.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "e772e38ec0a3e91a7f951fc0163a083e99c5c1d61693a111cabd29b313a4a452"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bugor/6sem/computergraphicalghorithms/projects/wavefront/wavefront/wavefront/triangle.h"
+          },
+          "hashes": {
+            "sha-256": "ef462d3d380255acb82bb84cd9c33dd0f9106873b20aadc49e671f9246317367"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bugor/6sem/computergraphicalghorithms/projects/wavefront/wavefront/wavefront/coordsystem.h"
+          },
+          "hashes": {
+            "sha-256": "950079054fa2a880f402e4113b9ef4b66801b7b45c09cf4941feef67740a8aca"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bugor/6sem/computergraphicalghorithms/projects/wavefront/wavefront/wavefront/objloader.h"
+          },
+          "hashes": {
+            "sha-256": "63abeedd4aed92b55c546698be3d5f829e333ad66e89df76d36743b5ccd5f5c5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bugor/6sem/computergraphicalghorithms/projects/wavefront/wavefront/wavefront/3dvectorstruct.h"
+          },
+          "hashes": {
+            "sha-256": "b53ccf654d2d6223d832e691134b41eddbb8377c8bc534e9a32b307a312073d6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bugor/6sem/computergraphicalghorithms/projects/wavefront/wavefront/wavefront/homogeneousvectorstruct.h"
+          },
+          "hashes": {
+            "sha-256": "c6fc74083edea52520536514e1b9002e5a16825827f4dd137fa60d8989ebf053"
+          }
+        }
+      ]
+    }
+  ]
+}

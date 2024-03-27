@@ -6,6 +6,8 @@
 #include "Rectangle2D.h"
 #include "MathLogic.h"
 
+#include "LightLogic.h"
+
 #include <windows.h>
 
 
@@ -28,7 +30,7 @@ public:
 	void UpdateXleftAndXRight(Triangle& polygon);
 	void DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
 	void DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
-	void DrawPolygonBarycentric(const Triangle& polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
+	void DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
 	
 
 

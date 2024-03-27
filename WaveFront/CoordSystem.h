@@ -116,12 +116,12 @@ public:
 
     CoordSystem(CoordinateStruct Translation);
 
-    CoordinateStruct SubstractVectors(CoordinateStruct& vector1, CoordinateStruct& vector2);
+    //CoordinateStruct SubstractVectors(CoordinateStruct& vector1, CoordinateStruct& vector2);
     CoordinateStruct MultiplyVectors(CoordinateStruct& vector1, CoordinateStruct& vector2);
     HomogeneousCoordinateStruct MultiplyMatByVector(_3DMATRIX matrix, HomogeneousCoordinateStruct vector);
     _3DMATRIX MultiplyMatrixByMatrix(const _3DMATRIX& mat1, const _3DMATRIX& mat2);
-    float DotProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2);
-    float DotProduct(const HomogeneousCoordinateStruct& vector1, const HomogeneousCoordinateStruct& vector2);
+    //float DotProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2);
+    //float DotProduct(const HomogeneousCoordinateStruct& vector1, const HomogeneousCoordinateStruct& vector2);
     CoordinateStruct CrossProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2);
     HomogeneousCoordinateStruct CrossProduct(const HomogeneousCoordinateStruct& vector1, const HomogeneousCoordinateStruct& vector2);
 
