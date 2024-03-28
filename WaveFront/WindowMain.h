@@ -8,8 +8,13 @@
 #include "ThreadPool.h"
 #include "Rasterizator.h"
 
+#include "GlobalParams.h"
+
+#define WIDTH 1920
+#define HEIGHT 1080
 
 LONG FrameHeight = 720, FrameWidth = 1280;
+
 int prevMouseX, prevMouseY;
 bool mouseDown = false;
 

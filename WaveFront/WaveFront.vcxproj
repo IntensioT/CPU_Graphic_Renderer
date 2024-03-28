@@ -173,6 +173,7 @@
   <ItemGroup>
     <ClInclude Include="3DVectorStruct.h" />
     <ClInclude Include="CoordSystem.h" />
+    <ClInclude Include="GlobalParams.h" />
     <ClInclude Include="HomogeneousVectorStruct.h" />
     <ClInclude Include="LightLogic.h" />
     <ClInclude Include="PointLightStruct.h" />

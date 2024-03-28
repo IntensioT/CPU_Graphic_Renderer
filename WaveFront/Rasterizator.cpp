@@ -1,5 +1,6 @@
 #include "Rasterizator.h"
 #include "MathLogic.h"
+#include "GlobalParams.h"
 
 void Rasterizator::SortYPoints(Triangle& polygon)
 {
@@ -150,7 +151,9 @@ void Rasterizator::UpdateXleftAndXRight(Triangle& polygon)
 	getHLeftAndHRight(polygon);
 }
 
-void Rasterizator::DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
+void Rasterizator::DrawLines(Triangle polygon, void* frameBuffer, void* depthBuffer, RGBQUAD color)
+//void Rasterizator::DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
+//void Rasterizator::DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1920][1080], float(&depthBuffer)[1920][1080], RGBQUAD color)
 {
 	// Отрисовка горизонтальных отрезков
 	for (int y = polygon.vectors[0].y; y <= polygon.vectors[2].y; y++) {
@@ -176,11 +179,14 @@ void Rasterizator::DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920]
 					z = zL;
 				}
 
-				if (z < depthBuffer[x][y])
+				//if (z < depthBuffer[x][y])
+				if (z < reinterpret_cast<float*>(depthBuffer)[y * FrameWidth + x])
 				{
 					RGBQUAD shadedColor = { color.rgbRed * hSegment[x - xL],color.rgbGreen * hSegment[x - xL],color.rgbBlue * hSegment[x - xL], 0 };
 					SetPoint(frameBuffer, x, y, shadedColor);
-					depthBuffer[x][y] = z;
+					//depthBuffer[x][y] = z;
+					reinterpret_cast<float*>(depthBuffer)[y * FrameWidth + x] = z;
+
 				}
 			}
 
@@ -188,7 +194,10 @@ void Rasterizator::DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920]
 	}
 }
 
-void Rasterizator::DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
+void Rasterizator::DrawPolygon(Triangle polygon, void* frameBuffer, void* depthBuffer, RGBQUAD color)
+//void Rasterizator::DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
+//void Rasterizator::DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1920][1080], float(&depthBuffer)[1920][1080], RGBQUAD color)
+
 {
 	RectangleStruct rect = FindTriangleBoundingRectangle2D(polygon);
 
@@ -274,17 +283,17 @@ float edgeFunctionReversePositive(const HomogeneousCoordinateStruct& a, const Ho
 	return (a.x - b.x) * (y - a.y) - (a.y - b.y) * (x - a.x);
 }
 
-void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings,CoordinateStruct& CameraGlobalCoordinates, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
+void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings,CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, RGBQUAD color)
+//void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings,CoordinateStruct& CameraGlobalCoordinates, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
+//void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, RGBQUAD(&frameBuffer)[1920][1080], float(&depthBuffer)[1920][1080], RGBQUAD color)
+
 {
 	bool istopleft = IsTopLeft(polygon);
 	RectangleStruct rect = FindTriangleBoundingRectangle2D(polygon);
-	//RectangleStruct rectInGlobal = FindTriangleBoundingRectangleInGlobal(polygon);
 
 	float w0, w1, w2, area;
-	//float weightInGlobal0, weightInGlobal1, weightInGlobal2, areaInGlobal;
 
 	area = edgeFunction(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
-	//areaInGlobal = edgeFunction(polygon.vectorsInGlobal[0], polygon.vectorsInGlobal[1], polygon.vectorsInGlobal[2].x, polygon.vectorsInGlobal[2].y);
 
 	for (int y = rect.top; y <= rect.bottom; y++)
 	{
@@ -308,9 +317,11 @@ void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<P
 				float oneOverZ = polygon.vectors[0].z * w0 + polygon.vectors[1].z * w1 + polygon.vectors[2].z * w2;
 				float z = 1 / ( - oneOverZ);
 				// TODO : Lock
-				if (z < depthBuffer[x][y])
+				//if (z < depthBuffer[x][y])
+				if (z < reinterpret_cast<float*>(depthBuffer)[y * FrameWidth + x])
 				{
-					depthBuffer[x][y] = z;
+					//depthBuffer[x][y] = z;
+					reinterpret_cast<float*>(depthBuffer)[y * FrameWidth + x] = z;
 
 					///////////////////////////////////////////////////////////////////////////////////////////////////
 					float curXInGlobal = polygon.vectorsInGlobal[0].x * w0 + polygon.vectorsInGlobal[1].x * w1 + polygon.vectorsInGlobal[2].x * w2;

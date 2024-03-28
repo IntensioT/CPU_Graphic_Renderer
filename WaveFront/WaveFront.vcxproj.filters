@@ -122,5 +122,8 @@
     <ClInclude Include="MathLogic.h">
       <Filter>MathLogic</Filter>
     </ClInclude>
+    <ClInclude Include="GlobalParams.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

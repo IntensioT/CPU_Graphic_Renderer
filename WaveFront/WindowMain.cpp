@@ -3,7 +3,6 @@
 #endif 
 
 #include "WindowMain.h"
-//#include "PolygonsLogic.h"
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
@@ -237,7 +236,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 
 		case 'S':
-			if (zCamera > 1.f)
+			if (zCamera > 0.1f)
 			{
 				zCamera -= coordSpeed;
 				rSphere -= coordSpeed;
@@ -275,15 +274,19 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 		case '1':
 			curGraphic = 1;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case '2':
 			curGraphic = 2;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case '3':
 			curGraphic = 3;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case '4':
 			curGraphic = 4;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case '5':
 			curGraphic = 5;
@@ -302,6 +305,18 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 		case '0':
 			curGraphic = 0;
+			return 0;
+		case VK_OEM_PLUS: // клавиша "=" из ряда с обычными клавишами
+			if (zCamera < 51) return 0;
+			zCamera -= 50;
+			rSphere -= 50;
+			InvalidateRect(hwnd, NULL, TRUE);
+			return 0;
+		case VK_OEM_MINUS: // клавиша "-" из ряда с обычными клавишами
+			if (zCamera > 1000) return 0;
+			zCamera += 50;
+			rSphere += 50;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		}
 
@@ -544,38 +559,6 @@ Triangle CalculateLambertTermAndShade(int polygonIterator, int vectorIterator, C
 
 	return polygon;
 }
-
-//Triangle  CalculatePhongShade(int polygonIterator, int vectorIterator, CoordinateStruct& curVector, Triangle inputPolygon)
-//{
-//	Triangle polygon = inputPolygon;
-//
-//	CoordinateStruct curNormal = polygonsOutp[polygonIterator].vectors[vectorIterator].normal;
-//
-//	CoordinateStruct lightDirection = Normalize(SubstractVectors(lightGlobalCoord, curVector));
-//	CoordinateStruct viewDirection = Normalize(SubstractVectors(curVector, lightGlobalCoord));
-//
-//	CoordinateStruct reflect = lightDirection - (curNormal * DotProduct(curNormal, lightDirection)) * 2.0f;
-//
-//	float diffuseTerm = light1.objectAlbedo * LightIntesity * (DotProduct(curNormal, lightDirection) >= 0.0) ?
-//		objectAlbedo * LightIntesity * DotProduct(curNormal, lightDirection) :
-//		0.0f;
-//
-//
-//	float dotProduct = DotProduct(reflect, viewDirection);
-//	if (dotProduct < 0.0f) {
-//		dotProduct = 0;
-//	}
-//	float specularComponent = LightIntesity * std::pow(dotProduct, objectShininess);
-//	CoordinateStruct specularTerms = { (LightIntesity * specularComponent * reflect.x), (LightIntesity * specularComponent * reflect.y), (LightIntesity * specularComponent * reflect.z) };
-//
-//	//polygon.vectors[vectorIterator].shade = lambertTerm;
-//
-//	polygon.vectors[vectorIterator].diffuse = { (DiffuseLightColor.x * diffuseTerm + specularTerms.x * SpecularLightColor.x),
-//	(DiffuseLightColor.y * diffuseTerm + specularTerms.y * SpecularLightColor.y),
-//	(DiffuseLightColor.z * diffuseTerm + specularTerms.z * SpecularLightColor.z), };
-//
-//	return polygon;
-//}
 
 void DrawObject(int i)
 {
