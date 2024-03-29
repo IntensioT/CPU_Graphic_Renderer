@@ -53,14 +53,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	/////
 
-	int width, height, channels;
-	unsigned char* data = stbi_load("../../assets/cube/texture.jpg", &width, &height, &channels, 0);
-	if (data)
-	{
-		// Используем данные изображения
-		// ...
-		stbi_image_free(data);
-	}
+	//textureData = stbi_load("../../assets/cube/texture.jpg", &textureWidth, &textureHeight, &textureChannels, 0);
+	//if (textureData)
+	//{
+	//	// Используем данные изображения
+	//	// ...
+	//	stbi_image_free(textureData);
+	//}
 
 	rasterizator = new Rasterizator();
 
@@ -377,26 +376,6 @@ void ShowFrame(unsigned int width, unsigned int height, void* pixels, HWND hWnd)
 {
 	HDC hdc = GetDC(hWnd);
 
-	//HBITMAP hBitMap = CreateBitmap(width, height, 1, 8 * 4, pixels);
-	////HBITMAP hBitMap = CreateCompatibleBitmap(hdc, width, height);
-	///*
-	////Однако для повышения производительности приложения должны использовать CreateBitmap для создания монохромных растровых изображений и
-	////CreateCompatibleBitmap для создания цветных растровых изображений
-	////  [in] nPlanes
-	////Количество цветовых плоскостей, используемых устройством.
-	////  [in] nBitCount (4)
-	////Количество битов, необходимых для идентификации цвета одного пикселя.
-	//// */
-
-	// // DC  bit-map
-	//HDC srcHdc = CreateCompatibleDC(hdc);
-
-	//SelectObject(srcHdc, hBitMap);
-
-	//BitBlt(hdc, 0, 0, static_cast<int>(width), static_cast<int>(height), srcHdc, 0, 0, SRCCOPY);
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Создаем битмап, совместимый с устройством
 	HBITMAP hBitMap = CreateCompatibleBitmap(hdc, width, height);
 

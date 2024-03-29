@@ -175,7 +175,6 @@
     <ClInclude Include="CoordSystem.h" />
     <ClInclude Include="GlobalParams.h" />
     <ClInclude Include="HomogeneousVectorStruct.h" />
-    <ClInclude Include="ImageLoader\FreeImage.h" />
     <ClInclude Include="ImageLoader\stb_image.h" />
     <ClInclude Include="LightLogic.h" />
     <ClInclude Include="PointLightStruct.h" />
@@ -183,6 +182,7 @@
     <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="Rasterizator.h" />
     <ClInclude Include="Rectangle2D.h" />
+    <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="Triangle.h" />
