@@ -175,6 +175,8 @@
     <ClInclude Include="CoordSystem.h" />
     <ClInclude Include="GlobalParams.h" />
     <ClInclude Include="HomogeneousVectorStruct.h" />
+    <ClInclude Include="ImageLoader\FreeImage.h" />
+    <ClInclude Include="ImageLoader\stb_image.h" />
     <ClInclude Include="LightLogic.h" />
     <ClInclude Include="PointLightStruct.h" />
     <ClInclude Include="MathLogic.h" />

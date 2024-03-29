@@ -93,7 +93,33 @@ void ObjLoader::_parseLine(std::string line)
 
 		_normalVector.push_back(coordStr);
 	}
+	///////////////////////////////////////////////////////////////////
+	if (line[0] == 'v' && line[1] == 't' && line[2] == ' ')
+	{
+		int i = 3;
+		int j = 0;
+		_clearArray(coordinates);
 
+		//X parsing
+		while (line[i] != ' ' && j < CoordMaxLength)
+		{
+			coordinates[j++] = line[i++];
+		}
+		coordStr.x = _convertCharArrayToFloat(coordinates);
+		_clearArray(coordinates);
+
+		//Y parsing
+		i++;
+		j = 0;
+		while (line[i] != ' ' && line[i] != '\n' && j < CoordMaxLength)
+		{
+			coordinates[j++] = line[i++];
+		}
+		coordStr.y = _convertCharArrayToFloat(coordinates);
+
+		_textureVector.push_back(coordStr);
+	}
+	//////////////////////////////////////////////////////////////////////////
 	if (line[0] == 'f' && line[1] == ' ')
 	{
 		int i = 2;
@@ -116,8 +142,13 @@ void ObjLoader::_parseLine(std::string line)
 
 		while (i < line.length() && line[i] != '/')
 		{
+			coordinates[j++] = line[i];
 			i++;
 		}
+		_textureIndicies.push_back(_convertCharArrayToFloat(coordinates));
+		_clearArray(coordinates);
+
+		j = 0;
 		i++;
 		while (i < line.length() && line[i] != ' ')
 		{
@@ -143,9 +174,15 @@ void ObjLoader::_parseLine(std::string line)
 
 		while (i < line.length() && line[i] != '/')
 		{
+			coordinates[j++] = line[i];
 			i++;
 		}
+		_textureIndicies.push_back(_convertCharArrayToFloat(coordinates));
+		_clearArray(coordinates);
+
 		i++;
+		j = 0;
+
 		while (i < line.length() && line[i] != ' ')
 		{
 			coordinates[j++] = line[i];
@@ -170,9 +207,14 @@ void ObjLoader::_parseLine(std::string line)
 
 		while (i < line.length() && line[i] != '/')
 		{
+			coordinates[j++] = line[i];
 			i++;
 		}
+		_textureIndicies.push_back(_convertCharArrayToFloat(coordinates));
+		_clearArray(coordinates);
 		i++;
+		j = 0;
+
 		while (i < line.length() && line[i] != ' ' && line[i] != '\n' && j < CoordMaxLength)
 		{
 			coordinates[j++] = line[i];
@@ -209,7 +251,18 @@ std::vector<int> ObjLoader::GetNormalIndexes()
 	return _normalIndexes;
 }
 
+
 std::vector<CoordinateStruct> ObjLoader::GetNormals()
 {
 	return _normalVector;
+}
+
+std::vector<CoordinateStruct> ObjLoader::GetTexturesVector()
+{
+	return _textureVector;
+}
+
+std::vector<int> ObjLoader::GetTextureCoordinateIndicies()
+{
+	return _textureIndicies;
 }

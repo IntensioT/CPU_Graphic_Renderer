@@ -9,6 +9,7 @@ struct HomogeneousCoordinateStruct
     float shade;
     CoordinateStruct diffuse;
     CoordinateStruct normal;
+    CoordinateStruct texture;
     float normalW;
     CoordinateStruct projectedNormal;
 

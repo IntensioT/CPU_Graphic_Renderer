@@ -48,9 +48,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WindowMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TempRasrt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -80,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="IntersectionInfo.h">
       <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowMain.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +123,12 @@
       <Filter>MathLogic</Filter>
     </ClInclude>
     <ClInclude Include="GlobalParams.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageLoader\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageLoader\FreeImage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,12 +6,12 @@ D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\
 D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(76,20): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'WindowMain.cpp')
   
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(49,24): warning C4305: '=': truncation from 'double' to 'float'
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(50,30): warning C4305: '=': truncation from 'double' to 'float'
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(51,31): warning C4305: '=': truncation from 'double' to 'float'
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(59,24): warning C4305: '=': truncation from 'double' to 'float'
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(60,30): warning C4305: '=': truncation from 'double' to 'float'
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(61,31): warning C4305: '=': truncation from 'double' to 'float'
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(420,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(654,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(69,24): warning C4305: '=': truncation from 'double' to 'float'
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(70,30): warning C4305: '=': truncation from 'double' to 'float'
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(71,31): warning C4305: '=': truncation from 'double' to 'float'
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(79,24): warning C4305: '=': truncation from 'double' to 'float'
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(80,30): warning C4305: '=': truncation from 'double' to 'float'
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(81,31): warning C4305: '=': truncation from 'double' to 'float'
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(463,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(665,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
   WaveFront.vcxproj -> D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\x64\Debug\WaveFront.exe

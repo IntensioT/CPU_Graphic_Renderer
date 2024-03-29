@@ -5,6 +5,11 @@
 #include "WindowMain.h"
 
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "ImageLoader/stb_image.h"
+
+
+
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	ObjLoader* loader = new ObjLoader();
@@ -17,6 +22,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	normalIndexes = loader->GetNormalIndexes();
 	normals = loader->GetNormals();
 
+	textureIndicies = loader->GetTextureCoordinateIndicies();
+	textures = loader->GetTexturesVector();
+
 	vertexesOutp.resize(vertexes.size() + normals.size());
 	std::vector<HomogeneousCoordinateStruct> vertexesHomo;
 
@@ -27,19 +35,32 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		vertexesHomo[i] = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1 };
 	}
 
-	//polygons.resize(indexes.size() / 3);
 
 	for (int i = 0; i < indexes.size(); i += 3)
 	{
 		vertexesHomo[indexes[i] - 1].normal = normals[normalIndexes[i] - 1];
 		vertexesHomo[indexes[i + 1] - 1].normal = normals[normalIndexes[i + 1] - 1];
 		vertexesHomo[indexes[i + 2] - 1].normal = normals[normalIndexes[i + 2] - 1];
+
+		vertexesHomo[indexes[i] - 1].texture = textures[textureIndicies[i] - 1];
+		vertexesHomo[indexes[i + 1] - 1].texture = textures[textureIndicies[i + 1] - 1];
+		vertexesHomo[indexes[i + 2] - 1].texture = textures[textureIndicies[i + 2] - 1];
+
 		polygons.push_back({ vertexesHomo[indexes[i] - 1], vertexesHomo[indexes[i + 1] - 1], vertexesHomo[indexes[i + 2] - 1] });
 	}
 	//polygons = GetAllPolygons(vertexesHomo, indexes, normalIndexes, normals);
 	polygonsOutp.resize(polygons.size());
 
 	/////
+
+	int width, height, channels;
+	unsigned char* data = stbi_load("../../assets/cube/texture.jpg", &width, &height, &channels, 0);
+	if (data)
+	{
+		// Используем данные изображения
+		// ...
+		stbi_image_free(data);
+	}
 
 	rasterizator = new Rasterizator();
 
@@ -316,6 +337,29 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (zCamera > 1000) return 0;
 			zCamera += 50;
 			rSphere += 50;
+			InvalidateRect(hwnd, NULL, TRUE);
+			return 0;
+		case 'I':
+			if (targetGlobalCoord.y > 300) return 0;
+			targetGlobalCoord.y += 10.f;
+			InvalidateRect(hwnd, NULL, TRUE);
+			return 0;
+
+		case 'K':
+			if (targetGlobalCoord.y < -300) return 0;
+			targetGlobalCoord.y -= 10.f;
+			InvalidateRect(hwnd, NULL, TRUE);
+			return 0;
+
+		case 'O':
+			if (targetGlobalCoord.x > 300) return 0;
+			targetGlobalCoord.x += 10.f;
+			InvalidateRect(hwnd, NULL, TRUE);
+			return 0;
+
+		case 'P':
+			if (targetGlobalCoord.x < -300) return 0;
+			targetGlobalCoord.x -= 10.f;
 			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		}
