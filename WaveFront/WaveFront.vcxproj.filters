@@ -46,6 +46,9 @@
     <Filter Include="MathLogic">
       <UniqueIdentifier>{c9fe28ab-48ae-4762-a59c-41adad134e35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TextureLoader">
+      <UniqueIdentifier>{555b2fe1-76f0-4d6d-8fae-5e81805f02b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TempRasrt.cpp">
@@ -80,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="WindowMain.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>TextureLoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -129,7 +135,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TextureLoader.h">
-      <Filter>Header Files</Filter>
+      <Filter>TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureStruct.h">
+      <Filter>TextureLoader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

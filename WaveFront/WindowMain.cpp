@@ -5,11 +5,6 @@
 #include "WindowMain.h"
 
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "ImageLoader/stb_image.h"
-
-
-
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	ObjLoader* loader = new ObjLoader();
@@ -51,15 +46,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	//polygons = GetAllPolygons(vertexesHomo, indexes, normalIndexes, normals);
 	polygonsOutp.resize(polygons.size());
 
-	/////
-
-	//textureData = stbi_load("../../assets/cube/texture.jpg", &textureWidth, &textureHeight, &textureChannels, 0);
-	//if (textureData)
-	//{
-	//	// Используем данные изображения
-	//	// ...
-	//	stbi_image_free(textureData);
-	//}
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	textureDatas.push_back(LoadTexture("../../assets/cube/texture.jpg"));
+	
 
 	rasterizator = new Rasterizator();
 
@@ -480,15 +469,15 @@ void Render()
 
 
 
-	/*for (int i = 0; i < polygonsOutp.size(); i++)
+	for (int i = 0; i < polygonsOutp.size(); i++)
 	{
 		DrawTriangle(polygonsOutp[i]);
-	}*/
+	}
 
-	Concurrency::parallel_for(0, static_cast<int>(polygonsOutp.size()), [&](int i)
+	/*Concurrency::parallel_for(0, static_cast<int>(polygonsOutp.size()), [&](int i)
 		{
 			DrawTriangle(polygonsOutp[i]);
-		});
+		});*/
 
 
 
@@ -686,7 +675,7 @@ void DrawTriangle(Triangle& triangle)
 		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
 
-		rasterizator->DrawPolygonBarycentric(triangle,Lightnings,cameraGlobalCoord, frameBuffer, depthBuffer, color);
+		rasterizator->DrawPolygonBarycentric(triangle,Lightnings,cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[0]);
 
 		break;
 
@@ -750,6 +739,7 @@ bool UpdatePolygons(int polygonIterator)
 
 		pointHomogeneous *= (1 / pointHomogeneous.w);
 
+
 		// Normalized Decart Coordinates here 
 		if (pointHomogeneous.x < -1.0f || pointHomogeneous.x > 1.0f ||
 			pointHomogeneous.y < -1.0f || pointHomogeneous.y > 1.0f )
@@ -757,6 +747,7 @@ bool UpdatePolygons(int polygonIterator)
 			polygonsOutp[polygonIterator].isOnScreen = false;
 			return false;
 		}
+		polygon.vectorsInGlobal[i].w = -pointHomogeneous.z;
 		pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
 
 		///////////////////////////////////////////////////////////////////////////////

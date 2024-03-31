@@ -10,6 +10,9 @@
 
 #include "GlobalParams.h"
 
+#include "TextureLoader.h"
+
+
 #define WIDTH 1920
 #define HEIGHT 1080
 
@@ -60,6 +63,7 @@ std::vector<int> normalIndexes;
 std::vector<CoordinateStruct> normals;
 std::vector<int> textureIndicies;
 std::vector<CoordinateStruct> textures;
+std::vector<TextureStruct> textureDatas;
 
 CoordSystem* modelCoordSystem;
 Rasterizator* rasterizator;

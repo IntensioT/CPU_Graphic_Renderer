@@ -152,8 +152,6 @@ void Rasterizator::UpdateXleftAndXRight(Triangle& polygon)
 }
 
 void Rasterizator::DrawLines(Triangle polygon, void* frameBuffer, void* depthBuffer, RGBQUAD color)
-//void Rasterizator::DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
-//void Rasterizator::DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1920][1080], float(&depthBuffer)[1920][1080], RGBQUAD color)
 {
 	// Отрисовка горизонтальных отрезков
 	for (int y = polygon.vectors[0].y; y <= polygon.vectors[2].y; y++) {
@@ -195,8 +193,6 @@ void Rasterizator::DrawLines(Triangle polygon, void* frameBuffer, void* depthBuf
 }
 
 void Rasterizator::DrawPolygon(Triangle polygon, void* frameBuffer, void* depthBuffer, RGBQUAD color)
-//void Rasterizator::DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
-//void Rasterizator::DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1920][1080], float(&depthBuffer)[1920][1080], RGBQUAD color)
 
 {
 	RectangleStruct rect = FindTriangleBoundingRectangle2D(polygon);
@@ -283,9 +279,7 @@ float edgeFunctionReversePositive(const HomogeneousCoordinateStruct& a, const Ho
 	return (a.x - b.x) * (y - a.y) - (a.y - b.y) * (x - a.x);
 }
 
-void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings,CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, RGBQUAD color)
-//void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings,CoordinateStruct& CameraGlobalCoordinates, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color)
-//void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, RGBQUAD(&frameBuffer)[1920][1080], float(&depthBuffer)[1920][1080], RGBQUAD color)
+void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings,CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, RGBQUAD color, TextureStruct& texture)
 
 {
 	bool istopleft = IsTopLeft(polygon);
@@ -294,6 +288,13 @@ void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<P
 	float w0, w1, w2, area;
 
 	area = edgeFunction(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
+
+	float texX0 = polygon.vectors[0].texture.x / polygon.vectors[0].z;
+	float texY0 = polygon.vectors[0].texture.y / polygon.vectors[0].z;
+	float texX1 = polygon.vectors[1].texture.x / polygon.vectors[1].z;
+	float texY1 = polygon.vectors[1].texture.y / polygon.vectors[1].z;
+	float texX2 = polygon.vectors[2].texture.x / polygon.vectors[2].z;
+	float texY2 = polygon.vectors[2].texture.y / polygon.vectors[2].z;
 
 	for (int y = rect.top; y <= rect.bottom; y++)
 	{
@@ -311,7 +312,9 @@ void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<P
 			{
 				w0 /= area;
 				w1 /= area;
-				w2 /= area;
+				//w2 /= area;
+				w2 = 1 - w0 - w1;
+
 
 
 				float oneOverZ = polygon.vectors[0].z * w0 + polygon.vectors[1].z * w1 + polygon.vectors[2].z * w2;
@@ -335,20 +338,55 @@ void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<P
 					CoordinateStruct hitNormal = { curXNormalInGlobal, curYNormalInGlobal, curZNormalInGlobal };
 
 					CoordinateStruct hitColor = calculatePhongLight(curPointInGlobal, hitNormal,CameraGlobalCoordinates, lightnings);
-					///////////////////////////////////////////////////////////////////////////////////////////////////
+					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					/*float u = (alpha * vt1.x * vt1.g + beta * vt2.x * vt2.g + gamma * vt3.x * vt3.g) / (alpha * vt1.g + beta * vt2.g + gamma * vt3.g);
+					float v = (alpha * vt1.y * vt1.g + beta * vt2.y * vt2.g + gamma * vt3.y * vt3.g) / (alpha * vt1.g + beta * vt2.g + gamma * vt3.g);*/
+					/*float u = w0 * polygon.vectors[0].texture.x / polygon.vectors[0].z + w1 * polygon.vectors[1].texture.x / polygon.vectors[1].z+ w2 * polygon.vectors[2].texture.x / polygon.vectors[2].z ;
+					float v = w0 * polygon.vectors[0].texture.y / polygon.vectors[0].z+ w1 * polygon.vectors[1].texture.y / polygon.vectors[1].z + w2 * polygon.vectors[2].texture.y / polygon.vectors[2].z;*/
 
-					/*float r = w0 * polygon.vectors[0].diffuse.x + w1 * polygon.vectors[1].diffuse.x + w2 * polygon.vectors[2].diffuse.x;
-					float g = w0 * polygon.vectors[0].diffuse.y + w1 * polygon.vectors[1].diffuse.y + w2 * polygon.vectors[2].diffuse.y;
-					float b = w0 * polygon.vectors[0].diffuse.z + w1 * polygon.vectors[1].diffuse.z + w2 * polygon.vectors[2].diffuse.z;
-					RGBQUAD shadedColor = { r,g,b,0 };*/
+
+					/*float u = w0 * polygon.vectors[0].texture.x * polygon.vectors[0].z + w1 * polygon.vectors[1].texture.x * polygon.vectors[1].z + w2 * polygon.vectors[2].texture.x * polygon.vectors[0].z;
+					u = -u / z;
+					float v = w0 * polygon.vectors[0].texture.y * polygon.vectors[0].z + w1 * polygon.vectors[1].texture.y * polygon.vectors[1].z + w2 * polygon.vectors[2].texture.y * polygon.vectors[2].z;
+					v = -v / z;
+
+					int textureX = u * texture.textureWidth;
+					int textureY = v * texture.textureHeight;*/
+
+					float texX = texX0 * w0 + texX1 * w1 + texX2 * w2;
+					float texY = texY0 * w0 + texY1 * w1 + texY2 * w2;
+
+					texX /= z;
+					texY /= z;
+
+					
+					int pixel_index = (texY * texture.textureWidth + texX) * texture.textureChannels;
+
+					
+					unsigned char red = texture.textureData[pixel_index];
+					unsigned char green = texture.textureData[pixel_index + 1];
+					unsigned char blue = texture.textureData[pixel_index + 2];
+					unsigned char alpha = (texture.textureChannels == 4) ? texture.textureData[pixel_index + 3] : 255;
+
+					
+
+
+					RGBQUAD finalColor;
+					finalColor.rgbRed = /*color.rgbRed **/ red /** alpha + backgroundColor.rgbRed * backgroundAlpha * (1 - alpha)*/;
+					finalColor.rgbGreen = /*color.rgbGreen * */green /** alpha /*+ backgroundColor.rgbGreen * backgroundAlpha * (1 - alpha)*/;
+					finalColor.rgbBlue = /*color.rgbBlue **/ blue /** alpha /*+ backgroundColor.rgbBlue * backgroundAlpha * (1 - alpha)*/;
+
+					SetPoint(frameBuffer, x, y, finalColor);
+
+
+					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 					RGBQUAD lightedColor;
 					lightedColor.rgbBlue = clamp(color.rgbBlue * hitColor.x, 0.0f, 255.0f);
 					lightedColor.rgbGreen = clamp(color.rgbGreen * hitColor.y, 0.0f, 255.0f);
 					lightedColor.rgbRed = clamp(color.rgbRed * hitColor.z, 0.0f, 255.0f);
 
-					//RGBQUAD lightedColor = { color.rgbBlue * hitColor.x, color.rgbGreen * hitColor.y, color.rgbRed * hitColor.z };
-					SetPoint(frameBuffer, x, y, /*shadedColor*/ lightedColor);
+					//SetPoint(frameBuffer, x, y, /*shadedColor*/ lightedColor);
 
 				}
 			}

@@ -167,6 +167,7 @@
     <ClCompile Include="PointLightStruct.cpp" />
     <ClCompile Include="Rasterizator.cpp" />
     <ClCompile Include="TempRasrt.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="WindowMain.cpp" />
   </ItemGroup>
@@ -183,6 +184,7 @@
     <ClInclude Include="Rasterizator.h" />
     <ClInclude Include="Rectangle2D.h" />
     <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="TextureStruct.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="Triangle.h" />

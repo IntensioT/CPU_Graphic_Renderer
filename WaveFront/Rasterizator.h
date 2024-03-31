@@ -7,6 +7,7 @@
 #include "MathLogic.h"
 
 #include "LightLogic.h"
+#include "TextureStruct.h"
 
 #include <windows.h>
 
@@ -34,7 +35,7 @@ public:
 	//void DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1920][1080], float(&depthBuffer)[1920][1080], RGBQUAD color);
 	void DrawPolygon(Triangle polygon, void* frameBuffer, void* depthBuffer, RGBQUAD color);
 	//void DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
-	void DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, RGBQUAD color);
+	void DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, RGBQUAD color, TextureStruct& texture);
 	//void DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
 	//void DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, RGBQUAD(&frameBuffer)[1920][1080], float(&depthBuffer)[1920][1080], RGBQUAD color);
 
