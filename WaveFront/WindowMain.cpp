@@ -469,15 +469,15 @@ void Render()
 
 
 
-	for (int i = 0; i < polygonsOutp.size(); i++)
+	/*for (int i = 0; i < polygonsOutp.size(); i++)
 	{
 		DrawTriangle(polygonsOutp[i]);
-	}
+	}*/
 
-	/*Concurrency::parallel_for(0, static_cast<int>(polygonsOutp.size()), [&](int i)
+	Concurrency::parallel_for(0, static_cast<int>(polygonsOutp.size()), [&](int i)
 		{
 			DrawTriangle(polygonsOutp[i]);
-		});*/
+		});
 
 
 
@@ -737,7 +737,9 @@ bool UpdatePolygons(int polygonIterator)
 			return false;
 		}
 
+		float temp = -(1 / pointHomogeneous.w);
 		pointHomogeneous *= (1 / pointHomogeneous.w);
+		polygon.vectorsInGlobal[i].w = temp;
 
 
 		// Normalized Decart Coordinates here 
@@ -747,7 +749,7 @@ bool UpdatePolygons(int polygonIterator)
 			polygonsOutp[polygonIterator].isOnScreen = false;
 			return false;
 		}
-		polygon.vectorsInGlobal[i].w = -pointHomogeneous.z;
+		
 		pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
 
 		///////////////////////////////////////////////////////////////////////////////

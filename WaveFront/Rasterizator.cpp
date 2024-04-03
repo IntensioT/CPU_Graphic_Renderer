@@ -339,30 +339,22 @@ void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<P
 
 					CoordinateStruct hitColor = calculatePhongLight(curPointInGlobal, hitNormal,CameraGlobalCoordinates, lightnings);
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					/*float u = (alpha * vt1.x * vt1.g + beta * vt2.x * vt2.g + gamma * vt3.x * vt3.g) / (alpha * vt1.g + beta * vt2.g + gamma * vt3.g);
-					float v = (alpha * vt1.y * vt1.g + beta * vt2.y * vt2.g + gamma * vt3.y * vt3.g) / (alpha * vt1.g + beta * vt2.g + gamma * vt3.g);*/
-					/*float u = w0 * polygon.vectors[0].texture.x / polygon.vectors[0].z + w1 * polygon.vectors[1].texture.x / polygon.vectors[1].z+ w2 * polygon.vectors[2].texture.x / polygon.vectors[2].z ;
-					float v = w0 * polygon.vectors[0].texture.y / polygon.vectors[0].z+ w1 * polygon.vectors[1].texture.y / polygon.vectors[1].z + w2 * polygon.vectors[2].texture.y / polygon.vectors[2].z;*/
-
-
-					/*float u = w0 * polygon.vectors[0].texture.x * polygon.vectors[0].z + w1 * polygon.vectors[1].texture.x * polygon.vectors[1].z + w2 * polygon.vectors[2].texture.x * polygon.vectors[0].z;
-					u = -u / z;
-					float v = w0 * polygon.vectors[0].texture.y * polygon.vectors[0].z + w1 * polygon.vectors[1].texture.y * polygon.vectors[1].z + w2 * polygon.vectors[2].texture.y * polygon.vectors[2].z;
-					v = -v / z;
-
-					int textureX = u * texture.textureWidth;
-					int textureY = v * texture.textureHeight;*/
-
-					float texX = texX0 * w0 + texX1 * w1 + texX2 * w2;
-					float texY = texY0 * w0 + texY1 * w1 + texY2 * w2;
-
-					texX /= z;
-					texY /= z;
-
 					
-					int pixel_index = (texY * texture.textureWidth + texX) * texture.textureChannels;
 
+					float Tc_over_Zc_forU = w0 * (polygon.vectors[0].texture.x * polygon.vectorsInGlobal[0].w) + w1 * (polygon.vectors[1].texture.x * polygon.vectorsInGlobal[1].w) + w2 * (polygon.vectors[2].texture.x * polygon.vectorsInGlobal[2].w);
+					float Tc_over_Zc_forV = w0 * (polygon.vectors[0].texture.y * polygon.vectorsInGlobal[0].w) + w1 * (polygon.vectors[1].texture.y * polygon.vectorsInGlobal[1].w) + w2 * (polygon.vectors[2].texture.y * polygon.vectorsInGlobal[2].w);
+
+					float interpolated_inv_Z = w0 * polygon.vectorsInGlobal[0].w + w1 * polygon.vectorsInGlobal[1].w + w2 * polygon.vectorsInGlobal[2].w;
+
+					float u = Tc_over_Zc_forU / interpolated_inv_Z;
+					float v = Tc_over_Zc_forV / interpolated_inv_Z;
+
+					float texX = u * texture.textureWidth;
+					float texY = v * texture.textureHeight;
 					
+					//int pixel_index = (texY * texture.textureWidth + texX) * texture.textureChannels;
+					int pixel_index = (int)texY * texture.textureWidth * texture.textureChannels + (int)texX * texture.textureChannels;
+
 					unsigned char red = texture.textureData[pixel_index];
 					unsigned char green = texture.textureData[pixel_index + 1];
 					unsigned char blue = texture.textureData[pixel_index + 2];
