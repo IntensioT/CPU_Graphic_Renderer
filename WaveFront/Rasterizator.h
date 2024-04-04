@@ -30,18 +30,17 @@ public:
 	std::vector<float> xLeft, xRight, zLeft, zRight, hLeft, hRight, diffuseLeft, diffuseRight;
 	void UpdateXleftAndXRight(Triangle& polygon);
 	void DrawLines(Triangle polygon, void* frameBuffer, void* depthBuffer, RGBQUAD color);
-	//void DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
-	//void DrawLines(Triangle polygon, RGBQUAD(&frameBuffer)[1920][1080], float(&depthBuffer)[1920][1080], RGBQUAD color);
-	//void DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1920][1080], float(&depthBuffer)[1920][1080], RGBQUAD color);
 	void DrawPolygon(Triangle polygon, void* frameBuffer, void* depthBuffer, RGBQUAD color);
-	//void DrawPolygon(Triangle polygon, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
 	void DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, RGBQUAD color, TextureStruct& texture);
-	//void DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, RGBQUAD(&frameBuffer)[1080][1920], float(&depthBuffer)[1080][1920], RGBQUAD color);
-	//void DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, RGBQUAD(&frameBuffer)[1920][1080], float(&depthBuffer)[1920][1080], RGBQUAD color);
+	void DrawPolygonBarycentricTexture(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, RGBQUAD color, TextureStruct& texture);
+	void DrawPolygonBarycentricTextureWithLight(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, RGBQUAD color, TextureStruct& texture);
+	void DrawPolygonBarycentricTextureWithBillinearFiltration(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, RGBQUAD color, TextureStruct& texture);
 
 
 
 private:
+	RGBQUAD PhongLight();
+
 	bool IsTopLeft(const Triangle& polygon);
 	bool IsInTriangle(float x, float y, Triangle polygon);
 	bool IsInPolygon(float x, float y, const Triangle& polygon);

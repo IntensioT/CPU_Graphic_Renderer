@@ -57,3 +57,8 @@ CoordinateStruct ReverseVector(const CoordinateStruct& vector)
 {
 	return {-vector.x, -vector.y, -vector.z};
 }
+
+float lerp(float a, float b, float t)
+{
+	return a + t * (b - a);
+}

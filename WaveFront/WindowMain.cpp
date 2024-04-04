@@ -47,7 +47,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	polygonsOutp.resize(polygons.size());
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	textureDatas.push_back(LoadTexture("../../assets/cube/texture.jpg"));
+	//textureDatas.push_back(LoadTexture("../../assets/cube/texture.jpg"));
+	//textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.jpg"));
+	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.png"));
 	
 
 	rasterizator = new Rasterizator();
@@ -674,9 +676,25 @@ void DrawTriangle(Triangle& triangle)
 		bbox = FindTriangleBoundingRectangle2D(triangle);
 		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
-
 		rasterizator->DrawPolygonBarycentric(triangle,Lightnings,cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[0]);
+		break;
+	case 5:
+		bbox = FindTriangleBoundingRectangle2D(triangle);
+		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
+		rasterizator->DrawPolygonBarycentricTexture(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[0]);
+		break;
+	case 6:
+		bbox = FindTriangleBoundingRectangle2D(triangle);
+		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
+
+		rasterizator->DrawPolygonBarycentricTextureWithLight(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[0]);
+		break;
+	case 7:
+		bbox = FindTriangleBoundingRectangle2D(triangle);
+		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
+
+		rasterizator->DrawPolygonBarycentricTextureWithBillinearFiltration(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[0]);
 		break;
 
 	}
@@ -732,7 +750,6 @@ bool UpdatePolygons(int polygonIterator)
 
 		if (/*pointHomogeneous.w < 0.4 && */pointHomogeneous.w > -0.4)
 		{
-			//#pragma omp atomic
 			polygonsOutp[polygonIterator].isOnScreen = false;
 			return false;
 		}

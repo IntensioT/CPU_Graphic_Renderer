@@ -57,5 +57,7 @@ CoordinateStruct SubstractVectors(CoordinateStruct& vector1, CoordinateStruct& v
 
 CoordinateStruct ReverseVector(const CoordinateStruct& vector);
 
+float lerp(float a, float b, float t);
+
 #endif // _MATHLOGIC_H_
 
