@@ -50,6 +50,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	//textureDatas.push_back(LoadTexture("../../assets/cube/texture.jpg"));
 	//textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.jpg"));
 	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.png"));
+	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_mrao.png"));
+	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_normal_map.png"));
 	
 
 	rasterizator = new Rasterizator();
@@ -64,16 +66,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	light1.LightIntesity = 70;
 
 	Lightnings.push_back(light1);
-	PointLightStruct light2;
-	light2.globalPosition = { 0.f,500.f,0.f };
-	light2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
-	light2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
-	light2.PhongSpecularWeight = 0.2; // phong model specular weight
-	light2.PhongSpecularExponent = 10;   // phong specular exponent
-	light2.LightColor = { 255,255,255 };
-	light2.LightIntesity = 70;
 
-	Lightnings.push_back(light2);
+	//PointLightStruct light2;
+	//light2.globalPosition = { 0.f,500.f,0.f };
+	//light2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
+	//light2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
+	//light2.PhongSpecularWeight = 0.2; // phong model specular weight
+	//light2.PhongSpecularExponent = 10;   // phong specular exponent
+	//light2.LightColor = { 255,255,255 };
+	//light2.LightIntesity = 70;
+
+	//Lightnings.push_back(light2);
 
 	UpdateNormals();
 	/////
