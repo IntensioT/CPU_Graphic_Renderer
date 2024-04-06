@@ -166,7 +166,6 @@
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="PointLightStruct.cpp" />
     <ClCompile Include="Rasterizator.cpp" />
-    <ClCompile Include="TempRasrt.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="WindowMain.cpp" />

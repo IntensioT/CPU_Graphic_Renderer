@@ -51,7 +51,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	//textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.jpg"));
 	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.png"));
 	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_mrao.png"));
+	textureDatas[0].specularTexturData = textureDatas[1].textureData;
 	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_normal_map.png"));
+	textureDatas[0].normalTexturData = textureDatas[2].textureData;
 	
 
 	rasterizator = new Rasterizator();
@@ -67,16 +69,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	Lightnings.push_back(light1);
 
-	//PointLightStruct light2;
-	//light2.globalPosition = { 0.f,500.f,0.f };
-	//light2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
-	//light2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
-	//light2.PhongSpecularWeight = 0.2; // phong model specular weight
-	//light2.PhongSpecularExponent = 10;   // phong specular exponent
-	//light2.LightColor = { 255,255,255 };
-	//light2.LightIntesity = 70;
+	PointLightStruct light2;
+	light2.globalPosition = { 0.f,500.f,0.f };
+	light2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
+	light2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
+	light2.PhongSpecularWeight = 0.2; // phong model specular weight
+	light2.PhongSpecularExponent = 10;   // phong specular exponent
+	light2.LightColor = { 255,255,255 };
+	light2.LightIntesity = 70;
 
-	//Lightnings.push_back(light2);
+	Lightnings.push_back(light2);
 
 	UpdateNormals();
 	/////
@@ -304,18 +306,23 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 		case '5':
 			curGraphic = 5;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case '6':
 			curGraphic = 6;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case '7':
 			curGraphic = 7;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case '8':
 			curGraphic = 8;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case '9':
 			curGraphic = 9;
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case '0':
 			curGraphic = 0;
@@ -484,9 +491,6 @@ void Render()
 			DrawTriangle(polygonsOutp[i]);
 		});
 
-
-
-	//UpdatePolygonsAsync();
 }
 
 void UpdateNormals()
@@ -679,7 +683,7 @@ void DrawTriangle(Triangle& triangle)
 		bbox = FindTriangleBoundingRectangle2D(triangle);
 		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
-		rasterizator->DrawPolygonBarycentric(triangle,Lightnings,cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[0]);
+		rasterizator->DrawPolygonBarycentric(triangle,Lightnings,cameraGlobalCoord, frameBuffer, depthBuffer, color);
 		break;
 	case 5:
 		bbox = FindTriangleBoundingRectangle2D(triangle);
@@ -699,8 +703,15 @@ void DrawTriangle(Triangle& triangle)
 
 		rasterizator->DrawPolygonBarycentricTextureWithBillinearFiltration(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[0]);
 		break;
+	case 8:
+		bbox = FindTriangleBoundingRectangle2D(triangle);
+		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
+
+		rasterizator->DrawPolygonBarycentricParam(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[0]);
+		break;
 
 	}
+	
 }
 
 bool ClipFacePolygons(int polygonIterator)
@@ -785,10 +796,8 @@ bool UpdatePolygons(int polygonIterator)
 		polygon.vectors[i].projectedNormal = { normalHomogeneous.x, normalHomogeneous.y, normalHomogeneous.z };
 		///////////////////////////////// LAMBERT///////////////////////////////////////////////////////
 
-		//if (curGraphic == 2) polygon = CalculateLambertTermAndShade(polygonIterator, i, curVector, polygon);
 		CoordinateStruct curVector = { polygon.vectorsInGlobal[i].x,polygon.vectorsInGlobal[i].y,polygon.vectorsInGlobal[i].z };
 		if (curGraphic == 2) polygon = CalculateLambertTermAndShade(polygonIterator, i, curVector, polygon);
-		//else if (curGraphic == 4) polygon = CalculatePhongShade(polygonIterator, i, curVector, polygon);
 	}
 	polygonOutputMutex.lock();
 	polygonsOutp[polygonIterator] = polygon;
