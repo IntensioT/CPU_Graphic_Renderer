@@ -9,6 +9,6 @@
 #include <vector>
 
 TextureStruct LoadTexture(const char* path);
-void UnloadTexture(std::vector<unsigned char*>& textureDatas);
+void UnloadTexture(std::vector<TextureStruct>& textureDatas);
 
 #endif

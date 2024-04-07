@@ -6,23 +6,24 @@
 
 TextureStruct LoadTexture(const char* path)
 {
+	stbi_set_flip_vertically_on_load(1);
 	TextureStruct result;
-	/*unsigned char* textureData;
-	int textureWidth, textureHeight, textureChannels;*/
 
 	result.textureData = stbi_load(path, &result.textureWidth, &result.textureHeight, &result.textureChannels, 0);
 
 	if (!result.textureData) {
 		// 
+		bool sus = false;
 	}
 	return result;
 }
 
-void UnloadTexture(std::vector<unsigned char*>& textureDatas)
+void UnloadTexture(std::vector<TextureStruct>& textureDatas)
 {
 	for (auto i = 0; i < textureDatas.size(); i++)
 	{
-		stbi_image_free(textureDatas[i]);
-
+		stbi_image_free(textureDatas[i].textureData);
+		stbi_image_free(textureDatas[i].specularTexturData);
+		stbi_image_free(textureDatas[i].normalTexturData);
 	}
 }

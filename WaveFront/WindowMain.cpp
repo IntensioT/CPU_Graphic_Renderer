@@ -23,6 +23,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	vertexesOutp.resize(vertexes.size() + normals.size());
 	std::vector<HomogeneousCoordinateStruct> vertexesHomo;
 
+	std::vector<int> steps = loader->GetMtlSteps();
+
 	vertexesHomo.resize(vertexes.size());
 
 	for (int i = 0; i < vertexes.size(); i++)
@@ -30,7 +32,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		vertexesHomo[i] = { vertexes[i].x, vertexes[i].y, vertexes[i].z, 1 };
 	}
 
-
+	int curMtl = 0;
+	int j = 0;
 	for (int i = 0; i < indexes.size(); i += 3)
 	{
 		vertexesHomo[indexes[i] - 1].normal = normals[normalIndexes[i] - 1];
@@ -42,18 +45,49 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		vertexesHomo[indexes[i + 2] - 1].texture = textures[textureIndicies[i + 2] - 1];
 
 		polygons.push_back({ vertexesHomo[indexes[i] - 1], vertexesHomo[indexes[i + 1] - 1], vertexesHomo[indexes[i + 2] - 1] });
+		polygons[j++].textureId = curMtl;
+		if (steps.size() - 1 <= curMtl) continue;
+		else if (i >= steps[curMtl+1])
+		{
+			curMtl++;
+		}
 	}
 	//polygons = GetAllPolygons(vertexesHomo, indexes, normalIndexes, normals);
 	polygonsOutp.resize(polygons.size());
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//textureDatas.push_back(LoadTexture("../../assets/cube/texture.jpg"));
-	//textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.jpg"));
-	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.png"));
+
+	/*textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.png"));
 	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_mrao.png"));
 	textureDatas[0].specularTexturData = textureDatas[1].textureData;
 	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_normal_map.png"));
-	textureDatas[0].normalTexturData = textureDatas[2].textureData;
+	textureDatas[0].normalTexturData = textureDatas[2].textureData;*/
+
+	/*textureDatas.push_back(LoadTexture("../../assets/madokaMachida/textures/tex_hair.png"));
+	textureDatas.push_back(LoadTexture("../../assets/madokaMachida/textures/tex_cloth.png"));
+	textureDatas.push_back(LoadTexture("../../assets/madokaMachida/textures/tex_face.png"));*/
+	
+	/*textureDatas.push_back(LoadTexture("../../assets/schoolUniform/textures/bow_FRONT_1123501_Base_Color_1011.png"));
+	textureDatas.push_back(LoadTexture("../../assets/schoolUniform/textures/shirt_FRONT_539393_Base_Color_1011.png"));
+	textureDatas.push_back(LoadTexture("../../assets/schoolUniform/textures/shirt_wrist_collar_FRONT_672717_Base_Color_1011.png"));
+	textureDatas.push_back(LoadTexture("../../assets/schoolUniform/textures/skirt_FRONT_1119_Base_Color_1001.png"));*/
+
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_BaseColor.png"));
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_cloth_BaseColor.png"));
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_golden_BaseColor.png"));
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_BaseColor.png"));
+
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_Normal.png"));
+	textureDatas[0].normalTexturData = textureDatas[4].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_cloth_Normal.png"));
+	textureDatas[1].normalTexturData = textureDatas[5].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_golden_Normal.png"));
+	textureDatas[2].normalTexturData = textureDatas[6].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_Normal.jpg"));
+	textureDatas[3].normalTexturData = textureDatas[7].textureData;
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 
 	rasterizator = new Rasterizator();
@@ -126,6 +160,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	}
 
+	UnloadTexture(textureDatas);
 	return 0;
 }
 
@@ -522,6 +557,8 @@ void UpdateNormals()
 
 		polygons[i].isOnScreen = true;
 		polygonsOutp[i].isOnScreen = true;
+
+		polygonsOutp[i].textureId = polygons[i].textureId;
 	}
 }
 
@@ -689,27 +726,32 @@ void DrawTriangle(Triangle& triangle)
 		bbox = FindTriangleBoundingRectangle2D(triangle);
 		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
-		rasterizator->DrawPolygonBarycentricTexture(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[0]);
+		rasterizator->DrawPolygonBarycentricTexture(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[triangle.textureId]);
 		break;
 	case 6:
 		bbox = FindTriangleBoundingRectangle2D(triangle);
 		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
-		rasterizator->DrawPolygonBarycentricTextureWithLight(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[0]);
+		rasterizator->DrawPolygonBarycentricTextureWithLight(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[triangle.textureId]);
 		break;
 	case 7:
 		bbox = FindTriangleBoundingRectangle2D(triangle);
 		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
-		rasterizator->DrawPolygonBarycentricTextureWithBillinearFiltration(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[0]);
+		rasterizator->DrawPolygonBarycentricTextureWithBillinearFiltration(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[triangle.textureId]);
 		break;
 	case 8:
 		bbox = FindTriangleBoundingRectangle2D(triangle);
 		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
-		rasterizator->DrawPolygonBarycentricParam(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[0]);
+		rasterizator->DrawPolygonBarycentricParam(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[triangle.textureId]);
 		break;
+	case 9:
+		bbox = FindTriangleBoundingRectangle2D(triangle);
+		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
+		rasterizator->DrawPolygonBarycentricLast(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[triangle.textureId]);
+		break;
 	}
 	
 }

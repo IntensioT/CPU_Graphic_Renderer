@@ -329,3 +329,15 @@ _3DMATRIX _3DMATRIX::operator*(const _3DMATRIX& a)
 	}
 	return result;
 }
+
+CoordinateStruct _3DMATRIX::operator*(const CoordinateStruct& vect)
+{
+	CoordinateStruct result;
+	for (int i = 0; i < 3; i++) {
+		result.x += m[i][0] * vect.x;
+		result.y += m[i][1] * vect.y;
+		result.z += m[i][2] * vect.z;
+	}
+	return result;
+}
+

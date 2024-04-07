@@ -119,6 +119,23 @@ void ObjLoader::_parseLine(std::string line)
 
 		_textureVector.push_back(coordStr);
 	}
+	///////////////////////////////////////////////////////////////////
+	if (line[0] == 'u' && line[1] == 's' && line[2] == 'e' && 
+		line[3] == 'm' && line[4] == 't' && line[5] == 'l' && line[6] == ' ')
+	{
+		int i = 7;
+		int j = 0;
+		_clearArray(coordinates);
+
+		//name parsing
+		while (line[i] != ' ' && line[i] != '\n' && j < CoordMaxLength)
+		{
+			coordinates[j++] = line[i++];
+		}
+		_mtlVector.push_back(coordinates);
+		mtlSteps.push_back(_textureIndicies.size());
+
+	}
 	//////////////////////////////////////////////////////////////////////////
 	if (line[0] == 'f' && line[1] == ' ')
 	{
@@ -233,6 +250,11 @@ float ObjLoader::_convertCharArrayToFloat(char* arr)
 {
 	float result = static_cast<float>(std::atof(arr));
 	return result;
+}
+
+std::vector<int> ObjLoader::GetMtlSteps()
+{
+	return mtlSteps;
 }
 
 std::vector<CoordinateStruct> ObjLoader::GetVetrexVector()

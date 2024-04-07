@@ -84,6 +84,9 @@
     <ClCompile Include="TextureLoader.cpp">
       <Filter>TextureLoader</Filter>
     </ClCompile>
+    <ClCompile Include="Mat3Struct.cpp">
+      <Filter>MathLogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowMain.h">
@@ -136,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="TextureStruct.h">
       <Filter>TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Mat3Struct.h">
+      <Filter>MathLogic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -44,6 +44,25 @@ float DotProduct(const HomogeneousCoordinateStruct& vector1, const HomogeneousCo
 	return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
 }
 
+CoordinateStruct CrossProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2)
+{
+	CoordinateStruct result;
+	result.x = vector1.y * vector2.z - vector1.z * vector2.y;
+	result.y = vector1.z * vector2.x - vector1.x * vector2.z;
+	result.z = vector1.x * vector2.y - vector1.y * vector2.x;
+	return result;
+}
+
+HomogeneousCoordinateStruct CrossProduct(const HomogeneousCoordinateStruct& vector1, const HomogeneousCoordinateStruct& vector2)
+{
+	HomogeneousCoordinateStruct result;
+	result.x = vector1.y * vector2.z - vector1.z * vector2.y;
+	result.y = vector1.z * vector2.x - vector1.x * vector2.z;
+	result.z = vector1.x * vector2.y - vector1.y * vector2.x;
+	result.w = vector1.w * vector2.w - vector1.w * vector2.w;
+	return result;
+}
+
 CoordinateStruct SubstractVectors(CoordinateStruct& vector1, CoordinateStruct& vector2)
 {
 	CoordinateStruct result;
@@ -52,6 +71,8 @@ CoordinateStruct SubstractVectors(CoordinateStruct& vector1, CoordinateStruct& v
 	result.z = vector1.z - vector2.z;
 	return result;
 }
+
+
 
 CoordinateStruct ReverseVector(const CoordinateStruct& vector)
 {

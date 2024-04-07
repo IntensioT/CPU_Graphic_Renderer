@@ -89,7 +89,7 @@ float zFar = 100.0f;
 
 int curGraphic = 1;
 
-float coordSpeed = 3.f;
+float coordSpeed = 1.f;
 float angleSpeed = 5.f;
 
 

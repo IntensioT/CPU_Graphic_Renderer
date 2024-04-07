@@ -26,6 +26,7 @@ typedef struct _3DMATRIX {
     };
 
     _3DMATRIX operator*(const _3DMATRIX& a);
+    CoordinateStruct operator*(const CoordinateStruct& vect);
 }; 
 
 

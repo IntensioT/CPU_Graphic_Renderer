@@ -5,7 +5,6 @@
 
 #include "CoordSystem.h"
 
-
 struct Triangle
 {
 	HomogeneousCoordinateStruct vectors[3];
@@ -14,6 +13,8 @@ struct Triangle
 	HomogeneousCoordinateStruct polygonCenter;
 
 	bool isOnScreen;
+
+	int textureId;
 };
 
 void AddTriangle(std::vector<Triangle>& triangles,const std::vector<HomogeneousCoordinateStruct>& homogeneousCoordinates,

@@ -162,6 +162,7 @@
     <ClCompile Include="CoordSystem.cpp" />
     <ClCompile Include="IntersectionInfo.h" />
     <ClCompile Include="LightLogic.cpp" />
+    <ClCompile Include="Mat3Struct.cpp" />
     <ClCompile Include="MathLogic.cpp" />
     <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="PointLightStruct.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="HomogeneousVectorStruct.h" />
     <ClInclude Include="ImageLoader\stb_image.h" />
     <ClInclude Include="LightLogic.h" />
+    <ClInclude Include="Mat3Struct.h" />
     <ClInclude Include="PointLightStruct.h" />
     <ClInclude Include="MathLogic.h" />
     <ClInclude Include="ObjLoader.h" />
