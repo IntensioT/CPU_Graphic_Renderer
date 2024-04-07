@@ -6,7 +6,6 @@
 #include "3DVectorStruct.h"
 #include "HomogeneousVectorStruct.h"
 #include <cmath>
-//#include "CoordSystem.h"
 
 #define M_PI       3.14159265358979323846   // pi
 const float MAX_DEPTH = 3.4E+38f;
@@ -59,8 +58,6 @@ HomogeneousCoordinateStruct CrossProduct(const HomogeneousCoordinateStruct& vect
 
 CoordinateStruct SubstractVectors(CoordinateStruct& vector1, CoordinateStruct& vector2);
 
-//_3DMATRIX Inverse(_3DMATRIX Mat);
-//_3DMATRIX Transpose(_3DMATRIX Mat);
 
 
 CoordinateStruct ReverseVector(const CoordinateStruct& vector);

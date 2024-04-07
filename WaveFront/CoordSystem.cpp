@@ -69,40 +69,6 @@ float CoordSystem::VectorLength(const HomogeneousCoordinateStruct& vector)
 {
 	return std::sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
 }
-//
-//CoordinateStruct CoordSystem::NormalizeVector(const CoordinateStruct& vector)
-//{
-//	float vectorLength = VectorLength(vector);
-//	if (vectorLength > 0.0f) {
-//		float invLength = 1.0f / vectorLength; //  позволяет избежать повторного деления на одно и то же значение в каждой компоненте вектора.
-//		return { vector.x * invLength, vector.y * invLength, vector.z * invLength };
-//	}
-//	else {
-//		return vector;
-//	}
-//}
-//
-//HomogeneousCoordinateStruct CoordSystem::NormalizeVector(const HomogeneousCoordinateStruct& vector)
-//{
-//	float vectorLength = VectorLength(vector);
-//	if (vectorLength > 0.0f) {
-//		float invLength = 1.0f / vectorLength; //  позволяет избежать повторного деления на одно и то же значение в каждой компоненте вектора.
-//		return { vector.x * invLength, vector.y * invLength, vector.z * invLength };
-//	}
-//	else {
-//		return vector;
-//	}
-//}
-
-//float CoordSystem::DotProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2)
-//{
-//	return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
-//}
-//
-//float CoordSystem::DotProduct(const HomogeneousCoordinateStruct& vector1, const HomogeneousCoordinateStruct& vector2)
-//{
-//	return vector1.x * vector2.x + vector1.y * vector2.y + vector1.z * vector2.z;
-//}
 
 CoordinateStruct CoordSystem::CrossProduct(const CoordinateStruct& vector1, const CoordinateStruct& vector2)
 {
