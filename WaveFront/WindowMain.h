@@ -40,7 +40,7 @@ CoordinateStruct targetGlobalCoord = { 0,0.6f,0.f };
 //CoordinateStruct targetGlobalCoord = { 0,50.f,0.f };
 //CoordinateStruct targetGlobalCoord = { 0,100.f,0.f };
 
-CoordinateStruct lightGlobalCoord = { 10.f,15.f,500.f };
+CoordinateStruct lightGlobalCoord = { 10.f,15.f,50.f };
 
 PointLightStruct light1;
 
@@ -90,6 +90,7 @@ float zFar = 100.0f;
 int curGraphic = 1;
 
 float coordSpeed = 1.f;
+float coordWheelSpeed = .05f;
 float angleSpeed = 5.f;
 
 

@@ -134,8 +134,6 @@ public:
     //CoordinateStruct NormalizeVector(const CoordinateStruct& vector);
     //HomogeneousCoordinateStruct NormalizeVector(const HomogeneousCoordinateStruct& vector);
 
-    HomogeneousCoordinateStruct TransformVector(HomogeneousCoordinateStruct& originalVector, CoordinateStruct& scale, float angle, CoordinateStruct& axis, CoordinateStruct& translation);
-
 
     void SetCameraTransformationMatrix(CoordinateStruct& cameraGlobalCoord, CoordinateStruct& targetGlobalCoord, CoordinateStruct& cameraUpVect);
     void SetProjectionTransformationMatrix(float fov, float aspectRatio, float nearPlane, float farPlane);

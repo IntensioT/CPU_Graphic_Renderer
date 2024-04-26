@@ -32,6 +32,7 @@ Triangle Rasterizator::correctOrdinary(Triangle polygon)
 		SwapVectorsInPolygon(polygon, 2, 1);
 	}
 
+
 	return Triangle();
 }
 
@@ -185,7 +186,6 @@ void Rasterizator::DrawLines(Triangle polygon, void* frameBuffer, void* depthBuf
 				{
 					RGBQUAD shadedColor = { color.rgbRed * hSegment[x - xL],color.rgbGreen * hSegment[x - xL],color.rgbBlue * hSegment[x - xL], 0 };
 					SetPoint(frameBuffer, x, y, shadedColor);
-					//depthBuffer[x][y] = z;
 					reinterpret_cast<float*>(depthBuffer)[y * FrameWidth + x] = z;
 
 				}

@@ -56,7 +56,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	polygonsOutp.resize(polygons.size());
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//textureDatas.push_back(LoadTexture("../../assets/cube/texture.jpg"));
+	textureDatas.push_back(LoadTexture("../../assets/cube/texture.jpg"));
 
 	/*textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.png"));
 	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_mrao.png"));
@@ -73,7 +73,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	textureDatas.push_back(LoadTexture("../../assets/schoolUniform/textures/shirt_wrist_collar_FRONT_672717_Base_Color_1011.png"));
 	textureDatas.push_back(LoadTexture("../../assets/schoolUniform/textures/skirt_FRONT_1119_Base_Color_1001.png"));*/
 
-	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_BaseColor.png"));
+	/*textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_BaseColor.png"));
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_cloth_BaseColor.png"));
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_golden_BaseColor.png"));
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_BaseColor.png"));
@@ -85,7 +85,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_golden_Normal.png"));
 	textureDatas[2].normalTexturData = textureDatas[6].textureData;
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_Normal.jpg"));
-	textureDatas[3].normalTexturData = textureDatas[7].textureData;
+	textureDatas[3].normalTexturData = textureDatas[7].textureData;*/
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -157,7 +157,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
-
 	}
 
 	UnloadTexture(textureDatas);
@@ -233,16 +232,20 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		if (wheelDelta > 0)
 		{
-			zCamera += coordSpeed;
-			rSphere += coordSpeed;
+			/*zCamera += coordSpeed;
+			rSphere += coordSpeed;*/
+			zCamera += coordWheelSpeed;
+			rSphere += coordWheelSpeed;
 
 		}
 		else if (wheelDelta < 0)
 		{
 			if (zCamera > 1.f)
 			{
-				zCamera -= coordSpeed;
-				rSphere -= coordSpeed;
+				/*zCamera -= coordSpeed;
+				rSphere -= coordSpeed;*/
+				zCamera -= coordWheelSpeed;
+				rSphere -= coordWheelSpeed;
 			}
 		}
 
@@ -501,7 +504,7 @@ void Render()
 	/////////////////////////////////////////SET MATRIXES////////////////////////////////////////////////////////////////
 	modelCoordSystem->SetRotateYMatrix(GetRadians(yAngleObject));
 	modelCoordSystem->SetRotateXMatrix(GetRadians(xAngleObject));
-	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix * modelCoordSystem->RotateXMatrix;
+	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix * modelCoordSystem->RotateXMatrix; 
 
 	cameraGlobalCoord = { SphericalToCartesian(rSphere, phiAngleSphere, thetaAngleSphere) };
 	CoordinateStruct cameraUpVect = { 0,1,0 };
@@ -804,7 +807,7 @@ bool UpdatePolygons(int polygonIterator)
 		pointHomogeneous *= modelCoordSystem->CameraTransformationMatrix;
 		pointHomogeneous *= modelCoordSystem->ProjectionTransformationMatrix;
 
-		if (/*pointHomogeneous.w < 0.4 && */pointHomogeneous.w > -0.4)
+		if (pointHomogeneous.w > -0.4)
 		{
 			polygonsOutp[polygonIterator].isOnScreen = false;
 			return false;
