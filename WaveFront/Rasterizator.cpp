@@ -181,7 +181,6 @@ void Rasterizator::DrawLines(Triangle polygon, void* frameBuffer, void* depthBuf
 					z = zL;
 				}
 
-				//if (z < depthBuffer[x][y])
 				if (z < reinterpret_cast<float*>(depthBuffer)[y * FrameWidth + x])
 				{
 					RGBQUAD shadedColor = { color.rgbRed * hSegment[x - xL],color.rgbGreen * hSegment[x - xL],color.rgbBlue * hSegment[x - xL], 0 };
