@@ -1,0 +1,17 @@
+﻿cl : command line  warning D9002: ignoring unknown option '/arch:SSE'
+  WindowMain.cpp
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(30,2): warning C4091: 'typedef ': ignored on left of '_3DMATRIX' when no variable is declared
+  (compiling source file 'WindowMain.cpp')
+  
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(77,20): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'WindowMain.cpp')
+  
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(97,24): warning C4305: '=': truncation from 'double' to 'float'
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(98,30): warning C4305: '=': truncation from 'double' to 'float'
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(99,31): warning C4305: '=': truncation from 'double' to 'float'
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(108,24): warning C4305: '=': truncation from 'double' to 'float'
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(109,30): warning C4305: '=': truncation from 'double' to 'float'
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(110,31): warning C4305: '=': truncation from 'double' to 'float'
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(477,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\WindowMain.cpp(695,21): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  WaveFront.vcxproj -> D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\x64\Debug\WaveFront.exe
