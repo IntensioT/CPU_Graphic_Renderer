@@ -162,24 +162,6 @@ bool CoordSystem::IsVertexBehindClipPlane(const HomogeneousCoordinateStruct vert
 	return dotProduct < clipPlane.distance;
 }
 
-//bool CoordSystem::IsObjectBehindClipPlanes(const std::vector<CoordinateStruct>& vertices, const std::vector<Plane>& clipPlanes, const _3DMATRIX& modelMatrix, const _3DMATRIX& viewMatrix, const _3DMATRIX& projectionMatrix)
-//{
-//	for (const CoordinateStruct& vertex : vertices) {
-//		HomogeneousCoordinateStruct vertexInClipSpace = TransformVertexToClipSpace(vertex, modelMatrix, viewMatrix, projectionMatrix);
-//		bool isVertexBehindClipPlanes = true;
-//		for (const Plane& clipPlane : clipPlanes) {
-//			if (!IsVertexBehindClipPlane(vertexInClipSpace, clipPlane)) {
-//				isVertexBehindClipPlanes = false;
-//				break;
-//			}
-//		}
-//		if (!isVertexBehindClipPlanes) {
-//			return false;
-//		}
-//	}
-//	return true;
-//}
-
 
 void CoordSystem::SetTranslationMatrix(CoordinateStruct Translation)
 {

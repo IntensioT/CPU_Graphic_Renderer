@@ -5,6 +5,11 @@ float GetVectorLength(const HomogeneousCoordinateStruct& vector)
 	return sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
 }
 
+float GetVectorLength(const CoordinateStruct& vector)
+{
+	return sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+}
+
 HomogeneousCoordinateStruct addZeroToGetHomogeneous(const CoordinateStruct& vector)
 {
 	return { vector.x, vector.y, vector.z, 0 };
@@ -70,6 +75,11 @@ CoordinateStruct SubstractVectors(CoordinateStruct& vector1, CoordinateStruct& v
 	result.y = vector1.y - vector2.y;
 	result.z = vector1.z - vector2.z;
 	return result;
+}
+
+CoordinateStruct getMix(CoordinateStruct& vector1, CoordinateStruct& vector2, float mixingFactor)
+{
+	return vector1 * (1 - mixingFactor) + vector2 * mixingFactor;
 }
 
 

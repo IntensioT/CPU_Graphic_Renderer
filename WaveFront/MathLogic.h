@@ -42,7 +42,10 @@ T clamp(T value, T minValue, T maxValue) {
 }
 
 
+
+
 float GetVectorLength(const HomogeneousCoordinateStruct& vector);
+float GetVectorLength(const CoordinateStruct& vector);
 
 
 HomogeneousCoordinateStruct addZeroToGetHomogeneous(const CoordinateStruct& vector);
@@ -58,7 +61,7 @@ HomogeneousCoordinateStruct CrossProduct(const HomogeneousCoordinateStruct& vect
 
 CoordinateStruct SubstractVectors(CoordinateStruct& vector1, CoordinateStruct& vector2);
 
-
+CoordinateStruct getMix(CoordinateStruct& vector1, CoordinateStruct& vector2, float mixingFactor);
 
 CoordinateStruct ReverseVector(const CoordinateStruct& vector);
 
