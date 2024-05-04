@@ -11,6 +11,7 @@
 #include "GlobalParams.h"
 
 #include "TextureLoader.h"
+#include "Material.h"
 
 
 #define WIDTH 1920
@@ -31,8 +32,8 @@ int frameCount = 0;
 RGBQUAD frameBuffer[1080][1920];
 float depthBuffer[1080][1920];
 
-//RGBQUAD color = { 255, 255, 255, 0 };
-RGBQUAD color = { 200, 200, 200, 0 };
+RGBQUAD color = { 255, 255, 255, 0 };
+//RGBQUAD color = { 200, 200, 200, 0 };
 RGBQUAD color2 = { 0, 0, 255, 0 };
 
 CoordinateStruct cameraGlobalCoord;
@@ -92,6 +93,13 @@ int curGraphic = 1;
 float coordSpeed = 1.f;
 float coordWheelSpeed = .05f;
 float angleSpeed = 5.f;
+
+
+CoordinateStruct materialParams = { 0.1, 0.4, 1};
+MaterialType currentMaterial = MaterialType::Default;
+std::string materialName;
+const int numMaterialTypes = static_cast<int>(MaterialType::Silver) + 1;
+CoordinateStruct materialProperties = getMaterialProperties(currentMaterial);
 
 
 

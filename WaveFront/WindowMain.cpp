@@ -46,73 +46,122 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 		polygons.push_back({ vertexesHomo[indexes[i] - 1], vertexesHomo[indexes[i + 1] - 1], vertexesHomo[indexes[i + 2] - 1] });
 		polygons[j++].textureId = curMtl;
-		if (steps.size() - 1 <= curMtl) continue;
-		else if (i >= steps[curMtl+1])
+		/*if (steps.size() - 1 <= curMtl) continue;
+		else if (i >= steps[curMtl + 1])
 		{
 			curMtl++;
-		}
+		}*/
 	}
-	//polygons = GetAllPolygons(vertexesHomo, indexes, normalIndexes, normals);
 	polygonsOutp.resize(polygons.size());
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	textureDatas.push_back(LoadTexture("../../assets/cube/texture.jpg"));
+	//textureDatas.push_back(LoadTexture("../../assets/cube/texture.jpg"));
 
-	/*textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.png"));
+	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.png"));
 	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_mrao.png"));
 	textureDatas[0].specularTexturData = textureDatas[1].textureData;
 	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_normal_map.png"));
-	textureDatas[0].normalTexturData = textureDatas[2].textureData;*/
+	textureDatas[0].normalTexturData = textureDatas[2].textureData;
 
 	/*textureDatas.push_back(LoadTexture("../../assets/madokaMachida/textures/tex_hair.png"));
 	textureDatas.push_back(LoadTexture("../../assets/madokaMachida/textures/tex_cloth.png"));
 	textureDatas.push_back(LoadTexture("../../assets/madokaMachida/textures/tex_face.png"));*/
-	
+
 	/*textureDatas.push_back(LoadTexture("../../assets/schoolUniform/textures/bow_FRONT_1123501_Base_Color_1011.png"));
 	textureDatas.push_back(LoadTexture("../../assets/schoolUniform/textures/shirt_FRONT_539393_Base_Color_1011.png"));
 	textureDatas.push_back(LoadTexture("../../assets/schoolUniform/textures/shirt_wrist_collar_FRONT_672717_Base_Color_1011.png"));
 	textureDatas.push_back(LoadTexture("../../assets/schoolUniform/textures/skirt_FRONT_1119_Base_Color_1001.png"));*/
 
+	////////////////////////////////////TITI//////////////////////////////////////////////////////////////////////////
 	/*textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_BaseColor.png"));
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_cloth_BaseColor.png"));
-	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_golden_BaseColor.png"));
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/golden_base.png"));
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_BaseColor.png"));
 
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_Normal.png"));
 	textureDatas[0].normalTexturData = textureDatas[4].textureData;
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_cloth_Normal.png"));
 	textureDatas[1].normalTexturData = textureDatas[5].textureData;
-	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_golden_Normal.png"));
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/golden_n.png"));
 	textureDatas[2].normalTexturData = textureDatas[6].textureData;
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_Normal.jpg"));
-	textureDatas[3].normalTexturData = textureDatas[7].textureData;*/
+	textureDatas[3].normalTexturData = textureDatas[7].textureData;
+
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_Metalness.png"));
+	textureDatas[0].metallnessData = textureDatas[8].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_cloth_Metalness.png"));
+	textureDatas[1].metallnessData = textureDatas[9].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/golden_m.png"));
+	textureDatas[2].metallnessData = textureDatas[10].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_Metalness.png")); 
+	textureDatas[3].metallnessData = textureDatas[11].textureData;
+		
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_Roughness.png"));
+	textureDatas[0].roughnessData = textureDatas[12].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_cloth_Roughness.png"));
+	textureDatas[1].roughnessData = textureDatas[13].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/05rough.png"));
+	textureDatas[2].roughnessData = textureDatas[14].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_Roughness.png")); 
+	textureDatas[3].roughnessData = textureDatas[15].textureData;
+
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_ao.png"));
+	textureDatas[0].AOData = textureDatas[16].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_cloth_ao.png"));
+	textureDatas[1].AOData = textureDatas[17].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/golden_ao.png")); 
+	textureDatas[2].AOData = textureDatas[18].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_ao.png")); 
+	textureDatas[3].AOData = textureDatas[19].textureData;*/
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 
 	rasterizator = new Rasterizator();
 
 
-	light1.globalPosition = { 10.f,15.f,500.f };
+	light1.globalPosition = { 10.f,15.f,50.f };
 	light1.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
 	light1.PhongDiffuseWeight = 0.8; // phong model diffuse weight
 	light1.PhongSpecularWeight = 0.2; // phong model specular weight
 	light1.PhongSpecularExponent = 10;   // phong specular exponent
 	light1.LightColor = { 255,255,255 };
-	light1.LightIntesity = 70;
+	light1.LightIntesity = 4;
 
 	Lightnings.push_back(light1);
 
 	PointLightStruct light2;
-	light2.globalPosition = { 0.f,500.f,0.f };
+	light2.globalPosition = { 0.f,50.f,0.f };
 	light2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
 	light2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
 	light2.PhongSpecularWeight = 0.2; // phong model specular weight
 	light2.PhongSpecularExponent = 10;   // phong specular exponent
 	light2.LightColor = { 255,255,255 };
-	light2.LightIntesity = 70;
+	light2.LightIntesity = 5;
 
 	Lightnings.push_back(light2);
+
+	//PointLightStruct lightTiti1;
+	//lightTiti1.globalPosition = { 10.f,15.f,150.f };
+	//lightTiti1.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
+	//lightTiti1.PhongDiffuseWeight = 0.8; // phong model diffuse weight
+	//lightTiti1.PhongSpecularWeight = 0.2; // phong model specular weight
+	//lightTiti1.PhongSpecularExponent = 10;   // phong specular exponent
+	//lightTiti1.LightColor = { 255,255,255 };
+	//lightTiti1.LightIntesity = 500;
+
+	//Lightnings.push_back(lightTiti1);
+
+	//PointLightStruct lightTiti2;
+	//lightTiti2.globalPosition = { 0.f,250.f,0.f };
+	//lightTiti2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
+	//lightTiti2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
+	//lightTiti2.PhongSpecularWeight = 0.2; // phong model specular weight
+	//lightTiti2.PhongSpecularExponent = 10;   // phong specular exponent
+	//lightTiti2.LightColor = { 255,255,255 };
+	//lightTiti2.LightIntesity = 50;
+
+	//Lightnings.push_back(lightTiti2);
 
 	UpdateNormals();
 	/////
@@ -178,8 +227,44 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_PAINT:
 	{
+		switch (currentMaterial) {
+		case MaterialType::Default:
+			materialName = "Default";
+			break;
+		case MaterialType::Water:
+			materialName = "Water";
+			break;
+		case MaterialType::PlasticLow:
+			materialName = "Plastic / Glass (Low)";
+			break;
+		case MaterialType::PlasticHigh:
+			materialName = "Plastic High";
+			break;
+		case MaterialType::GlassHigh:
+			materialName = "Glass (high) / Ruby";
+			break;
+		case MaterialType::Diamond:
+			materialName = "Diamond";
+			break;
+		case MaterialType::Iron:
+			materialName = "Iron";
+			break;
+		case MaterialType::Copper:
+			materialName = "Copper";
+			break;
+		case MaterialType::Gold:
+			materialName = "Gold";
+			break;
+		case MaterialType::Aluminium:
+			materialName = "Aluminium";
+			break;
+		case MaterialType::Silver:
+			materialName = "Silver";
+			break;
+		}
+
 		// Update the window title with the frame count
-		std::string title = "3D Engine - FPS: " + std::to_string(fps);
+		std::string title = "3D Engine - FPS: " + std::to_string(fps) + " Material: " + materialName;
 		SetWindowTextA(hwnd, title.c_str());
 
 		Render();
@@ -232,8 +317,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		if (wheelDelta > 0)
 		{
-			/*zCamera += coordSpeed;
-			rSphere += coordSpeed;*/
 			zCamera += coordWheelSpeed;
 			rSphere += coordWheelSpeed;
 
@@ -242,8 +325,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			if (zCamera > 1.f)
 			{
-				/*zCamera -= coordSpeed;
-				rSphere -= coordSpeed;*/
 				zCamera -= coordWheelSpeed;
 				rSphere -= coordWheelSpeed;
 			}
@@ -312,20 +393,56 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 
 		case 'C':
-			if (thetaAngleSphere < 175.f)
-			{
-				thetaAngleSphere += 5.f;
-				InvalidateRect(hwnd, NULL, TRUE);
+			if (GetAsyncKeyState(VK_SHIFT) & 0x8000) {
+				if (materialParams.y < 0.95)
+				{
+					materialParams.y += 0.05;
+				}
 			}
+			else if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
+				if (materialParams.z < 0.95)
+				{
+					materialParams.z += 0.05;
+				}
+			}
+			else {
+				if (materialParams.x < 0.95)
+				{
+					materialParams.x += 0.05;
+				}
+			}
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 
 		case 'V':
-			if (thetaAngleSphere > 5.f)
-			{
-				thetaAngleSphere -= 5.f;
-				InvalidateRect(hwnd, NULL, TRUE);
+			if (GetAsyncKeyState(VK_SHIFT) & 0x8000) {
+				if (materialParams.y > 0.05)
+				{
+					materialParams.y -= 0.05;
+				}
 			}
+			else if (GetAsyncKeyState(VK_CONTROL) & 0x8000) {
+				if (materialParams.z > 0.05)
+				{
+					materialParams.z -= 0.05;
+				}
+			}
+			else {
+				if (materialParams.x > 0.05)
+				{
+					materialParams.x -= 0.05;
+				}
+			}
+			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
+		case 'B':
+		
+			currentMaterial = static_cast<MaterialType>((static_cast<int>(currentMaterial) + 1) % numMaterialTypes);
+			materialProperties = getMaterialProperties(currentMaterial);
+
+			InvalidateRect(hwnd, NULL, TRUE);
+			return 0;
+
 		case '1':
 			curGraphic = 1;
 			InvalidateRect(hwnd, NULL, TRUE);
@@ -359,7 +476,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case '9':
-			curGraphic = 9;
+			if (GetAsyncKeyState(VK_SHIFT) & 0x8000) {
+				curGraphic = 10;
+			}
+			else {
+				curGraphic = 9;
+			}
 			InvalidateRect(hwnd, NULL, TRUE);
 			return 0;
 		case '0':
@@ -494,7 +616,7 @@ void Render()
 
 	std::memset(frameBuffer, 0, sizeof(frameBuffer));
 
-	
+
 	for (int i = 0; i < 1080; ++i) {
 		for (int j = 0; j < 1920; ++j) {
 			depthBuffer[i][j] = MAX_DEPTH;
@@ -504,7 +626,7 @@ void Render()
 	/////////////////////////////////////////SET MATRIXES////////////////////////////////////////////////////////////////
 	modelCoordSystem->SetRotateYMatrix(GetRadians(yAngleObject));
 	modelCoordSystem->SetRotateXMatrix(GetRadians(xAngleObject));
-	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix * modelCoordSystem->RotateXMatrix; 
+	modelCoordSystem->GlobalTransformationMatrix = modelCoordSystem->RotateYMatrix * modelCoordSystem->RotateXMatrix;
 
 	cameraGlobalCoord = { SphericalToCartesian(rSphere, phiAngleSphere, thetaAngleSphere) };
 	CoordinateStruct cameraUpVect = { 0,1,0 };
@@ -570,7 +692,7 @@ void UpdateVectors()
 	//omp_set_num_threads(6);
 	// Цикл будет выполняться в g_nNumberOfThreads потоков.
 	// Параметры цикла будут автоматически распределены между потоками.
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (int i = 0; i < polygons.size(); i++)
 	{
 		if (!ClipFacePolygons(i)) continue;
@@ -723,7 +845,7 @@ void DrawTriangle(Triangle& triangle)
 		bbox = FindTriangleBoundingRectangle2D(triangle);
 		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
-		rasterizator->DrawPolygonBarycentric(triangle,Lightnings,cameraGlobalCoord, frameBuffer, depthBuffer, color);
+		rasterizator->DrawPolygonBarycentric(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color);
 		break;
 	case 5:
 		bbox = FindTriangleBoundingRectangle2D(triangle);
@@ -753,10 +875,18 @@ void DrawTriangle(Triangle& triangle)
 		bbox = FindTriangleBoundingRectangle2D(triangle);
 		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
 
-		rasterizator->DrawPolygonBarycentricLast(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[triangle.textureId]);
+		//rasterizator->DrawPolygonBarycentricLast(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[triangle.textureId]);
+		rasterizator->DrawPolygonPBR(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, materialParams, materialProperties);
+		break;
+	case 10:
+		bbox = FindTriangleBoundingRectangle2D(triangle);
+		if (bbox.left > 1920 || bbox.right < 0 || bbox.top > 1080 || bbox.bottom < 0) return;
+
+		//rasterizator->DrawPolygonBarycentricLast(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[triangle.textureId]);
+		rasterizator->DrawPolygonPBRtexture(triangle, Lightnings, cameraGlobalCoord, frameBuffer, depthBuffer, color, textureDatas[triangle.textureId], materialProperties);
 		break;
 	}
-	
+
 }
 
 bool ClipFacePolygons(int polygonIterator)
@@ -820,12 +950,12 @@ bool UpdatePolygons(int polygonIterator)
 
 		// Normalized Decart Coordinates here 
 		if (pointHomogeneous.x < -1.0f || pointHomogeneous.x > 1.0f ||
-			pointHomogeneous.y < -1.0f || pointHomogeneous.y > 1.0f )
+			pointHomogeneous.y < -1.0f || pointHomogeneous.y > 1.0f)
 		{
 			polygonsOutp[polygonIterator].isOnScreen = false;
 			return false;
 		}
-		
+
 		pointHomogeneous *= modelCoordSystem->ViewPortTransformationMatrix;
 
 		///////////////////////////////////////////////////////////////////////////////

@@ -49,6 +49,9 @@
     <Filter Include="TextureLoader">
       <UniqueIdentifier>{555b2fe1-76f0-4d6d-8fae-5e81805f02b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Material">
+      <UniqueIdentifier>{add367d4-5f5a-4aa2-9cbd-512022c6cf61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ObjLoader.cpp">
@@ -86,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="Mat3Struct.cpp">
       <Filter>MathLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="Mat3Struct.h">
       <Filter>MathLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Material</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
