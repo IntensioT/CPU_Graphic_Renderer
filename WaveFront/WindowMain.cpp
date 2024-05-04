@@ -46,22 +46,22 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 		polygons.push_back({ vertexesHomo[indexes[i] - 1], vertexesHomo[indexes[i + 1] - 1], vertexesHomo[indexes[i + 2] - 1] });
 		polygons[j++].textureId = curMtl;
-		/*if (steps.size() - 1 <= curMtl) continue;
+		if (steps.size() - 1 <= curMtl) continue;
 		else if (i >= steps[curMtl + 1])
 		{
 			curMtl++;
-		}*/
+		}
 	}
 	polygonsOutp.resize(polygons.size());
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//textureDatas.push_back(LoadTexture("../../assets/cube/texture.jpg"));
 
-	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.png"));
+	/*textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_diffuse.png"));
 	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_mrao.png"));
 	textureDatas[0].specularTexturData = textureDatas[1].textureData;
 	textureDatas.push_back(LoadTexture("../../assets/Shovel Knight/shovel_normal_map.png"));
-	textureDatas[0].normalTexturData = textureDatas[2].textureData;
+	textureDatas[0].normalTexturData = textureDatas[2].textureData;*/
 
 	/*textureDatas.push_back(LoadTexture("../../assets/madokaMachida/textures/tex_hair.png"));
 	textureDatas.push_back(LoadTexture("../../assets/madokaMachida/textures/tex_cloth.png"));
@@ -73,7 +73,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	textureDatas.push_back(LoadTexture("../../assets/schoolUniform/textures/skirt_FRONT_1119_Base_Color_1001.png"));*/
 
 	////////////////////////////////////TITI//////////////////////////////////////////////////////////////////////////
-	/*textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_BaseColor.png"));
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_BaseColor.png"));
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_cloth_BaseColor.png"));
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/golden_base.png"));
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_BaseColor.png"));
@@ -112,7 +112,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/golden_ao.png")); 
 	textureDatas[2].AOData = textureDatas[18].textureData;
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_ao.png")); 
-	textureDatas[3].AOData = textureDatas[19].textureData;*/
+	textureDatas[3].AOData = textureDatas[19].textureData;
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -120,48 +120,48 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	rasterizator = new Rasterizator();
 
 
-	light1.globalPosition = { 10.f,15.f,50.f };
-	light1.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
-	light1.PhongDiffuseWeight = 0.8; // phong model diffuse weight
-	light1.PhongSpecularWeight = 0.2; // phong model specular weight
-	light1.PhongSpecularExponent = 10;   // phong specular exponent
-	light1.LightColor = { 255,255,255 };
-	light1.LightIntesity = 4;
+	//light1.globalPosition = { 10.f,15.f,50.f };
+	//light1.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
+	//light1.PhongDiffuseWeight = 0.8; // phong model diffuse weight
+	//light1.PhongSpecularWeight = 0.2; // phong model specular weight
+	//light1.PhongSpecularExponent = 10;   // phong specular exponent
+	//light1.LightColor = { 255,255,255 };
+	//light1.LightIntesity = 4;
 
-	Lightnings.push_back(light1);
+	//Lightnings.push_back(light1);
 
-	PointLightStruct light2;
-	light2.globalPosition = { 0.f,50.f,0.f };
-	light2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
-	light2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
-	light2.PhongSpecularWeight = 0.2; // phong model specular weight
-	light2.PhongSpecularExponent = 10;   // phong specular exponent
-	light2.LightColor = { 255,255,255 };
-	light2.LightIntesity = 5;
+	//PointLightStruct light2;
+	//light2.globalPosition = { 0.f,50.f,0.f };
+	//light2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
+	//light2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
+	//light2.PhongSpecularWeight = 0.2; // phong model specular weight
+	//light2.PhongSpecularExponent = 10;   // phong specular exponent
+	//light2.LightColor = { 255,255,255 };
+	//light2.LightIntesity = 5;
 
-	Lightnings.push_back(light2);
+	//Lightnings.push_back(light2);
 
-	//PointLightStruct lightTiti1;
-	//lightTiti1.globalPosition = { 10.f,15.f,150.f };
-	//lightTiti1.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
-	//lightTiti1.PhongDiffuseWeight = 0.8; // phong model diffuse weight
-	//lightTiti1.PhongSpecularWeight = 0.2; // phong model specular weight
-	//lightTiti1.PhongSpecularExponent = 10;   // phong specular exponent
-	//lightTiti1.LightColor = { 255,255,255 };
-	//lightTiti1.LightIntesity = 500;
+	PointLightStruct lightTiti1;
+	lightTiti1.globalPosition = { 10.f,50.f,150.f };
+	lightTiti1.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
+	lightTiti1.PhongDiffuseWeight = 0.8; // phong model diffuse weight
+	lightTiti1.PhongSpecularWeight = 0.2; // phong model specular weight
+	lightTiti1.PhongSpecularExponent = 10;   // phong specular exponent
+	lightTiti1.LightColor = { 255,255,255 };
+	lightTiti1.LightIntesity = 600;
 
-	//Lightnings.push_back(lightTiti1);
+	Lightnings.push_back(lightTiti1);
 
-	//PointLightStruct lightTiti2;
-	//lightTiti2.globalPosition = { 0.f,250.f,0.f };
-	//lightTiti2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
-	//lightTiti2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
-	//lightTiti2.PhongSpecularWeight = 0.2; // phong model specular weight
-	//lightTiti2.PhongSpecularExponent = 10;   // phong specular exponent
-	//lightTiti2.LightColor = { 255,255,255 };
-	//lightTiti2.LightIntesity = 50;
+	PointLightStruct lightTiti2;
+	lightTiti2.globalPosition = { 0.f,250.f,0.f };
+	lightTiti2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
+	lightTiti2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
+	lightTiti2.PhongSpecularWeight = 0.2; // phong model specular weight
+	lightTiti2.PhongSpecularExponent = 10;   // phong specular exponent
+	lightTiti2.LightColor = { 255,255,255 };
+	lightTiti2.LightIntesity = 50;
 
-	//Lightnings.push_back(lightTiti2);
+	Lightnings.push_back(lightTiti2);
 
 	UpdateNormals();
 	/////

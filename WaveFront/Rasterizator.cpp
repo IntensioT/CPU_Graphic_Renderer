@@ -1085,13 +1085,13 @@ void Rasterizator::DrawPolygonPBRtexture(const Triangle& polygon, std::vector<Po
 					textureNormal = textureNormal * 2 - 1; // переход от [-1,1] к [0,1]   
 					textureNormal = Normalize(textureNormal);
 					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					float metalness = texture.specularTexturData[MapPixelIndex] / 255.0f;
+					/*float metalness = texture.specularTexturData[MapPixelIndex] / 255.0f;
 					float roughness = texture.specularTexturData[MapPixelIndex + 1] / 255.0f;
-					float ao = texture.specularTexturData[MapPixelIndex + 2] / 255.0f;
+					float ao = texture.specularTexturData[MapPixelIndex + 2] / 255.0f;*/
 
-					/*float metalness = texture.metallnessData[MapPixelIndex] / 255.0f;
+					float metalness = texture.metallnessData[MapPixelIndex] / 255.0f;
 					float roughness = texture.roughnessData[MapPixelIndex] / 255.0f;
-					float ao = texture.AOData[MapPixelIndex] / 255.0f;*/
+					float ao = texture.AOData[MapPixelIndex] / 255.0f;
 
 					//CoordinateStruct albedo = { 255,255,255 };
 					CoordinateStruct albedo = { 200,200,200 };
