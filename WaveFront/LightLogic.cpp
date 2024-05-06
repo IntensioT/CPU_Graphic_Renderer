@@ -81,6 +81,7 @@ CoordinateStruct fresnelSchlick(float cosTheta, CoordinateStruct F0) // F0 повер
 	return F0 + (identVec - F0) * std::pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 
+// Trowbridge-Reitz GGX
 float DistributionGGX(CoordinateStruct& Normal, CoordinateStruct& Halfway, float roughness)
 {
 	float a = roughness * roughness;
@@ -124,6 +125,7 @@ CoordinateStruct calculatePBRLight(CoordinateStruct& Point, CoordinateStruct& hi
 
 	CoordinateStruct cameraDirection = Normalize(SubstractVectors(cameraPosition, Point));
 
+	// base reflectivity
 	//Average F0 for dielectric materials
 	//CoordinateStruct F0 = { 0.04f,0.04f,0.04f };
 	CoordinateStruct F0 = material;
@@ -134,27 +136,31 @@ CoordinateStruct calculatePBRLight(CoordinateStruct& Point, CoordinateStruct& hi
 
 	for (auto i = 0; i < lightnings.size(); ++i) {
 
-		// Calculate per-light radiance
+		// Calculate per-light radiance(сияние,излучение)
 		CoordinateStruct lightDirection = Normalize(SubstractVectors(lightnings[i].globalPosition, Point));
+		//Based on the roughness of a surface, we can calculate the ratio of microfacets roughly aligned to some vector половины пути
 		CoordinateStruct halfwayVector = Normalize(cameraDirection + lightDirection);
 
 		float lightDistance = GetVectorLength(SubstractVectors(lightnings[i].globalPosition, Point));
-		float attentuation = 1.0 / (lightDistance * lightDistance);
+		float attentuation = 1.0 / (lightDistance * lightDistance); // затухание
 		CoordinateStruct lightColorWithIntensity = lightnings[i].LightColor * lightnings[i].LightIntesity ;
 		CoordinateStruct radiance = lightColorWithIntensity * attentuation;
 		//CoordinateStruct radiance = lightnings[i].LightColor * attentuation;
 
-		//////
-		// cook-torrance brdf
-		float NDF = DistributionGGX(hitNormal, halfwayVector, roughness);
-		float G = GeometrySmith(hitNormal, cameraDirection, lightDirection, roughness);
-		CoordinateStruct F = fresnelSchlick(getMax(DotProduct(halfwayVector, cameraDirection), 0.0f), F0);
+		///////////////////////////////////////////////////////////////////////////
+		//A BRDF approximates the material's reflective and refractive properties based on the microfacet theory. 
+		// 
+		// cook-torrance brdf bidirectional reflective distribution(распределения) function
+		float NormalDistributedFunction = DistributionGGX(hitNormal, halfwayVector, roughness); // approximates the amount the surface's microfacets
+		float GeometryFunction = GeometrySmith(hitNormal, cameraDirection, lightDirection, roughness); // describes the self-shadowing property of the microfacets
+		CoordinateStruct Fresnel = fresnelSchlick(getMax(DotProduct(halfwayVector, cameraDirection), 0.0f), F0); // describes the ratio of surface reflection at different surface angles.
 
-		CoordinateStruct kS = F;
-		CoordinateStruct kD = identVec - kS;
+		//mutually exclusive model
+		CoordinateStruct kS = Fresnel;			 //reflection / specular fraction
+		CoordinateStruct kD = identVec - kS; // refraction/diffuse  fraction
 		kD = kD * (1.0 - metallic);
 
-		CoordinateStruct numerator = F * NDF * G;
+		CoordinateStruct numerator = Fresnel * NormalDistributedFunction * GeometryFunction;
 		float denominator = 4.0 * getMax(DotProduct(hitNormal, cameraDirection), 0.0f) * getMax(DotProduct(hitNormal, lightDirection), 0.0f) + 0.0001;
 		CoordinateStruct specular = numerator / denominator;
 
@@ -169,6 +175,8 @@ CoordinateStruct calculatePBRLight(CoordinateStruct& Point, CoordinateStruct& hi
 	CoordinateStruct ambient = tempAmbCoef * albedoVec * ambientOcclusion;
 	CoordinateStruct color = ambient + Lo;
 
+	// fix this by taking Lo and tone or exposure map the high dynamic range (HDR) value correctly to LDR before gamma correction
+	// tone map the HDR color using the Reinhard operator
 	color.x = color.x / (color.x + 1);
 	color.y = color.y / (color.y + 1);
 	color.z = color.z / (color.z + 1);
