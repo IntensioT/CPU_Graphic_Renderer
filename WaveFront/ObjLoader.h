@@ -14,7 +14,8 @@ class ObjLoader
 private:
 	
 	//std::string filePath = "D:\\Bugor\\6sem\\ComputerGraphicAlghorithms\\projects\\final_v01.obj";
-	std::string filePath = "../../assets/AtomicHeart/source/Titi/TitiTriangulated.obj";
+	//std::string filePath = "../../assets/AtomicHeart/source/Titi/TitiTriangulated.obj";
+	std::string filePath = "../../assets/Aston/blend/aston.obj";
 	//std::string filePath = "../../assets/cube/box.obj";
 	//std::string filePath = "../../assets/misato/misato.obj";
 	//std::string filePath = "../../assets/madokaMachida/source/triangulated/madoka.obj";

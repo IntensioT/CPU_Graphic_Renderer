@@ -73,7 +73,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	textureDatas.push_back(LoadTexture("../../assets/schoolUniform/textures/skirt_FRONT_1119_Base_Color_1001.png"));*/
 
 	////////////////////////////////////TITI//////////////////////////////////////////////////////////////////////////
-	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_BaseColor.png"));
+	/*textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_BaseColor.png"));
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_cloth_BaseColor.png"));
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/golden_base.png"));
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_BaseColor.png"));
@@ -112,8 +112,63 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/golden_ao.png")); 
 	textureDatas[2].AOData = textureDatas[18].textureData;
 	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_ao.png")); 
-	textureDatas[3].AOData = textureDatas[19].textureData;
+	textureDatas[3].AOData = textureDatas[19].textureData;*/
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	/////////////////////////////////////////ASTON MARTIN////////////////////////////////////////////////////////////////////////
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/body_base.png"));
 
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/4_base.png"));
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/4_base.png"));
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/4_base.png"));
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/4_base.png"));
+
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/4_base.png"));
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/4_base.png"));
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/4_base.png"));
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/4_base.png"));
+
+	//textureDatas.push_back(LoadTexture("../../assets/Aston/texture/2_base.png"));
+	//textureDatas.push_back(LoadTexture("../../assets/Aston/texture/2_base.png"));
+	//textureDatas.push_back(LoadTexture("../../assets/Aston/texture/2_base.png"));
+	//textureDatas.push_back(LoadTexture("../../assets/Aston/texture/3_base.png"));
+
+
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_2_Normal.png"));
+	textureDatas[0].normalTexturData = textureDatas[4].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_cloth_Normal.png"));
+	textureDatas[1].normalTexturData = textureDatas[5].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/golden_n.png"));
+	textureDatas[2].normalTexturData = textureDatas[6].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/AtomicHeart/textures/Titi_1_Normal.jpg"));
+	textureDatas[3].normalTexturData = textureDatas[7].textureData;
+
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/body_m.png"));
+	textureDatas[0].metallnessData = textureDatas[8].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/2_m.png"));
+	textureDatas[1].metallnessData = textureDatas[9].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/3_m.png"));
+	textureDatas[2].metallnessData = textureDatas[10].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/4_m.png"));
+	textureDatas[3].metallnessData = textureDatas[11].textureData;
+
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/body_r.png"));
+	textureDatas[0].roughnessData = textureDatas[12].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/2_r.png"));
+	textureDatas[1].roughnessData = textureDatas[13].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/3_r.png"));
+	textureDatas[2].roughnessData = textureDatas[14].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/4_r.png"));
+	textureDatas[3].roughnessData = textureDatas[15].textureData;
+
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/05.png"));
+	textureDatas[0].AOData = textureDatas[16].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/05.png"));
+	textureDatas[1].AOData = textureDatas[17].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/05.png"));
+	textureDatas[2].AOData = textureDatas[18].textureData;
+	textureDatas.push_back(LoadTexture("../../assets/Aston/texture/05.png"));
+	textureDatas[3].AOData = textureDatas[19].textureData;
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -142,7 +197,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	//Lightnings.push_back(light2);
 
 	PointLightStruct lightTiti1;
-	lightTiti1.globalPosition = { 10.f,50.f,150.f };
+	lightTiti1.globalPosition = { 10.f,50.f,350.f };
 	lightTiti1.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
 	lightTiti1.PhongDiffuseWeight = 0.8; // phong model diffuse weight
 	lightTiti1.PhongSpecularWeight = 0.2; // phong model specular weight
@@ -153,7 +208,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	Lightnings.push_back(lightTiti1);
 
 	PointLightStruct lightTiti2;
-	lightTiti2.globalPosition = { 0.f,250.f,0.f };
+	lightTiti2.globalPosition = { 0.f,350.f,0.f };
 	lightTiti2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
 	lightTiti2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
 	lightTiti2.PhongSpecularWeight = 0.2; // phong model specular weight

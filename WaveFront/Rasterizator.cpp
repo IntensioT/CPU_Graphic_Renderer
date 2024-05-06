@@ -1096,7 +1096,8 @@ void Rasterizator::DrawPolygonPBRtexture(const Triangle& polygon, std::vector<Po
 					//CoordinateStruct albedo = { 255,255,255 };
 					CoordinateStruct albedo = { 200,200,200 };
 					//CoordinateStruct hitColorPBR = calculatePBRLight(curPointInGlobal, textureNormal, CameraGlobalCoordinates, lightnings, albedo, 0.1f, 0.3f, 1.0f, material);
-					CoordinateStruct hitColorPBR = calculatePBRLight(curPointInGlobal, textureNormal, CameraGlobalCoordinates, lightnings, albedo, metalness, roughness, ao, material);
+					//CoordinateStruct hitColorPBR = calculatePBRLight(curPointInGlobal, textureNormal, CameraGlobalCoordinates, lightnings, albedo, metalness, roughness, ao, material);
+					CoordinateStruct hitColorPBR = calculatePBRLight(curPointInGlobal, hitNormal, CameraGlobalCoordinates, lightnings, albedo, metalness, roughness, ao, material);
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 					//  Пиксельные координаты текстуры (texX, texY) для четырех ближайших текселей вокруг (u, v)
