@@ -822,6 +822,8 @@ void Rasterizator::DrawPolygonBarycentricParam(const Triangle& polygon, std::vec
 					unsigned char blue = lerp(lerp(blue1, blue2, s), lerp(blue3, blue4, s), t);
 					unsigned char alpha = lerp(lerp(alpha1, alpha2, s), lerp(alpha3, alpha4, s), t);
 
+
+
 					RGBQUAD finalColor;
 					finalColor.rgbRed = /*color.rgbRed **/ red /** alpha + backgroundColor.rgbRed * backgroundAlpha * (1 - alpha)*/;
 					finalColor.rgbGreen = /*color.rgbGreen * */green /** alpha /*+ backgroundColor.rgbGreen * backgroundAlpha * (1 - alpha)*/;
@@ -1089,73 +1091,61 @@ void Rasterizator::DrawPolygonPBRtexture(const Triangle& polygon, std::vector<Po
 					float roughness = texture.specularTexturData[MapPixelIndex + 1] / 255.0f;
 					float ao = texture.specularTexturData[MapPixelIndex + 2] / 255.0f;
 
+					/*float ao = texture.specularTexturData[MapPixelIndex] / 255.0f;
+					float roughness = texture.specularTexturData[MapPixelIndex + 1] / 255.0f;
+					float metalness = texture.specularTexturData[MapPixelIndex + 2] / 255.0f;*/
+
 					/*float metalness = texture.metallnessData[MapPixelIndex] / 255.0f;
 					float roughness = texture.roughnessData[MapPixelIndex] / 255.0f;
 					float ao = texture.AOData[MapPixelIndex] / 255.0f;*/
 
+					unsigned char red = texture.textureData[MapPixelIndex];
+					unsigned char green = texture.textureData[MapPixelIndex + 1];
+					unsigned char blue = texture.textureData[MapPixelIndex + 2];
+
+					CoordinateStruct albedo = { blue,green,red };
 					//CoordinateStruct albedo = { 255,255,255 };
-					CoordinateStruct albedo = { 200,200,200 };
-					//CoordinateStruct hitColorPBR = calculatePBRLight(curPointInGlobal, textureNormal, CameraGlobalCoordinates, lightnings, albedo, 0.1f, 0.3f, 1.0f, material);
+					//CoordinateStruct albedo = { 200,200,200 };
+					//CoordinateStruct hitColorPBR = calculatePBRLight(curPointInGlobal, textureNormal, CameraGlobalCoordinates, lightnings, albedo, 0.5f, 0.3f, 1.0f, material);
 					CoordinateStruct hitColorPBR = calculatePBRLight(curPointInGlobal, textureNormal, CameraGlobalCoordinates, lightnings, albedo, metalness, roughness, ao, material);
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-					//  Пиксельные координаты текстуры (texX, texY) для четырех ближайших текселей вокруг (u, v)
-					int x1 = (int)floor(texX);
-					int y1 = (int)floor(texY);
-					int x2 = (int)ceil(texX);
-					int y2 = (int)ceil(texY);
-
-					// Вычислить весовые коэффициенты (s, t) для линейной интерполяции между текселями.
-					float int_part;
-					float s = std::modf(texX, &int_part);
-					float t = std::modf(texY, &int_part);
-
-					int pixel_index1 = (y1 * texture.textureWidth + x1) * texture.textureChannels;
-					int pixel_index2 = (y1 * texture.textureWidth + x2) * texture.textureChannels;
-					int pixel_index3 = (y2 * texture.textureWidth + x1) * texture.textureChannels;
-					int pixel_index4 = (y2 * texture.textureWidth + x2) * texture.textureChannels;
-
-					// Вычислить цвета четырех ближайших текселей, используя пиксельные координаты
-					unsigned char red1 = texture.textureData[pixel_index1];
-					unsigned char green1 = texture.textureData[pixel_index1 + 1];
-					unsigned char blue1 = texture.textureData[pixel_index1 + 2];
-					unsigned char alpha1 = (texture.textureChannels == 4) ? texture.textureData[pixel_index1 + 3] : 255;
-
-					unsigned char red2 = texture.textureData[pixel_index2];
-					unsigned char green2 = texture.textureData[pixel_index2 + 1];
-					unsigned char blue2 = texture.textureData[pixel_index2 + 2];
-					unsigned char alpha2 = (texture.textureChannels == 4) ? texture.textureData[pixel_index2 + 3] : 255;
-
-					unsigned char red3 = texture.textureData[pixel_index3];
-					unsigned char green3 = texture.textureData[pixel_index3 + 1];
-					unsigned char blue3 = texture.textureData[pixel_index3 + 2];
-					unsigned char alpha3 = (texture.textureChannels == 4) ? texture.textureData[pixel_index3 + 3] : 255;
-
-					unsigned char red4 = texture.textureData[pixel_index4];
-					unsigned char green4 = texture.textureData[pixel_index4 + 1];
-					unsigned char blue4 = texture.textureData[pixel_index4 + 2];
-					unsigned char alpha4 = (texture.textureChannels == 4) ? texture.textureData[pixel_index4 + 3] : 255;
-
-					// Вычислить интерполированный цвет между текселями, используя весовые коэффициенты
-					unsigned char red = lerp(lerp(red1, red2, s), lerp(red3, red4, s), t);
-					unsigned char green = lerp(lerp(green1, green2, s), lerp(green3, green4, s), t);
-					unsigned char blue = lerp(lerp(blue1, blue2, s), lerp(blue3, blue4, s), t);
-					unsigned char alpha = lerp(lerp(alpha1, alpha2, s), lerp(alpha3, alpha4, s), t);
+					
+					unsigned char alpha = (texture.textureChannels == 4) ? texture.textureData[MapPixelIndex + 3] : 255;
 
 					RGBQUAD finalColor;
-					finalColor.rgbRed = /*color.rgbRed **/ red /** alpha + backgroundColor.rgbRed * backgroundAlpha * (1 - alpha)*/;
-					finalColor.rgbGreen = /*color.rgbGreen * */green /** alpha /*+ backgroundColor.rgbGreen * backgroundAlpha * (1 - alpha)*/;
-					finalColor.rgbBlue = /*color.rgbBlue **/ blue /** alpha /*+ backgroundColor.rgbBlue * backgroundAlpha * (1 - alpha)*/;
+
+					/*float red_normalized = static_cast<float>(red) / 255.0f;
+					float green_normalized = static_cast<float>(green) / 255.0f;
+					float blue_normalized = static_cast<float>(blue) / 255.0f;*/
+
+					/*red_normalized = red_normalized  / (red_normalized + 1);
+					green_normalized = green_normalized / (green_normalized + 1);
+					blue_normalized = blue_normalized / (blue_normalized + 1);*/
+
+					/*finalColor.rgbRed = static_cast<BYTE>(pow(red_normalized, 2.2f) * 255.0f);
+					finalColor.rgbGreen = static_cast<BYTE>(pow(green_normalized, 2.2f) * 255.0f);
+					finalColor.rgbBlue = static_cast<BYTE>(pow(blue_normalized, 2.2f) * 255.0f);*/
+
 
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 					RGBQUAD lightedColor;
 
-					lightedColor.rgbBlue = clamp(hitColorPBR.x * finalColor.rgbBlue, 0.0f, 255.0f);
+					/*lightedColor.rgbBlue = clamp(hitColorPBR.x * finalColor.rgbBlue, 0.0f, 255.0f);
 					lightedColor.rgbGreen = clamp(hitColorPBR.y * finalColor.rgbGreen, 0.0f, 255.0f);
-					lightedColor.rgbRed = clamp(hitColorPBR.z * finalColor.rgbRed, 0.0f, 255.0f);
+					lightedColor.rgbRed = clamp(hitColorPBR.z * finalColor.rgbRed, 0.0f, 255.0f);*/
+
+					/*lightedColor.rgbBlue = clamp(hitColorPBR.x * 255, 0.0f, 255.0f);
+					lightedColor.rgbGreen = clamp(hitColorPBR.y * 255, 0.0f, 255.0f);
+					lightedColor.rgbRed = clamp(hitColorPBR.z * 255, 0.0f, 255.0f);*/
+
+					lightedColor.rgbBlue = hitColorPBR.x * 255;
+					lightedColor.rgbGreen =hitColorPBR.y * 255;
+					lightedColor.rgbRed = hitColorPBR.z * 255;
 
 					SetPoint(frameBuffer, x, y, lightedColor);
+					//SetPoint(frameBuffer, x, y, finalColor);
 
 				}
 			}

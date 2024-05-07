@@ -127,9 +127,12 @@ CoordinateStruct calculatePBRLight(CoordinateStruct& Point, CoordinateStruct& hi
 
 	// base reflectivity
 	//Average F0 for dielectric materials
-	//CoordinateStruct F0 = { 0.04f,0.04f,0.04f };
-	CoordinateStruct F0 = material;
-	CoordinateStruct albedoVec = Normalize(albedo);
+	CoordinateStruct F0 = { 0.04f,0.04f,0.04f };
+	//CoordinateStruct F0 = material;
+	CoordinateStruct albedoVec = { albedo.x / 255.0f, albedo.y / 255.0f, albedo.z / 255.0f };
+	albedoVec.x = (pow(albedoVec.x, 2.2f));
+	albedoVec.y = (pow(albedoVec.y, 2.2f));
+	albedoVec.z = (pow(albedoVec.z, 2.2f));
 	F0 = getMix(F0, albedoVec, metallic); // Linear
 
 	CoordinateStruct Lo = { 0.f,0.f,0.f };
@@ -181,9 +184,9 @@ CoordinateStruct calculatePBRLight(CoordinateStruct& Point, CoordinateStruct& hi
 	color.y = color.y / (color.y + 1);
 	color.z = color.z / (color.z + 1);
 
-	color.x = pow(color.x, 1.0 / 2.2);
-	color.y = pow(color.y, 1.0 / 2.2);
-	color.z = pow(color.z, 1.0 / 2.2);
+		color.x = pow(color.x, 1.0 / 2.2);
+		color.y = pow(color.y, 1.0 / 2.2);
+		color.z = pow(color.z, 1.0 / 2.2);
 
 
 	return color;

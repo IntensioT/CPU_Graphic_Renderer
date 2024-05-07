@@ -120,26 +120,37 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	rasterizator = new Rasterizator();
 
 
-	light1.globalPosition = { 10.f,15.f,50.f };
+	light1.globalPosition = { 0.f,0.f,10.f };
 	light1.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
 	light1.PhongDiffuseWeight = 0.8; // phong model diffuse weight
 	light1.PhongSpecularWeight = 0.2; // phong model specular weight
 	light1.PhongSpecularExponent = 10;   // phong specular exponent
-	light1.LightColor = { 255,255,255 };
-	light1.LightIntesity = 4;
+	light1.LightColor = { 229,229,229 };
+	light1.LightIntesity = 3;
 
 	Lightnings.push_back(light1);
 
-	PointLightStruct light2;
-	light2.globalPosition = { 0.f,50.f,0.f };
-	light2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
-	light2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
-	light2.PhongSpecularWeight = 0.2; // phong model specular weight
-	light2.PhongSpecularExponent = 10;   // phong specular exponent
-	light2.LightColor = { 255,255,255 };
-	light2.LightIntesity = 5;
+	//PointLightStruct light2;
+	//light2.globalPosition = { 0.f,50.f,0.f };
+	//light2.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
+	//light2.PhongDiffuseWeight = 0.8; // phong model diffuse weight
+	//light2.PhongSpecularWeight = 0.2; // phong model specular weight
+	//light2.PhongSpecularExponent = 10;   // phong specular exponent
+	//light2.LightColor = { 255,255,255 };
+	//light2.LightIntesity = 30;
 
-	Lightnings.push_back(light2);
+	//Lightnings.push_back(light2);
+
+	//PointLightStruct light3;
+	//light3.globalPosition = { 10.f,0.f,-20.f };
+	//light3.objectAlbedo = 0.18; //  base color input that defines the diffuse color or reflectivity of the surface
+	//light3.PhongDiffuseWeight = 0.8; // phong model diffuse weight
+	//light3.PhongSpecularWeight = 0.2; // phong model specular weight
+	//light3.PhongSpecularExponent = 10;   // phong specular exponent
+	//light3.LightColor = { 174,0,255 };
+	//light3.LightIntesity = 40;
+
+	//Lightnings.push_back(light3);
 
 	//PointLightStruct lightTiti1;
 	//lightTiti1.globalPosition = { 10.f,15.f,150.f };
