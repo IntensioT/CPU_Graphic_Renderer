@@ -1168,23 +1168,6 @@ void plotLine(void* buffer, int x0, int y0, int x1, int y1, RGBQUAD color)
 	}
 }
 
-
-//void UpdatePolygonsAsync()
-//{
-//	ThreadPool pool(8);
-//	std::vector<std::future<void>> futures;
-//
-//	for (int i = 0; i < polygons.size(); i++)
-//	{
-//		futures.emplace_back(pool.enqueue([i] { return UpdateVectors(i); }));
-//	}
-//
-//	for (int i = 0; i < polygons.size(); i++)
-//	{
-//		futures[i].get();
-//	}
-//}
-
 void DrawPolygonsAsync()
 {
 	ThreadPool pool(8);
