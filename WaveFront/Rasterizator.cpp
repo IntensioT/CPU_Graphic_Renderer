@@ -503,7 +503,6 @@ void Rasterizator::DrawPolygonBarycentricTextureWithLight(const Triangle& polygo
 			{
 				w0 /= area;
 				w1 /= area;
-				//w2 /= area;
 				w2 = 1 - w0 - w1;
 
 
@@ -549,9 +548,9 @@ void Rasterizator::DrawPolygonBarycentricTextureWithLight(const Triangle& polygo
 					unsigned char alpha = (texture.textureChannels == 4) ? texture.textureData[pixel_index + 3] : 255;
 
 					RGBQUAD finalColor;
-					finalColor.rgbRed = /*color.rgbRed **/ red /** alpha + backgroundColor.rgbRed * backgroundAlpha * (1 - alpha)*/;
-					finalColor.rgbGreen = /*color.rgbGreen * */green /** alpha /*+ backgroundColor.rgbGreen * backgroundAlpha * (1 - alpha)*/;
-					finalColor.rgbBlue = /*color.rgbBlue **/ blue /** alpha /*+ backgroundColor.rgbBlue * backgroundAlpha * (1 - alpha)*/;
+					finalColor.rgbRed = red;
+					finalColor.rgbGreen = green ;
+					finalColor.rgbBlue = blue ;
 
 
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -724,7 +723,6 @@ void Rasterizator::DrawPolygonBarycentricParam(const Triangle& polygon, std::vec
 			{
 				w0 /= area;
 				w1 /= area;
-				//w2 /= area;
 				w2 = 1 - w0 - w1;
 
 				float oneOverZ = polygon.vectors[0].z * w0 + polygon.vectors[1].z * w1 + polygon.vectors[2].z * w2;
@@ -745,9 +743,7 @@ void Rasterizator::DrawPolygonBarycentricParam(const Triangle& polygon, std::vec
 					float curZNormalInGlobal = polygon.vectorsInGlobal[0].normal.z * w0 + polygon.vectorsInGlobal[1].normal.z * w1 + polygon.vectorsInGlobal[2].normal.z * w2;
 					CoordinateStruct hitNormal = { curXNormalInGlobal, curYNormalInGlobal, curZNormalInGlobal };
 
-					//CoordinateStruct hitColor = calculatePhongLight(curPointInGlobal, hitNormal, CameraGlobalCoordinates, lightnings);
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 					float Tc_over_Zc_forU = w0 * (polygon.vectors[0].texture.x * polygon.vectorsInGlobal[0].w) + w1 * (polygon.vectors[1].texture.x * polygon.vectorsInGlobal[1].w) + w2 * (polygon.vectors[2].texture.x * polygon.vectorsInGlobal[2].w);
 					float Tc_over_Zc_forV = w0 * (polygon.vectors[0].texture.y * polygon.vectorsInGlobal[0].w) + w1 * (polygon.vectors[1].texture.y * polygon.vectorsInGlobal[1].w) + w2 * (polygon.vectors[2].texture.y * polygon.vectorsInGlobal[2].w);
@@ -825,9 +821,9 @@ void Rasterizator::DrawPolygonBarycentricParam(const Triangle& polygon, std::vec
 
 
 					RGBQUAD finalColor;
-					finalColor.rgbRed = /*color.rgbRed **/ red /** alpha + backgroundColor.rgbRed * backgroundAlpha * (1 - alpha)*/;
-					finalColor.rgbGreen = /*color.rgbGreen * */green /** alpha /*+ backgroundColor.rgbGreen * backgroundAlpha * (1 - alpha)*/;
-					finalColor.rgbBlue = /*color.rgbBlue **/ blue /** alpha /*+ backgroundColor.rgbBlue * backgroundAlpha * (1 - alpha)*/;
+					finalColor.rgbRed = red;
+					finalColor.rgbGreen = green;
+					finalColor.rgbBlue = blue;
 
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1060,9 +1056,7 @@ void Rasterizator::DrawPolygonPBRtexture(const Triangle& polygon, std::vector<Po
 					float curZNormalInGlobal = polygon.vectorsInGlobal[0].normal.z * w0 + polygon.vectorsInGlobal[1].normal.z * w1 + polygon.vectorsInGlobal[2].normal.z * w2;
 					CoordinateStruct hitNormal = { curXNormalInGlobal, curYNormalInGlobal, curZNormalInGlobal };
 
-					//CoordinateStruct hitColor = calculatePhongLight(curPointInGlobal, hitNormal, CameraGlobalCoordinates, lightnings);
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 					float Tc_over_Zc_forU = w0 * (polygon.vectors[0].texture.x * polygon.vectorsInGlobal[0].w) + w1 * (polygon.vectors[1].texture.x * polygon.vectorsInGlobal[1].w) + w2 * (polygon.vectors[2].texture.x * polygon.vectorsInGlobal[2].w);
 					float Tc_over_Zc_forV = w0 * (polygon.vectors[0].texture.y * polygon.vectorsInGlobal[0].w) + w1 * (polygon.vectors[1].texture.y * polygon.vectorsInGlobal[1].w) + w2 * (polygon.vectors[2].texture.y * polygon.vectorsInGlobal[2].w);
@@ -1072,11 +1066,10 @@ void Rasterizator::DrawPolygonPBRtexture(const Triangle& polygon, std::vector<Po
 					float u = Tc_over_Zc_forU / interpolated_inv_Z;
 					float v = Tc_over_Zc_forV / interpolated_inv_Z;
 
-
 					float texX = u * texture.textureWidth;
 					float texY = v * texture.textureHeight;
 
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					//////////////////////////////////////////////////////////////////NORMAL MAP//////////////////////////////////////////////////////////////////////////////////////////////
 					int MapPixelIndex = (int)texY * texture.textureWidth * texture.textureChannels + (int)texX * texture.textureChannels;
 
 					float xNormal = texture.normalTexturData[MapPixelIndex] / 255.0f;
@@ -1086,66 +1079,28 @@ void Rasterizator::DrawPolygonPBRtexture(const Triangle& polygon, std::vector<Po
 					CoordinateStruct textureNormal = { xNormal, yNormal, zNormal };
 					textureNormal = textureNormal * 2 - 1; // переход от [-1,1] к [0,1]   
 					textureNormal = Normalize(textureNormal);
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					///////////////////////////////////////////////////////////////////PBR/////////////////////////////////////////////////////////////////////////////////////////////
 					float metalness = texture.specularTexturData[MapPixelIndex] / 255.0f;
 					float roughness = texture.specularTexturData[MapPixelIndex + 1] / 255.0f;
 					float ao = texture.specularTexturData[MapPixelIndex + 2] / 255.0f;
 
-					/*float ao = texture.specularTexturData[MapPixelIndex] / 255.0f;
-					float roughness = texture.specularTexturData[MapPixelIndex + 1] / 255.0f;
-					float metalness = texture.specularTexturData[MapPixelIndex + 2] / 255.0f;*/
-
-					/*float metalness = texture.metallnessData[MapPixelIndex] / 255.0f;
-					float roughness = texture.roughnessData[MapPixelIndex] / 255.0f;
-					float ao = texture.AOData[MapPixelIndex] / 255.0f;*/
 
 					unsigned char red = texture.textureData[MapPixelIndex];
 					unsigned char green = texture.textureData[MapPixelIndex + 1];
 					unsigned char blue = texture.textureData[MapPixelIndex + 2];
 
 					CoordinateStruct albedo = { blue,green,red };
-					//CoordinateStruct albedo = { 255,255,255 };
-					//CoordinateStruct albedo = { 200,200,200 };
-					//CoordinateStruct hitColorPBR = calculatePBRLight(curPointInGlobal, textureNormal, CameraGlobalCoordinates, lightnings, albedo, 0.5f, 0.3f, 1.0f, material);
 					CoordinateStruct hitColorPBR = calculatePBRLight(curPointInGlobal, textureNormal, CameraGlobalCoordinates, lightnings, albedo, metalness, roughness, ao, material);
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-					
-					unsigned char alpha = (texture.textureChannels == 4) ? texture.textureData[MapPixelIndex + 3] : 255;
-
-					RGBQUAD finalColor;
-
-					/*float red_normalized = static_cast<float>(red) / 255.0f;
-					float green_normalized = static_cast<float>(green) / 255.0f;
-					float blue_normalized = static_cast<float>(blue) / 255.0f;*/
-
-					/*red_normalized = red_normalized  / (red_normalized + 1);
-					green_normalized = green_normalized / (green_normalized + 1);
-					blue_normalized = blue_normalized / (blue_normalized + 1);*/
-
-					/*finalColor.rgbRed = static_cast<BYTE>(pow(red_normalized, 2.2f) * 255.0f);
-					finalColor.rgbGreen = static_cast<BYTE>(pow(green_normalized, 2.2f) * 255.0f);
-					finalColor.rgbBlue = static_cast<BYTE>(pow(blue_normalized, 2.2f) * 255.0f);*/
-
-
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 					RGBQUAD lightedColor;
-
-					/*lightedColor.rgbBlue = clamp(hitColorPBR.x * finalColor.rgbBlue, 0.0f, 255.0f);
-					lightedColor.rgbGreen = clamp(hitColorPBR.y * finalColor.rgbGreen, 0.0f, 255.0f);
-					lightedColor.rgbRed = clamp(hitColorPBR.z * finalColor.rgbRed, 0.0f, 255.0f);*/
-
-					/*lightedColor.rgbBlue = clamp(hitColorPBR.x * 255, 0.0f, 255.0f);
-					lightedColor.rgbGreen = clamp(hitColorPBR.y * 255, 0.0f, 255.0f);
-					lightedColor.rgbRed = clamp(hitColorPBR.z * 255, 0.0f, 255.0f);*/
 
 					lightedColor.rgbBlue = hitColorPBR.x * 255;
 					lightedColor.rgbGreen =hitColorPBR.y * 255;
 					lightedColor.rgbRed = hitColorPBR.z * 255;
 
 					SetPoint(frameBuffer, x, y, lightedColor);
-					//SetPoint(frameBuffer, x, y, finalColor);
 
 				}
 			}
