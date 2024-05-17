@@ -66,7 +66,6 @@ void Rasterizator::getXleftAndRight(Triangle polygon)
 
 void Rasterizator::getZLeftAndZRight(Triangle polygon)
 {
-
 	// Вычисление значений z для вершин треугольника
 	std::vector<float> z01 = Interpolate(polygon.vectors[0].y, polygon.vectors[0].z, polygon.vectors[1].y, polygon.vectors[1].z);
 	std::vector<float> z12 = Interpolate(polygon.vectors[1].y, polygon.vectors[1].z, polygon.vectors[2].y, polygon.vectors[2].z);
@@ -117,7 +116,16 @@ void Rasterizator::getHLeftAndHRight(Triangle polygon)
 	}
 }
 
+RGBQUAD Rasterizator::_getLightedColor(CoordinateStruct baseColor, CoordinateStruct lightedColor)
+{
+	RGBQUAD resultColor;
 
+	resultColor.rgbBlue = clamp(baseColor.x * lightedColor.x, 0.0f, 255.0f);
+	resultColor.rgbGreen = clamp(baseColor.y * lightedColor.y, 0.0f, 255.0f);
+	resultColor.rgbRed = clamp(baseColor.z * lightedColor.z, 0.0f, 255.0f);
+
+	return resultColor;
+}
 
 std::vector<float> Rasterizator::Interpolate(float i0, float d0, float i1, float d1)
 {
@@ -281,135 +289,86 @@ float edgeFunctionReversePositive(const HomogeneousCoordinateStruct& a, const Ho
 	return (a.x - b.x) * (y - a.y) - (a.y - b.y) * (x - a.x);
 }
 
+void Rasterizator::DrawPolygonBase(const Triangle& polygon, std::vector<PointLightStruct> lightnings,
+	CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer,
+	void* depthBuffer, std::function<RGBQUAD(float, float, const Triangle&,
+		CoordinateStruct&, CoordinateStruct&, std::vector<PointLightStruct>&)> calculateColor)
+{
+	RectangleStruct rect = FindTriangleBoundingRectangle2D(polygon);
+	float w0, w1, w2, area;
+	area = edgeFunction(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
+
+	for (int y = rect.top; y <= rect.bottom; y++)
+	{
+		for (int x = rect.left; x <= rect.right; x++)
+		{
+			w0 = edgeFunction(polygon.vectors[1], polygon.vectors[2], x, y);
+			w1 = edgeFunction(polygon.vectors[2], polygon.vectors[0], x, y);
+			w2 = edgeFunction(polygon.vectors[0], polygon.vectors[1], x, y);
+
+			if ((w0 >= 0 && w1 >= 0 && w2 >= 0) || (w0 < 0 && w1 < 0 && w2 < 0))
+			{
+				w0 /= area;
+				w1 /= area;
+				w2 = 1 - w0 - w1;
+
+				float oneOverZ = polygon.vectors[0].z * w0 + polygon.vectors[1].z * w1 + polygon.vectors[2].z * w2;
+				float z = 1 / (-oneOverZ);
+
+				if (z < reinterpret_cast<float*>(depthBuffer)[y * FrameWidth + x])
+				{
+					reinterpret_cast<float*>(depthBuffer)[y * FrameWidth + x] = z;
+
+					float curXInGlobal = polygon.vectorsInGlobal[0].x * w0 + polygon.vectorsInGlobal[1].x * w1 + polygon.vectorsInGlobal[2].x * w2;
+					float curYInGlobal = polygon.vectorsInGlobal[0].y * w0 + polygon.vectorsInGlobal[1].y * w1 + polygon.vectorsInGlobal[2].y * w2;
+					float curZInGlobal = polygon.vectorsInGlobal[0].z * w0 + polygon.vectorsInGlobal[1].z * w1 + polygon.vectorsInGlobal[2].z * w2;
+					CoordinateStruct curPointInGlobal = { curXInGlobal, curYInGlobal, curZInGlobal };
+
+					float curXNormalInGlobal = polygon.vectorsInGlobal[0].normal.x * w0 + polygon.vectorsInGlobal[1].normal.x * w1 + polygon.vectorsInGlobal[2].normal.x * w2;
+					float curYNormalInGlobal = polygon.vectorsInGlobal[0].normal.y * w0 + polygon.vectorsInGlobal[1].normal.y * w1 + polygon.vectorsInGlobal[2].normal.y * w2;
+					float curZNormalInGlobal = polygon.vectorsInGlobal[0].normal.z * w0 + polygon.vectorsInGlobal[1].normal.z * w1 + polygon.vectorsInGlobal[2].normal.z * w2;
+					CoordinateStruct hitNormal = { curXNormalInGlobal, curYNormalInGlobal, curZNormalInGlobal };
+
+					RGBQUAD lightedColor = calculateColor(curXInGlobal, curYInGlobal, polygon, curPointInGlobal, hitNormal, lightnings);
+
+					SetPoint(frameBuffer, x, y, lightedColor);
+				}
+			}
+		}
+	}
+}
+
 void Rasterizator::DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, RGBQUAD color)
 {
-	RectangleStruct rect = FindTriangleBoundingRectangle2D(polygon);
-
-	float w0, w1, w2, area;
-
-	area = edgeFunction(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
-
-
-	for (int y = rect.top; y <= rect.bottom; y++)
-	{
-		for (int x = rect.left; x <= rect.right; x++)
+	auto calculateColor = [&](float x, float y, const Triangle& polygon, CoordinateStruct& curPointInGlobal, CoordinateStruct& hitNormal, std::vector<PointLightStruct>& lightnings)
 		{
+			CoordinateStruct hitColor = calculatePhongLight(curPointInGlobal, hitNormal, CameraGlobalCoordinates, lightnings);
 
-			w0 = edgeFunction(polygon.vectors[1], polygon.vectors[2], x, y);
-			w1 = edgeFunction(polygon.vectors[2], polygon.vectors[0], x, y);
-			w2 = edgeFunction(polygon.vectors[0], polygon.vectors[1], x, y);
+			CoordinateStruct colorStruct = { color.rgbBlue,color.rgbGreen, color.rgbRed };
+			
+			return _getLightedColor(colorStruct, hitColor);
+		};
 
-			if ((w0 >= 0 && w1 >= 0 && w2 >= 0) || (w0 < 0 && w1 < 0 && w2 < 0))
-			{
-				w0 /= area;
-				w1 /= area;
-				//w2 /= area;
-				w2 = 1 - w0 - w1;
-
-
-
-				float oneOverZ = polygon.vectors[0].z * w0 + polygon.vectors[1].z * w1 + polygon.vectors[2].z * w2;
-				float z = 1 / (-oneOverZ);
-				// TODO : Lock
-				if (z < reinterpret_cast<float*>(depthBuffer)[y * FrameWidth + x])
-				{
-					reinterpret_cast<float*>(depthBuffer)[y * FrameWidth + x] = z;
-
-					///////////////////////////////////////////////////////////////////////////////////////////////////
-					float curXInGlobal = polygon.vectorsInGlobal[0].x * w0 + polygon.vectorsInGlobal[1].x * w1 + polygon.vectorsInGlobal[2].x * w2;
-					float curYInGlobal = polygon.vectorsInGlobal[0].y * w0 + polygon.vectorsInGlobal[1].y * w1 + polygon.vectorsInGlobal[2].y * w2;
-					float curZInGlobal = polygon.vectorsInGlobal[0].z * w0 + polygon.vectorsInGlobal[1].z * w1 + polygon.vectorsInGlobal[2].z * w2;
-					CoordinateStruct curPointInGlobal = { curXInGlobal, curYInGlobal, curZInGlobal };
-
-					float curXNormalInGlobal = polygon.vectorsInGlobal[0].normal.x * w0 + polygon.vectorsInGlobal[1].normal.x * w1 + polygon.vectorsInGlobal[2].normal.x * w2;
-					float curYNormalInGlobal = polygon.vectorsInGlobal[0].normal.y * w0 + polygon.vectorsInGlobal[1].normal.y * w1 + polygon.vectorsInGlobal[2].normal.y * w2;
-					float curZNormalInGlobal = polygon.vectorsInGlobal[0].normal.z * w0 + polygon.vectorsInGlobal[1].normal.z * w1 + polygon.vectorsInGlobal[2].normal.z * w2;
-					CoordinateStruct hitNormal = { curXNormalInGlobal, curYNormalInGlobal, curZNormalInGlobal };
-
-					CoordinateStruct hitColor = calculatePhongLight(curPointInGlobal, hitNormal, CameraGlobalCoordinates, lightnings);
-					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-					RGBQUAD lightedColor;
-					lightedColor.rgbBlue = clamp(color.rgbBlue * hitColor.x, 0.0f, 255.0f);
-					lightedColor.rgbGreen = clamp(color.rgbGreen * hitColor.y, 0.0f, 255.0f);
-					lightedColor.rgbRed = clamp(color.rgbRed * hitColor.z, 0.0f, 255.0f);
-
-					SetPoint(frameBuffer, x, y, lightedColor);
-
-				}
-			}
-		}
-	}
+	DrawPolygonBase(polygon, lightnings, CameraGlobalCoordinates, frameBuffer, depthBuffer, calculateColor);
 }
 
-void Rasterizator::DrawPolygonPBR(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, 
-	RGBQUAD color, CoordinateStruct materialParams, CoordinateStruct& material)
+void Rasterizator::DrawPolygonPBR(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer,
+	RGBQUAD color, CoordinateStruct& materialParams, CoordinateStruct& material)
 {
-	RectangleStruct rect = FindTriangleBoundingRectangle2D(polygon);
-
-	float w0, w1, w2, area;
-
-	area = edgeFunction(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
-
-
-	for (int y = rect.top; y <= rect.bottom; y++)
-	{
-		for (int x = rect.left; x <= rect.right; x++)
+	auto calculateColor = [&](float x, float y, const Triangle& polygon, CoordinateStruct& curPointInGlobal, CoordinateStruct& hitNormal, std::vector<PointLightStruct>& lightnings)
 		{
+			CoordinateStruct albedo = { 200,200,200 };
+			CoordinateStruct colorStruct = { color.rgbBlue,color.rgbGreen, color.rgbRed };
 
-			w0 = edgeFunction(polygon.vectors[1], polygon.vectors[2], x, y);
-			w1 = edgeFunction(polygon.vectors[2], polygon.vectors[0], x, y);
-			w2 = edgeFunction(polygon.vectors[0], polygon.vectors[1], x, y);
+			CoordinateStruct hitColorPBR = calculatePBRLight(curPointInGlobal, hitNormal, CameraGlobalCoordinates, lightnings, albedo, materialParams.x, materialParams.y, materialParams.z, material);
 
-			if ((w0 >= 0 && w1 >= 0 && w2 >= 0) || (w0 < 0 && w1 < 0 && w2 < 0))
-			{
-				w0 /= area;
-				w1 /= area;
-				//w2 /= area;
-				w2 = 1 - w0 - w1;
+			return _getLightedColor(colorStruct, hitColorPBR);
+		};
 
-
-
-				float oneOverZ = polygon.vectors[0].z * w0 + polygon.vectors[1].z * w1 + polygon.vectors[2].z * w2;
-				float z = 1 / (-oneOverZ);
-				// TODO : Lock
-				if (z < reinterpret_cast<float*>(depthBuffer)[y * FrameWidth + x])
-				{
-					reinterpret_cast<float*>(depthBuffer)[y * FrameWidth + x] = z;
-
-					///////////////////////////////////////////////////////////////////////////////////////////////////
-					float curXInGlobal = polygon.vectorsInGlobal[0].x * w0 + polygon.vectorsInGlobal[1].x * w1 + polygon.vectorsInGlobal[2].x * w2;
-					float curYInGlobal = polygon.vectorsInGlobal[0].y * w0 + polygon.vectorsInGlobal[1].y * w1 + polygon.vectorsInGlobal[2].y * w2;
-					float curZInGlobal = polygon.vectorsInGlobal[0].z * w0 + polygon.vectorsInGlobal[1].z * w1 + polygon.vectorsInGlobal[2].z * w2;
-					CoordinateStruct curPointInGlobal = { curXInGlobal, curYInGlobal, curZInGlobal };
-
-					float curXNormalInGlobal = polygon.vectorsInGlobal[0].normal.x * w0 + polygon.vectorsInGlobal[1].normal.x * w1 + polygon.vectorsInGlobal[2].normal.x * w2;
-					float curYNormalInGlobal = polygon.vectorsInGlobal[0].normal.y * w0 + polygon.vectorsInGlobal[1].normal.y * w1 + polygon.vectorsInGlobal[2].normal.y * w2;
-					float curZNormalInGlobal = polygon.vectorsInGlobal[0].normal.z * w0 + polygon.vectorsInGlobal[1].normal.z * w1 + polygon.vectorsInGlobal[2].normal.z * w2;
-					CoordinateStruct hitNormal = { curXNormalInGlobal, curYNormalInGlobal, curZNormalInGlobal };
-
-					//CoordinateStruct albedo = { 255,255,255 };
-					CoordinateStruct albedo = { 200,200,200 };
-
-					//CoordinateStruct hitColorPBR = calculatePBRLight(curPointInGlobal, hitNormal, CameraGlobalCoordinates, lightnings, albedo, 0.1f, 0.3f, 1.0f);
-					CoordinateStruct hitColorPBR = calculatePBRLight(curPointInGlobal, hitNormal, CameraGlobalCoordinates, lightnings, albedo, materialParams.x, materialParams.y, materialParams.z, material);
-					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-					RGBQUAD lightedColor;
-
-					lightedColor.rgbBlue = clamp(color.rgbBlue * hitColorPBR.x, 0.0f, 255.0f);
-					lightedColor.rgbGreen = clamp(color.rgbGreen * hitColorPBR.y, 0.0f, 255.0f);
-					lightedColor.rgbRed = clamp(color.rgbRed * hitColorPBR.z, 0.0f, 255.0f);
-
-					SetPoint(frameBuffer, x, y, lightedColor);
-
-				}
-			}
-		}
-	}
+	DrawPolygonBase(polygon, lightnings, CameraGlobalCoordinates, frameBuffer, depthBuffer, calculateColor);
 }
+
+
 
 void Rasterizator::DrawPolygonBarycentricTexture(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, RGBQUAD color, TextureStruct& texture)
 {
@@ -419,7 +378,6 @@ void Rasterizator::DrawPolygonBarycentricTexture(const Triangle& polygon, std::v
 
 	area = edgeFunction(polygon.vectors[0], polygon.vectors[1], polygon.vectors[2].x, polygon.vectors[2].y);
 
-
 	for (int y = rect.top; y <= rect.bottom; y++)
 	{
 		for (int x = rect.left; x <= rect.right; x++)
@@ -433,7 +391,6 @@ void Rasterizator::DrawPolygonBarycentricTexture(const Triangle& polygon, std::v
 			{
 				w0 /= area;
 				w1 /= area;
-				//w2 /= area;
 				w2 = 1 - w0 - w1;
 
 
@@ -451,22 +408,24 @@ void Rasterizator::DrawPolygonBarycentricTexture(const Triangle& polygon, std::v
 					float Tc_over_Zc_forU = w0 * (polygon.vectors[0].texture.x * polygon.vectorsInGlobal[0].w) + w1 * (polygon.vectors[1].texture.x * polygon.vectorsInGlobal[1].w) + w2 * (polygon.vectors[2].texture.x * polygon.vectorsInGlobal[2].w);
 					float Tc_over_Zc_forV = w0 * (polygon.vectors[0].texture.y * polygon.vectorsInGlobal[0].w) + w1 * (polygon.vectors[1].texture.y * polygon.vectorsInGlobal[1].w) + w2 * (polygon.vectors[2].texture.y * polygon.vectorsInGlobal[2].w);
 
-					float interpolated_inv_Z = w0 * polygon.vectorsInGlobal[0].w + w1 * polygon.vectorsInGlobal[1].w + w2 * polygon.vectorsInGlobal[2].w;
+					float interpolatedInvZ = w0 * polygon.vectorsInGlobal[0].w + w1 * polygon.vectorsInGlobal[1].w + w2 * polygon.vectorsInGlobal[2].w;
 
-					float u = Tc_over_Zc_forU / interpolated_inv_Z;
-					float v = Tc_over_Zc_forV / interpolated_inv_Z;
+					float normalizedTexU = Tc_over_Zc_forU / interpolatedInvZ;
+					float normalizedTexV = Tc_over_Zc_forV / interpolatedInvZ;
 
-					float texX = u * texture.textureWidth;
-					float texY = v * texture.textureHeight;
 
-					int pixel_index = (int)texY * texture.textureWidth * texture.textureChannels + (int)texX * texture.textureChannels;
+					float texelX = normalizedTexU * texture.textureWidth;
+					float texelY = normalizedTexV * texture.textureHeight;
+
+
+					int pixel_index = (int)texelY * texture.textureWidth * texture.textureChannels + (int)texelX * texture.textureChannels;
 
 					unsigned char red = texture.textureData[pixel_index];
 					unsigned char green = texture.textureData[pixel_index + 1];
 					unsigned char blue = texture.textureData[pixel_index + 2];
 					unsigned char alpha = (texture.textureChannels == 4) ? texture.textureData[pixel_index + 3] : 255;
 
-
+					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 					RGBQUAD finalColor;
@@ -549,8 +508,8 @@ void Rasterizator::DrawPolygonBarycentricTextureWithLight(const Triangle& polygo
 
 					RGBQUAD finalColor;
 					finalColor.rgbRed = red;
-					finalColor.rgbGreen = green ;
-					finalColor.rgbBlue = blue ;
+					finalColor.rgbGreen = green;
+					finalColor.rgbBlue = blue;
 
 
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1097,7 +1056,7 @@ void Rasterizator::DrawPolygonPBRtexture(const Triangle& polygon, std::vector<Po
 					RGBQUAD lightedColor;
 
 					lightedColor.rgbBlue = hitColorPBR.x * 255;
-					lightedColor.rgbGreen =hitColorPBR.y * 255;
+					lightedColor.rgbGreen = hitColorPBR.y * 255;
 					lightedColor.rgbRed = hitColorPBR.z * 255;
 
 					SetPoint(frameBuffer, x, y, lightedColor);

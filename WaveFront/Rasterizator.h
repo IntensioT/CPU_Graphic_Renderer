@@ -10,6 +10,7 @@
 #include "TextureStruct.h"
 
 #include <windows.h>
+#include <functional>
 
 
 inline void SetPoint(void* buffer, int x, int y, RGBQUAD color);
@@ -29,12 +30,18 @@ public:
 	std::vector<float> Interpolate(float x0, float y0, float x1, float y1);
 	std::vector<float> xLeft, xRight, zLeft, zRight, hLeft, hRight, diffuseLeft, diffuseRight;
 	void UpdateXleftAndXRight(Triangle& polygon);
+
 	void DrawLines(Triangle polygon, void* frameBuffer, void* depthBuffer, RGBQUAD color);
+
+	void DrawPolygonBase(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer,
+		void* depthBuffer, std::function<RGBQUAD(float, float, const Triangle&, CoordinateStruct&, CoordinateStruct&, 
+			std::vector<PointLightStruct>&)> calculateColor);
+
 	void DrawPolygon(Triangle polygon, void* frameBuffer, void* depthBuffer, RGBQUAD color);
 	void DrawPolygonBarycentric(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, RGBQUAD color);
 
 	void DrawPolygonPBR(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer, 
-		RGBQUAD color, CoordinateStruct materialParams, CoordinateStruct& material);
+		RGBQUAD color, CoordinateStruct& materialParams, CoordinateStruct& material);
 	void DrawPolygonPBRtexture(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer, void* depthBuffer,
 		RGBQUAD color, TextureStruct& texture, CoordinateStruct& material);
 
@@ -47,7 +54,7 @@ public:
 
 
 private:
-	RGBQUAD PhongLight();
+	RGBQUAD _getLightedColor(CoordinateStruct baseColor, CoordinateStruct lightedColor);
 
 	bool IsTopLeft(const Triangle& polygon);
 	bool IsInTriangle(float x, float y, Triangle polygon);

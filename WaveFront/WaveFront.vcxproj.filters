@@ -93,6 +93,9 @@
     <ClCompile Include="Material.cpp">
       <Filter>Material</Filter>
     </ClCompile>
+    <ClCompile Include="DeprecatedRaterizator.cpp">
+      <Filter>Rasterizator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowMain.h">

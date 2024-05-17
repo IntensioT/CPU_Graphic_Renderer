@@ -1,7 +1,7 @@
 #include "LightLogic.h"
 
 
-CoordinateStruct calculatePhongLight(CoordinateStruct& Point, CoordinateStruct& hitNormal, CoordinateStruct& cameraPosition, std::vector<PointLightStruct> lightnings)
+CoordinateStruct calculatePhongLight( CoordinateStruct& Point, CoordinateStruct& hitNormal, CoordinateStruct& cameraPosition, std::vector<PointLightStruct>& lightnings)
 {
 	CoordinateStruct hitColor, diffuseLightFinalColor, specularLightFinalColor;
 
@@ -127,8 +127,8 @@ CoordinateStruct calculatePBRLight(CoordinateStruct& Point, CoordinateStruct& hi
 
 	// base reflectivity
 	//Average F0 for dielectric materials
-	CoordinateStruct F0 = { 0.04f,0.04f,0.04f };
-	//CoordinateStruct F0 = material;
+	//CoordinateStruct F0 = { 0.04f,0.04f,0.04f };
+	CoordinateStruct F0 = material;
 	CoordinateStruct albedoVec = { albedo.x / 255.0f, albedo.y / 255.0f, albedo.z / 255.0f };
 	albedoVec.x = (pow(albedoVec.x, 2.2f));
 	albedoVec.y = (pow(albedoVec.y, 2.2f));

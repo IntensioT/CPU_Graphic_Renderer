@@ -81,6 +81,8 @@
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <AdditionalOptions>/arch:SSE /arch:AVX2 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -103,6 +105,8 @@
       <OmitFramePointers>true</OmitFramePointers>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions>/arch:SSE /arch:AVX2 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,6 +129,8 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
       <AdditionalOptions>/arch:SSE /arch:AVX2 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -147,6 +153,8 @@
       <OmitFramePointers>true</OmitFramePointers>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions>/arch:SSE /arch:AVX2 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -160,6 +168,7 @@
   <ItemGroup>
     <ClCompile Include="3DVectorStruct.cpp" />
     <ClCompile Include="CoordSystem.cpp" />
+    <ClCompile Include="DeprecatedRaterizator.cpp" />
     <ClCompile Include="IntersectionInfo.h" />
     <ClCompile Include="LightLogic.cpp" />
     <ClCompile Include="Mat3Struct.cpp" />

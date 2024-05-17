@@ -46,6 +46,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 		polygons.push_back({ vertexesHomo[indexes[i] - 1], vertexesHomo[indexes[i + 1] - 1], vertexesHomo[indexes[i + 2] - 1] });
 		polygons[j++].textureId = curMtl;
+
 		/*if (steps.size() - 1 <= curMtl) continue;
 		else if (i >= steps[curMtl + 1])
 		{
@@ -125,7 +126,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	light1.PhongDiffuseWeight = 0.8; // phong model diffuse weight
 	light1.PhongSpecularWeight = 0.2; // phong model specular weight
 	light1.PhongSpecularExponent = 10;   // phong specular exponent
-	light1.LightColor = { 128,128,128 };
+	light1.LightColor = { 200,200,200};
 	light1.LightIntesity = 3;
 
 	Lightnings.push_back(light1);
@@ -139,7 +140,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	light2.LightColor = { 69,22,28 };
 	light2.LightIntesity = 30;
 
-	Lightnings.push_back(light2);
+	//Lightnings.push_back(light2);
 
 	PointLightStruct light3;
 	light3.globalPosition = { 10.f,0.f,-20.f };
@@ -150,7 +151,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	light3.LightColor = { 220,20,60 };
 	light3.LightIntesity = 40;
 
-	Lightnings.push_back(light3);
+	//Lightnings.push_back(light3);
 
 	//PointLightStruct lightTiti1;
 	//lightTiti1.globalPosition = { 10.f,15.f,150.f };
@@ -219,7 +220,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		DispatchMessage(&msg);
 	}
 
-	UnloadTexture(textureDatas);
+	//UnloadTexture(textureDatas);
 	return 0;
 }
 
@@ -649,12 +650,13 @@ void Render()
 	UpdateVectors();
 
 
-	// Single thread cycle logic
+	// Single thread loop logic
 	/*for (int i = 0; i < polygonsOutp.size(); i++)
 	{
 		DrawTriangle(polygonsOutp[i]);
 	}*/
 
+	// Multithreading loop logic
 	Concurrency::parallel_for(0, static_cast<int>(polygonsOutp.size()), [&](int i)
 		{
 			DrawTriangle(polygonsOutp[i]);
