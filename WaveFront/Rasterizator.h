@@ -2,6 +2,7 @@
 #define RASTERIZATOR_H
 
 
+
 #include "Triangle.h"
 #include "Rectangle2D.h"
 #include "MathLogic.h"
@@ -16,6 +17,7 @@
 inline void SetPoint(void* buffer, int x, int y, RGBQUAD color);
 
 RectangleStruct FindTriangleBoundingRectangle2D(Triangle polygon);
+
 
 
 class Rasterizator
@@ -34,7 +36,7 @@ public:
 	void DrawLines(Triangle polygon, void* frameBuffer, void* depthBuffer, RGBQUAD color);
 
 	void DrawPolygonBase(const Triangle& polygon, std::vector<PointLightStruct> lightnings, CoordinateStruct& CameraGlobalCoordinates, void* frameBuffer,
-		void* depthBuffer, std::function<RGBQUAD(float, float, const Triangle&, CoordinateStruct&, CoordinateStruct&, 
+		void* depthBuffer, std::function<RGBQUAD(float, float,float, float, float, const Triangle&, CoordinateStruct&, CoordinateStruct&, 
 			std::vector<PointLightStruct>&)> calculateColor);
 
 	void DrawPolygon(Triangle polygon, void* frameBuffer, void* depthBuffer, RGBQUAD color);
@@ -55,6 +57,11 @@ public:
 
 private:
 	RGBQUAD _getLightedColor(CoordinateStruct baseColor, CoordinateStruct lightedColor);
+	std::tuple<float,float> _getTexelIndexes(const Triangle& polygon, float w0, float w1, float w2, TextureStruct& texture);
+	RGBQUAD _calculateTextureColor(const Triangle& polygon, float w0, float w1, float w2,
+		TextureStruct& texture, int x, int y);
+	RGBQUAD _calculateBillinearColor(const Triangle& polygon, float w0, float w1, float w2,
+		TextureStruct& texture);
 
 	bool IsTopLeft(const Triangle& polygon);
 	bool IsInTriangle(float x, float y, Triangle polygon);

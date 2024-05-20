@@ -34,6 +34,7 @@ CoordinateStruct calculatePhongLight( CoordinateStruct& Point, CoordinateStruct&
 
 
 
+
 CoordinateStruct calculatePhongLight(CoordinateStruct& Point, CoordinateStruct& hitNormal, CoordinateStruct& cameraPosition, std::vector<PointLightStruct> lightnings, float specularWeight)
 {
 	float diffuseWeight = 1 - specularWeight;

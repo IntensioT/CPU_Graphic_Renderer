@@ -10,224 +10,209 @@ D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\
   (compiling source file 'Rasterizator.cpp')
   
 D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(54,8): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(130,13): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(158,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(160,26): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(160,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(160,10): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(160,10): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(160,10): warning C4244:             _Ty=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(160,10): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(161,27): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(161,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(161,10): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(161,10): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(161,10): warning C4244:             _Ty=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(161,10): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(164,69): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(164,113): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(164,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(164,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(168,30): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(169,31): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,43): warning C4838: conversion from '_Ty' to 'BYTE' requires a narrowing conversion
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,43): warning C4838:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,43): warning C4838:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,43): warning C4838:             _Ty=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,43): warning C4838:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,43): warning C4244: 'initializing': conversion from '_Ty' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,43): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,43): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,43): warning C4244:             _Ty=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,43): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,77): warning C4838: conversion from '_Ty' to 'BYTE' requires a narrowing conversion
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,77): warning C4838:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,77): warning C4838:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,77): warning C4838:             _Ty=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,77): warning C4838:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,77): warning C4244: 'initializing': conversion from '_Ty' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,77): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,77): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,77): warning C4244:             _Ty=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,77): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,110): warning C4838: conversion from '_Ty' to 'BYTE' requires a narrowing conversion
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,110): warning C4838:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,110): warning C4838:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,110): warning C4838:             _Ty=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,110): warning C4838:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,110): warning C4244: 'initializing': conversion from '_Ty' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,110): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,110): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,110): warning C4244:             _Ty=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(183,110): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(199,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(201,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(203,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(203,21): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(290,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(292,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(294,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(294,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(295,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(295,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(296,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(296,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(337,32): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(337,32): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(337,32): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(337,32): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(337,32): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(338,33): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(338,33): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(338,33): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(338,33): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(338,33): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(339,31): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(339,31): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(339,31): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(339,31): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(339,31): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(357,32): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(357,32): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(357,32): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(357,32): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(357,32): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(358,33): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(358,33): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(358,33): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(358,33): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(358,33): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(359,31): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(359,31): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(359,31): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(359,31): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(359,31): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(377,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(379,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(382,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(382,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(383,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(383,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(384,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(384,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(448,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(450,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(453,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(453,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(454,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(454,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(455,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(455,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(515,34): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(515,34): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(515,34): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(515,34): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(515,34): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(516,35): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(516,35): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(516,35): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(516,35): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(516,35): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(517,33): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(517,33): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(517,33): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(517,33): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(517,33): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(536,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(538,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(541,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(541,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(542,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(542,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(543,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(543,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(633,24): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(634,26): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(635,25): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(636,26): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(647,34): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(647,34): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(647,34): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(647,34): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(647,34): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(648,35): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(648,35): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(648,35): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(648,35): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(648,35): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(649,33): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(649,33): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(649,33): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(649,33): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(649,33): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(668,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(670,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(673,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(673,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(674,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(674,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(675,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(675,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(771,24): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(772,26): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(773,25): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(774,26): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(787,34): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(787,34): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(787,34): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(787,34): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(787,34): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(788,35): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(788,35): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(788,35): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(788,35): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(788,35): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(789,33): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(789,33): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(789,33): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(789,33): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(789,33): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(808,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(810,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(813,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(813,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(814,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(814,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(815,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(815,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(945,24): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(946,26): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(947,25): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(948,26): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(959,34): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(959,34): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(959,34): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(959,34): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(959,34): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(960,35): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(960,35): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(960,35): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(960,35): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(960,35): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(961,33): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(961,33): warning C4244:         with
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(961,33): warning C4244:         [
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(961,33): warning C4244:             T=float
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(961,33): warning C4244:         ]
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(980,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(982,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(985,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(985,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(986,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(986,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(987,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(987,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1047,34): warning C4838: conversion from 'unsigned char' to 'float' requires a narrowing conversion
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1047,39): warning C4838: conversion from 'unsigned char' to 'float' requires a narrowing conversion
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1047,45): warning C4838: conversion from 'unsigned char' to 'float' requires a narrowing conversion
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1054,43): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1055,44): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
-D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1056,42): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(123,29): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(123,29): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(123,29): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(123,29): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(123,29): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(124,30): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(124,30): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(124,30): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(124,30): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(124,30): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(125,28): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(125,28): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(125,28): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(125,28): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(125,28): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(175,13): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(203,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(205,26): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(205,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(205,10): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(205,10): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(205,10): warning C4244:             _Ty=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(205,10): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(206,27): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(206,10): warning C4244: 'initializing': conversion from '_Ty' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(206,10): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(206,10): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(206,10): warning C4244:             _Ty=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(206,10): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(209,69): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(209,113): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(209,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(209,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(213,30): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(214,31): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,43): warning C4838: conversion from '_Ty' to 'BYTE' requires a narrowing conversion
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,43): warning C4838:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,43): warning C4838:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,43): warning C4838:             _Ty=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,43): warning C4838:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,43): warning C4244: 'initializing': conversion from '_Ty' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,43): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,43): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,43): warning C4244:             _Ty=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,43): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,77): warning C4838: conversion from '_Ty' to 'BYTE' requires a narrowing conversion
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,77): warning C4838:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,77): warning C4838:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,77): warning C4838:             _Ty=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,77): warning C4838:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,77): warning C4244: 'initializing': conversion from '_Ty' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,77): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,77): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,77): warning C4244:             _Ty=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,77): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,110): warning C4838: conversion from '_Ty' to 'BYTE' requires a narrowing conversion
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,110): warning C4838:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,110): warning C4838:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,110): warning C4838:             _Ty=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,110): warning C4838:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,110): warning C4244: 'initializing': conversion from '_Ty' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,110): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,110): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,110): warning C4244:             _Ty=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(228,110): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(244,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(246,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(248,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(248,21): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(335,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(337,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(339,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(339,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(340,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(340,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(341,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(341,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(381,42): warning C4838: conversion from 'BYTE' to 'float' requires a narrowing conversion
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(381,56): warning C4838: conversion from 'BYTE' to 'float' requires a narrowing conversion
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(381,72): warning C4838: conversion from 'BYTE' to 'float' requires a narrowing conversion
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(395,42): warning C4838: conversion from 'BYTE' to 'float' requires a narrowing conversion
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(395,56): warning C4838: conversion from 'BYTE' to 'float' requires a narrowing conversion
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(395,72): warning C4838: conversion from 'BYTE' to 'float' requires a narrowing conversion
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(413,82): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(413,79): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(500,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(502,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(505,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(505,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(506,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(506,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(507,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(507,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(567,34): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(567,34): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(567,34): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(567,34): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(567,34): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(568,35): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(568,35): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(568,35): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(568,35): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(568,35): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(569,33): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(569,33): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(569,33): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(569,33): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(569,33): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(588,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(590,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(593,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(593,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(594,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(594,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(595,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(595,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(684,24): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(685,26): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(686,25): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(687,26): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(698,34): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(698,34): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(698,34): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(698,34): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(698,34): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(699,35): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(699,35): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(699,35): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(699,35): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(699,35): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(700,33): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(700,33): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(700,33): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(700,33): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(700,33): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(719,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(721,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(724,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(724,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(725,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(725,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(726,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(726,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(822,24): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(823,26): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(824,25): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(825,26): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(838,34): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(838,34): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(838,34): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(838,34): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(838,34): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(839,35): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(839,35): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(839,35): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(839,35): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(839,35): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(840,33): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(840,33): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(840,33): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(840,33): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(840,33): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(859,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(861,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(864,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(864,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(865,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(865,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(866,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(866,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(996,24): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(997,26): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(998,25): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(999,26): warning C4244: 'initializing': conversion from 'float' to 'unsigned char', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1010,34): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1010,34): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1010,34): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1010,34): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1010,34): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1011,35): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1011,35): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1011,35): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1011,35): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1011,35): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1012,33): warning C4244: '=': conversion from 'T' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1012,33): warning C4244:         with
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1012,33): warning C4244:         [
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1012,33): warning C4244:             T=float
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1012,33): warning C4244:         ]
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1031,13): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1033,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1036,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1036,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1037,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1037,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1038,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1038,62): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1098,34): warning C4838: conversion from 'unsigned char' to 'float' requires a narrowing conversion
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1098,39): warning C4838: conversion from 'unsigned char' to 'float' requires a narrowing conversion
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1098,45): warning C4838: conversion from 'unsigned char' to 'float' requires a narrowing conversion
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1105,43): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1106,44): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\Rasterizator.cpp(1107,42): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
   WindowMain.cpp
 D:\Bugor\6sem\ComputerGraphicAlghorithms\projects\WaveFront\WaveFront\WaveFront\CoordSystem.h(30,2): warning C4091: 'typedef ': ignored on left of '_3DMATRIX' when no variable is declared
   (compiling source file 'WindowMain.cpp')
