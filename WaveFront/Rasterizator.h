@@ -62,6 +62,7 @@ private:
 		TextureStruct& texture, int x, int y);
 	RGBQUAD _calculateBillinearColor(const Triangle& polygon, float w0, float w1, float w2,
 		TextureStruct& texture);
+	CoordinateStruct _getNormalMap(float texX, float texY, TextureStruct& texture);
 
 	bool IsTopLeft(const Triangle& polygon);
 	bool IsInTriangle(float x, float y, Triangle polygon);
