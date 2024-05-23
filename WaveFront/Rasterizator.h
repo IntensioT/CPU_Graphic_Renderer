@@ -58,6 +58,8 @@ public:
 private:
 	RGBQUAD _getLightedColor(CoordinateStruct baseColor, CoordinateStruct lightedColor);
 	std::tuple<float,float> _getTexelIndexes(const Triangle& polygon, float w0, float w1, float w2, TextureStruct& texture);
+	std::tuple<float, float, float> _getMRAO(const Triangle& polygon, float w0, float w1, float w2,
+		TextureStruct& texture);
 	RGBQUAD _calculateTextureColor(const Triangle& polygon, float w0, float w1, float w2,
 		TextureStruct& texture, int x, int y);
 	RGBQUAD _calculateBillinearColor(const Triangle& polygon, float w0, float w1, float w2,
