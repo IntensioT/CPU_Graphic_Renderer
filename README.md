@@ -71,8 +71,7 @@ Example usage:
 
 9. PBR light model with different materials and other params
 ```
-![image](https://github.com/IntensioT/CPU_Graphic_Renderer/assets/90414976/e0853431-7746-4d7e-bf81-47fd1e0180a3)
-<img src="https://github.com/IntensioT/CPU_Graphic_Renderer/assets/90414976/e0853431-7746-4d7e-bf81-47fd1e0180a3" width="600" height="500" alt="My Image">
+<img src="https://github.com/IntensioT/CPU_Graphic_Renderer/assets/90414976/e0853431-7746-4d7e-bf81-47fd1e0180a3" width="580" height="500" alt="My Image">
 
 ```
 10. PBR light with texturing and mrao map
