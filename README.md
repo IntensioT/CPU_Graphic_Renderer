@@ -9,7 +9,7 @@ Welcome to the CPU Graphic Renderer repository! This project is an exploration o
 - Transformations such as rotation, scaling, and translation
 - Perspective and orthographic projection
 - Phong lighting system
-- Physically based rendering
+- Physically Based Rendering
 - etc
 
 ## Installation
