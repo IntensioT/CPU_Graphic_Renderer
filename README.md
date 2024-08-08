@@ -10,7 +10,6 @@ Welcome to the CPU Graphic Renderer repository! This project is an exploration o
 - Perspective and orthographic projection
 - Phong lighting system
 - Physically Based Rendering
-- etc
 
 ## Installation
 Configuration of the cmake project will be done later. At the moment it is a project in visual studio.
