@@ -16,7 +16,7 @@ Configuration of the cmake project will be done later. At the moment it is a pro
 
 ## Usage
 
-The CPU Graphic Engine provides a simple interface for rendering 3D scenes. You can specify the geometry, textures, lighting, and camera parameters using a configuration file.
+The CPU Graphic Engine provides a simple interface for rendering 3D scenes. You can specify the geometry, textures, lighting, and camera parameters using keybindings.
 
 Example usage:
 
