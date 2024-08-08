@@ -2,12 +2,6 @@
 
 Welcome to the CPU Graphic Renderer repository! This project is an exploration of computer graphics rendering using only the CPU. Made for the discipline of Computer Graphics in the 3rd year of study.
 
-## Table of Contents
-
-- Features
-- Installation
-- Usage
-
 ## Features
 
 - Basic 3D geometry rendering using triangles
