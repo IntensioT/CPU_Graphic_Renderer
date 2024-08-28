@@ -11,6 +11,31 @@ Welcome to the CPU Graphic Renderer repository! This project is an exploration o
 - Phong lighting system
 - Physically Based Rendering
 
+## Tasks Completed
+
+According to the tasks assigned to me, the following features have been implemented and are in use:
+
+### Geometry and Transformations
+
+- Developed a parser for .obj files
+- Implemented matrix transformations for coordinates from model space to world space
+- Implemented matrix transformations for coordinates from world space to view space
+- Implemented matrix transformations for coordinates from view space to projection space
+- Implemented matrix transformations for coordinates from projection space to screen space
+- Implemented wireframe rendering of 3D models
+- Implemented a triangle rasterization algorithm
+- Implemented back-face culling and hidden surface removal for 3D objects
+
+### Lighting and Shading
+
+- Implemented flat shading and the Lambert lighting model
+- Implemented the Phong shading model
+- Implemented the Phong lighting model
+- Implemented an algorithm for applying diffuse maps
+- Implemented an algorithm for applying normal maps
+- Implemented an algorithm for applying specular maps
+- Implemented an algorithm for interpolating vertex attributes with perspective correction
+
 ## Installation
 Configuration of the cmake project will be done later. At the moment it is a project in visual studio.
 
